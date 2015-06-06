@@ -27,8 +27,10 @@ public class Tile : MonoBehaviour {
 	}
 
 	void OnMouseDown(){
-		GameManager.instance.moveCurrentPlayer(this);
-
+		if (GameManager.instance.movingPlayer <= 0) {
+			GameManager.instance.moveCurrentPlayer(this);
+			GameManager.instance.movingPlayer = 1;
+		}
 	}
 
 }

@@ -9,9 +9,9 @@ public class GameManager : MonoBehaviour {
 	public GameObject UserPlayerPrefab;
 	public GameObject AIPlayerPrefab;
 
-
 	public int mapSize = 11;
-	
+	public int movingPlayer = 0;
+
 	List <List<Tile>> map = new List<List<Tile>>();
 	List <Player> players = new List<Player>();
 	int currentPlayerIndex = 0;
@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void nextTurn(){
+		movingPlayer = 0;
 		if (currentPlayerIndex +1 < players.Count) {
 			currentPlayerIndex++;
 
