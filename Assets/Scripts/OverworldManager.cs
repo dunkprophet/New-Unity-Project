@@ -24,7 +24,7 @@ public class OverworldManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-
+		OverworldPlayer.instance.moveZig();
 	}
 
 }

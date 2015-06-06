@@ -2,14 +2,18 @@
 using System.Collections;
 
 public class OverworldPlayer : MonoBehaviour {
-	
-	//float speed = 3.0f;
+	public static OverworldPlayer instance;
 
-	public float speed = 6.0F;
+	public float moveSpeed = 6.0F;
 	public float jumpSpeed = 8.0F;
 	public float gravity = 20.0F;
 	private Vector3 moveDirection = Vector3.zero;
+	public Vector3 moveDestination;
 
+	void Awake () {
+		instance = this;
+
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -18,6 +22,7 @@ public class OverworldPlayer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		/*
 		CharacterController controller = GetComponent<CharacterController>();
 		if (controller.isGrounded) {
 			moveDirection = new Vector3 (Input.mousePosition, 0, 0);
@@ -29,6 +34,17 @@ public class OverworldPlayer : MonoBehaviour {
 		controller.Move(moveDirection * Time.deltaTime);
 		
 		Debug.Log(transform.position);
+		*/
+	}
 
+	public void moveZig () {
+		if (Vector3.Distance(moveDestination, transform.position) > 0.1f) {
+			transform.position += (moveDestination -transform.position).normalized * moveSpeed * Time.deltaTime;
+			
+			if (Vector3.Distance(moveDestination, transform.position) <= 0.1f) {
+				transform.position = moveDestination;
+				
+			}
+		}
 	}
 }
