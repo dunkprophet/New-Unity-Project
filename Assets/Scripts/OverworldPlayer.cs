@@ -4,59 +4,31 @@ using System.Collections;
 public class OverworldPlayer : MonoBehaviour {
 	
 	//float speed = 3.0f;
-	RaycastHit hit;
-	Vector3 newPos;
 
-	bool canWalk = false;
-	
-	public float speed = 3.0f;
-	public float rotateSpeed = 3.0f;
+	public float speed = 6.0F;
+	public float jumpSpeed = 8.0F;
+	public float gravity = 20.0F;
+	private Vector3 moveDirection = Vector3.zero;
+
 
 	// Use this for initialization
 	void Start () {
-		hit = new RaycastHit();
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
-
-		/*Input.GetButton ("w");
-		var move = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis(""), 0);
-		transform.position += move * speed * Time.deltaTime;
-		*/
-		if (canWalk)
-		{
-			makeCharacterWalk();
+		CharacterController controller = GetComponent<CharacterController>();
+		if (controller.isGrounded) {
+			moveDirection = new Vector3 (Input.mousePosition, 0, 0);
+			moveDirection = transform.TransformDirection (moveDirection);
+			moveDirection *= speed;
 		}
 
+		moveDirection.y -= gravity * Time.deltaTime;
+		controller.Move(moveDirection * Time.deltaTime);
+		
 		Debug.Log(transform.position);
 
-	}
-	void OnGUI()
-	{
-		Event e = Event.current;
-		
-		if (e.button == 0 && e.isMouse)
-		{
-			Debug.Log("mouse click");
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			if (Physics.Raycast(ray, out hit, 1000.0f))
-			{
-				newPos = new Vector3(hit.point.x, 0.5f, hit.point.z);    
-			}
-			
-			canWalk = true;
-			
-			//point = Input.mousePosition;
-			//Debug.Log("point is " + point);
-		}
-	}
-	void makeCharacterWalk()
-	{
-		CharacterController controller = GetComponent<CharacterController>();
-		
-		Vector3 diff = transform.TransformDirection(newPos - transform.position);
-		controller.SimpleMove(diff * speed);    
 	}
 }
