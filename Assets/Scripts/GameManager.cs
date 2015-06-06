@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour {
 		generateMap();
 		generatePlayers();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 
