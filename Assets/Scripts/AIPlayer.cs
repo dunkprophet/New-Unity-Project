@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class AIPlayer : Player {
-
+    //THIS IS MINE NOW
 	// Use this for initialization
 	void Start () {
 	
