@@ -37,6 +37,11 @@ public class OverworldPlayer : MonoBehaviour {
 		*/
 	}
 
+	public void moveDest (float destX,float destZ) {
+		moveDestination[0] = destX;
+		moveDestination[2] = destZ;
+	}
+
 	public void moveZig () {
 		if (Vector3.Distance(moveDestination, transform.position) > 0.1f) {
 			transform.position += (moveDestination -transform.position).normalized * moveSpeed * Time.deltaTime;
