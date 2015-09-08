@@ -18,7 +18,6 @@ public class Tile : MonoBehaviour {
 	void OnMouseEnter(){
 		transform.GetComponent<Renderer>().material.color = Color.blue;
 
-		Debug.Log("my position is (" + gridPosition.x + ", " + gridPosition.y + ")");
 	}
 
 	void OnMouseExit(){
