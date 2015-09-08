@@ -6,29 +6,35 @@ public class Tile : MonoBehaviour {
 	public Vector2 gridPosition = Vector2.zero;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 	
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 
 	}
 
-	void OnMouseEnter(){
+	void OnMouseEnter()
+	{
 		transform.GetComponent<Renderer>().material.color = Color.blue;
 
 	}
 
-	void OnMouseExit(){
+	void OnMouseExit()
+	{
 		transform.GetComponent<Renderer>().material.color = Color.white;
 
 	}
 
-	void OnMouseDown(){
-		if (GameManager.instance.movingPlayer <= 0) {
+	void OnMouseDown()
+	{
+		if (!GameManager.instance.movingPlayer)
+		{
 			GameManager.instance.moveCurrentPlayer(this);
-			GameManager.instance.movingPlayer = 1;
+			GameManager.instance.movingPlayer = true;
 		}
 	}
 

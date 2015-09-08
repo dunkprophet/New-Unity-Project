@@ -10,49 +10,57 @@ public class GameManager : MonoBehaviour {
 	public GameObject AIPlayerPrefab;
 
 	public int mapSize = 11;
-	public int movingPlayer = 0;
+	public bool movingPlayer = false;
 
 	List <List<Tile>> map = new List<List<Tile>>();
 	List <Player> players = new List<Player>();
 	int currentPlayerIndex = 0;
 
-	void Awake () {
+	void Awake ()
+	{
 		instance = this;
 
 	}
 	// Use this for initialization
-	void Start () {	
+	void Start ()
+	{	
 		generateMap();
 		generatePlayers();
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 
 		players[currentPlayerIndex].TurnUpdate();
 	}
 
-	public void nextTurn(){
-		movingPlayer = 0;
+	public void nextTurn()
+	{
+		movingPlayer = false;
 		if (currentPlayerIndex +1 < players.Count) {
 			currentPlayerIndex++;
 
-		} else {
+		} else
+		{
 			currentPlayerIndex = 0;
 
 		}
 	}
 
-	public void moveCurrentPlayer(Tile destTile){
+	public void moveCurrentPlayer(Tile destTile)
+	{
 		players[currentPlayerIndex].moveDestination = destTile.transform.position;
 
 	}
 
-	void generateMap() {
+	void generateMap()
+	{
 		map = new List<List<Tile>>();
 		for (int i = 0;i < mapSize; i++){
 			List <Tile> row = new List<Tile>();
-			for (int j = 0;j < mapSize; j++){
+			for (int j = 0;j < mapSize; j++)
+			{
 				Tile tile = 
 					((GameObject)Instantiate(
 						TilePrefab,
@@ -66,7 +74,8 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	void generatePlayers() {
+	void generatePlayers()
+	{
 		UserPlayer player;
 
 		player = 

@@ -7,22 +7,26 @@ public class Player : MonoBehaviour {
 
 	public Vector3 moveDestination;
 
-	void Awake () {
+	void Awake ()
+	{
 		moveDestination = transform.position;
 
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 	
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 	
 	}
 
-	public virtual void TurnUpdate(){
+	public virtual void TurnUpdate()
+	{
 
 
 	}
