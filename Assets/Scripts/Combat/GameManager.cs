@@ -24,8 +24,8 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{	
-		generateMap();
-		generatePlayers();
+		GenerateMap();
+		GeneratePlayers();
 	}
 
 	// Update is called once per frame
@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour {
 		players[currentPlayerIndex].TurnUpdate();
 	}
 
-	public void nextTurn()
+	public void NextTurn()
 	{
 		movingPlayer = false;
 		if (currentPlayerIndex +1 < players.Count) {
@@ -48,13 +48,13 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	public void moveCurrentPlayer(Tile destTile)
+	public void MoveCurrentPlayer(Tile destTile)
 	{
 		players[currentPlayerIndex].moveDestination = destTile.transform.position;
 
 	}
 
-	void generateMap()
+	void GenerateMap()
 	{
 		map = new List<List<Tile>>();
 		for (int i = 0;i < mapSize; i++){
@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	void generatePlayers()
+	void GeneratePlayers()
 	{
 		UserPlayer player;
 

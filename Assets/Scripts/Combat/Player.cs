@@ -7,6 +7,9 @@ public class Player : MonoBehaviour {
 
 	public Vector3 moveDestination;
 
+	private int moves;
+	private int movesPerMove;
+
 	void Awake ()
 	{
 		moveDestination = transform.position;

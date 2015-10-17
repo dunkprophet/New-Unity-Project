@@ -3,12 +3,15 @@ using System.Collections;
 
 public class UserPlayer : Player {
 
+	int moves = 3;
+	int movesPerMove = 1;
+
 	// Use this for initialization
 	void Start ()
 	{
 	
 	}
-	
+
 	// Update is called once per frame
 	void Update ()
 	{
@@ -26,7 +29,7 @@ public class UserPlayer : Player {
 
 				transform.FindChild("Sprite").transform.GetComponent<Renderer>().material.color = Color.white;
 
-				GameManager.instance.nextTurn();
+				GameManager.instance.NextTurn();
 				transform.position = moveDestination;
 			}
 		}
