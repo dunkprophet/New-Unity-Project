@@ -1,0 +1,40 @@
+﻿<dialog characterName="Commodore Pet" startNode="102">
+	<text id="1" target="1" nodesIn="108" nodesOut="6" pos="309.5,139.5">
+		Good day, Sir.
+	</text>
+	<text id="5" target="1" nodesIn="105,106" nodesOut="110" pos="1105.5,256.5">
+		Good bye, Sir.
+	</text>
+	<choice id="6" target="0" nodesIn="1,109" pos="490.5,187.5">
+		Y/N?
+		<answer id="100" nodesOut="9" pos="672.5,143.5">
+			Y
+		</answer>
+		<answer id="101" nodesOut="106" pos="673.5,237.5">
+			N
+		</answer>
+	</choice>
+	<text id="9" target="1" nodesIn="100" nodesOut="105" pos="866.5,67.5">
+		Thank you, Sir.
+	</text>
+	<text id="14" target="1" nodesIn="104" nodesOut="109" pos="127.5,335">
+		Good day, again, Sir.
+	</text>
+	<switch id="102" var="counter" pos="-343.5,258.5">
+		<case id="103" method="2" value="0" nodesOut="107" pos="-60.5,173.5" />
+		<case id="104" method="0" value="0" nodesOut="14" pos="-58.5,336.5" />
+	</switch>
+	<variable id="105" var="local.yes_count" method="1" value="1" nodesIn="9" nodesOut="5" pos="1044,67.5" />
+	<variable id="106" var="local.no_count" method="1" value="1" nodesIn="101" nodesOut="5" pos="867,237.5" />
+	<variable id="107" var="local.yes_count" method="0" value="0" nodesIn="103" nodesOut="108" pos="127,86.5" />
+	<variable id="108" var="local.no_count" method="0" value="0" nodesIn="107" nodesOut="1" pos="126,195" />
+	<text id="109" target="1" nodesIn="14" nodesOut="6" pos="315,333.5">
+		Statistics
+==============
+'Yes':   [yes_count]x
+'No':    [no_count]x
+-------------------------
+Total:   [counter]x
+	</text>
+	<variable id="110" var="global.terminal_count" method="1" value="1" nodesIn="5" pos="1290,256.5" />
+</dialog>
