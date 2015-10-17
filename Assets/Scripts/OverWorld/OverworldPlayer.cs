@@ -22,7 +22,12 @@ public class OverworldPlayer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		/*
+
+		//Talking to things
+		/*if (moveDestination.x == -3.99 && moveDestination.y == 0.45) {
+
+		}
+
 		CharacterController controller = GetComponent<CharacterController>();
 		if (controller.isGrounded) {
 			moveDirection = new Vector3 (Input.mousePosition, 0, 0);
