@@ -3,7 +3,7 @@ using System.Collections;
 
 public class OverworldPlayer : MonoBehaviour {
 	public static OverworldPlayer instance;
-
+	
 	public float moveSpeed = 6.0F;
 	public float jumpSpeed = 8.0F;
 	public float gravity = 20.0F;
@@ -24,7 +24,17 @@ public class OverworldPlayer : MonoBehaviour {
 	void Update () {
 
 		//Talking to things
-		/*if (moveDestination.x == -3.99 && moveDestination.y == 0.45) {
+		/*
+		if (Input.GetMouseButtonDown(0)) {
+			Ray hit RaycastHit;
+			var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			
+			if (Physics.Raycast(ray, hit)) {
+				if (hit.transform.name == "MyObjectName" )Debug.Log( "My object is clicked by mouse");
+			}
+		}
+
+		if (moveDestination.x == -3.99 && moveDestination.y == 0.45) {
 
 		}
 
