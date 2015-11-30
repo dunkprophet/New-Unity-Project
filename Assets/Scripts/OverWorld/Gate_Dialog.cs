@@ -1,22 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ChrisCube_Dialogue : MonoBehaviour {
+public class Gate_Dialogue : MonoBehaviour {
 	public GUISkin skin;
 	string scene = "stop"; 
-
+	
 	/*void OnMouseDown(){
 		string scene = "start";
 	}*/
-
+	
 	void OnMouseOver ()
 	{
 		if (Input.GetMouseButtonDown (0)) {
 			scene = "start";
 		}
 	}
-
-
+	
+	
 	/*public void StartCondition(){
 		if(-4.5 < OverworldPlayer.instance.moveDestination[0] < -3.5) {
 			
@@ -31,8 +31,8 @@ public class ChrisCube_Dialogue : MonoBehaviour {
 		
 		if (scene == "start") {
 			GUILayout.BeginArea (new Rect (50, 50, 250, 250));
-		
-
+			
+			
 			GUILayout.BeginVertical ();
 			GUILayout.Label ("Howdy.");
 			
@@ -54,7 +54,7 @@ public class ChrisCube_Dialogue : MonoBehaviour {
 			GUILayout.Label ("I would also like to know.");
 			GUILayout.EndVertical ();
 		}
-	
+		
 		GUILayout.EndArea ();
 	}
 }
