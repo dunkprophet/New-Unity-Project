@@ -3,16 +3,24 @@ using System.Collections;
 
 public class ChrisCube_Dialogue : MonoBehaviour {
 	public GUISkin skin;
-	string scene = "stop"; 
-
-	/*void OnMouseDown(){
-		string scene = "start";
-	}*/
+	int scene = 0;
 
 	void OnMouseOver ()
 	{
 		if (Input.GetMouseButtonDown (0)) {
-			scene = "start";
+			scene = 1;
+		}
+	}
+
+	void OnMouseEnter()
+	{
+		transform.GetComponent<Renderer>().material.color = Color.gray;
+	}
+
+	void OnMouseExit()
+	{
+		if (scene == 0) {
+			transform.GetComponent<Renderer> ().material.color = Color.white;
 		}
 	}
 
@@ -24,37 +32,66 @@ public class ChrisCube_Dialogue : MonoBehaviour {
 			
 		}
 	}*/
-	
 	void OnGUI()
 	{
+
 		GUI.skin = skin;
+		//START
+
+		GUILayout.BeginArea (new Rect (50, 50, 250, 250));
+
+		if (scene == 1) {
 		
-		if (scene == "start") {
-			GUILayout.BeginArea (new Rect (50, 50, 250, 250));
-		
+			GUILayout.BeginVertical ();
+			//FIRST WORD
+			GUILayout.Label ("ENTER CODE");
+
+			//FIRST CHOICE
+			if (GUILayout.Button ("*HIT THE CUBE*")) {
+				scene = 2;
+			}
+
+			//SECOND CHOICE
+			if (GUILayout.Button ("*HUG THE CUBE*")) {
+				scene = 3;
+			}
+			
+			GUILayout.EndVertical ();
+		} else if (scene == 2) {
 
 			GUILayout.BeginVertical ();
-			GUILayout.Label ("Howdy.");
-			
-			if (GUILayout.Button ("O hai.")) {
-				scene = "hello";
+			//From CHOICE 2
+			GUILayout.Label ("*CUBE IS SAD*");
+
+			//FIRST CHOICE
+			if (GUILayout.Button ("Sorry, Cube... :(")) {
+				scene = 4;
 			}
-			
-			if (GUILayout.Button ("Where the party is?")) {
-				scene = "party";
+				
+			//SECOND CHOICE
+			if (GUILayout.Button ("Fuck cubes, man! THE GOVERMENT'S CORRUPT!")) {
+				scene = 4;
 			}
-			
+
 			GUILayout.EndVertical ();
-		} else if (scene == "hello") {
+		
+		} else if (scene == 3) {
 			GUILayout.BeginVertical ();
-			GUILayout.Label ("Cool talk to you later.");
+			GUILayout.Label ("*CUBE LOVES YOU*");
+				
+			//ONLY CHOICE
+			if (GUILayout.Button ("Thanks, Chris!")) {
+				scene = 4;
+			}
+				
 			GUILayout.EndVertical ();
-		} else if (scene == "party") {
-			GUILayout.BeginVertical ();
-			GUILayout.Label ("I would also like to know.");
-			GUILayout.EndVertical ();
+
+		} else if (scene == 4) {
+			transform.GetComponent<Renderer> ().material.color = Color.white;
+			scene = 0;
 		}
-	
+		
 		GUILayout.EndArea ();
 	}
+
 }
