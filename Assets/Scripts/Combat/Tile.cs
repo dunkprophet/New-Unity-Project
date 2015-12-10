@@ -33,7 +33,7 @@ public class Tile : MonoBehaviour {
 	{
 		if (!GameManager.instance.movingPlayer)
 		{
-			GameManager.instance.moveCurrentPlayer(this);
+			GameManager.instance.MoveCurrentPlayer(this);
 			GameManager.instance.movingPlayer = true;
 		}
 	}

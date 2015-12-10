@@ -2,7 +2,10 @@
 using System.Collections;
 
 public class AIPlayer : Player {
-    //THIS IS MINE NOW
+
+	int moves = 3;
+	int movesPerMove = 1;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -25,7 +28,7 @@ public class AIPlayer : Player {
 			if (Vector3.Distance(moveDestination, transform.position) <= 0.1f)
 			{
 				transform.position = moveDestination;
-				GameManager.instance.nextTurn();
+				GameManager.instance.NextTurn();
 
 			}
 		} else

@@ -1,8 +1,15 @@
 fileFormatVersion: 2
 guid: ed54852e23727244cb058ef76ba43f7c
+timeCreated: 1445107142
+licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - TilePrefab: {fileID: 175316, guid: eb199af30a8fd86438f1661663d4b39d, type: 2}
+  - UserPlayerPrefab: {fileID: 167960, guid: 5eefb739da2e17b4c97e699ac694e4f9, type: 2}
+  - AIPlayerPrefab: {fileID: 180992, guid: 8979c9fb4286b8a44b24dc1dce9ad06f, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 
