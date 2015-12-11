@@ -60,6 +60,7 @@ public class OverworldPlayer : MonoBehaviour {
 	public void moveZig () {
 		if (Vector3.Distance(moveDestination, transform.position) > 0.1f) {
 			transform.position += (moveDestination -transform.position).normalized * moveSpeed * Time.deltaTime;
+			//GetComponent<Animation>	().Play("Prototype Runner 2_0");
 			
 			if (Vector3.Distance(moveDestination, transform.position) <= 0.1f) {
 				transform.position = moveDestination;

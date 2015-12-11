@@ -5,6 +5,13 @@ public class ChrisCube_Dialog : MonoBehaviour {
 	public GUISkin skin;
 	int scene = 0;
 
+	void Update(){
+		if (scene != 0) {
+			OverworldPlayer.instance.moveDestination [0] = 2.60f;
+			OverworldPlayer.instance.moveDestination [2] = -3.54f;
+		}
+	}
+
 	void OnMouseOver ()
 	{
 		if (Input.GetMouseButtonDown (0)) {

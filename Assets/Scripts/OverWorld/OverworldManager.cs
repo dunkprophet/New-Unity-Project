@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class OverworldManager : MonoBehaviour {
 	public static OverworldManager instance;
-
 	/*
 	
 	public GameObject TilePrefab;
