@@ -3,8 +3,10 @@ using System.Collections;
 
 public class AIPlayer : Player {
 
-	int moves = 3;
-	int movesPerMove = 1;
+	//int moves = 3;
+	//int movesPerMove = 1;
+	
+	public Vector3 moveDestination;
 
 	// Use this for initialization
 	void Start ()
