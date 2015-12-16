@@ -5,35 +5,66 @@ public class GateJack_Dialog : MonoBehaviour {
 	int scene = 0;
 
 	//public static bool playerTalking = false;
-	
+
+	public float fadeSpeed = 1.5f;
+
 	private GUISkin MetalGUISkin;
 
+	void Awake ()
+	{
+		// Set the texture so that it is the the size of the screen and covers it.
+		GetComponent<GUITexture>().pixelInset = new Rect(0f, 0f, Screen.width, Screen.height);
+	}
+
+	void FadeToWhite ()
+	{
+		// Lerp the colour of the texture between itself and black.
+		GetComponent<GUITexture>().color = Color.Lerp(GetComponent<GUITexture>().color, Color.white, fadeSpeed * Time.deltaTime);
+	}
+
+	public void EndScene ()
+	{
+		// Make sure the texture is enabled.
+		GetComponent<GUITexture> ().enabled = true;
+		
+		// Start fading towards black.
+		FadeToWhite ();
+		
+		// If the screen is almost black...
+		if (scene == 4) {
+			// ... reload the level.
+			Application.LoadLevel (2);
+		}
+	}
 	void Start () {
 		MetalGUISkin = Resources.Load("MetalGUISkin") as GUISkin;
 	}
 
 	void Update(){
 		if (scene != 0) {
-			OverworldPlayer.instance.moveDestination [0] = 2.60f;
-			OverworldPlayer.instance.moveDestination [2] = -3.54f;
+			OverworldPlayer.instance.moveDestination [0] = 1.22f;
+			OverworldPlayer.instance.moveDestination [2] = 9.74f;
+			EndScene ();
 		}
 	}
 
 	void OnMouseOver ()
 	{
-		if (Input.GetMouseButtonDown (0)) {
+		if (Input.GetMouseButtonDown (0) && Yakuza_Dialog.talkedToYakuza == true) {
 			scene = 1;
 		}
 	}
 	
 	void OnMouseEnter()
 	{
-		transform.GetComponent<Renderer>().material.color = Color.gray;
+		if (Yakuza_Dialog.talkedToYakuza == true) {
+			transform.GetComponent<Renderer> ().material.color = Color.yellow;
+		}
 	}
 	
 	void OnMouseExit()
 	{
-		if (scene == 0) {
+		if (scene == 0 && Yakuza_Dialog.talkedToYakuza == true) {
 			transform.GetComponent<Renderer> ().material.color = Color.white;
 		}
 	}
@@ -57,54 +88,43 @@ public class GateJack_Dialog : MonoBehaviour {
 		
 		if (scene == 1) {
 			
-			GUILayout.BeginVertical ("Fence Gate", GUI.skin.GetStyle("window"));
+			GUILayout.BeginVertical ("Panel", GUI.skin.GetStyle ("window"));
 			//FIRST WORD
-			GUILayout.Label ("ENTER CODEENTER CODEENTER CODEENTER CODE");
+			GUILayout.Label ("When I booted up the old panel, it flickered and sparked a bit. Always a good sign.");
 			
 			//FIRST CHOICE
-			if (GUILayout.Button ("*Hit the cube*")) {
+			if (GUILayout.Button ("Jack in.")) {
 				scene = 2;
 			}
 			
 			//SECOND CHOICE
-			if (GUILayout.Button ("*HUG THE CUBE*")) {
+			if (GUILayout.Button ("Leave.")) {
 				scene = 3;
 			}
 			
 			GUILayout.EndVertical ();
 		} else if (scene == 2) {
 			
-			GUILayout.BeginVertical ("Fence Gate", GUI.skin.GetStyle("window"));
+			GUILayout.BeginVertical ("Panel", GUI.skin.GetStyle ("window"));
 			//From CHOICE 2
-			GUILayout.Label ("*CUBE IS SAD*");
-			
+			GUILayout.Label ("I shoved the cable into one of the grimy ports on the side. As my entirety was being consumed by the lightning fast bolt of pain shot through every bone in my body the stench of the docking station faded away, until all my senses became stuck in a white limbo.");
+			GUILayout.Label ("I was in.");
 			//FIRST CHOICE
-			if (GUILayout.Button ("Sorry, Cube... :(")) {
-				scene = 4;
-			}
-			
-			//SECOND CHOICE
-			if (GUILayout.Button ("Fuck cubes, man! THE GOVERMENT'S CORRUPT!")) {
+			if (GUILayout.Button ("-Hack Completed-")) {
 				scene = 4;
 			}
 			
 			GUILayout.EndVertical ();
 			
 		} else if (scene == 3) {
-			GUILayout.BeginVertical ("Fence Gate", GUI.skin.GetStyle("window"));
-			GUILayout.Label ("*CUBE LOVES YOU*");
-			
-			//ONLY CHOICE
-			if (GUILayout.Button ("Thanks, Chris!")) {
-				scene = 4;
-			}
-			
-			GUILayout.EndVertical ();
+			transform.GetComponent<Renderer> ().material.color = Color.white;
+			scene = 0;
+
 			
 		} else if (scene == 4) {
 			transform.GetComponent<Renderer> ().material.color = Color.white;
-			scene = 0;
 		}
+
 		
 		GUILayout.EndArea ();
 	}

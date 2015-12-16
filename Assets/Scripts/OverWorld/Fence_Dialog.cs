@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ChrisCube_Dialog : MonoBehaviour {
-	public GUISkin skin;
+public class Fence_Dialog : MonoBehaviour {
 	int scene = 0;
 
 	//public static bool playerTalking = false;
-
+	
 	private GUISkin MetalGUISkin;
+
+	public static bool talkedToYakuza;
 
 	void Start () {
 		MetalGUISkin = Resources.Load("MetalGUISkin") as GUISkin;
@@ -15,8 +16,8 @@ public class ChrisCube_Dialog : MonoBehaviour {
 
 	void Update(){
 		if (scene != 0) {
-			OverworldPlayer.instance.moveDestination [0] = -3.18f;
-			OverworldPlayer.instance.moveDestination [2] = 8.47f;
+			OverworldPlayer.instance.moveDestination [0] = 3.91f;
+			OverworldPlayer.instance.moveDestination [2] = -1.8f;
 		}
 	}
 
@@ -26,20 +27,20 @@ public class ChrisCube_Dialog : MonoBehaviour {
 			scene = 1;
 		}
 	}
-
+	
 	void OnMouseEnter()
 	{
 		transform.GetComponent<Renderer>().material.color = Color.gray;
 	}
-
+	
 	void OnMouseExit()
 	{
 		if (scene == 0) {
 			transform.GetComponent<Renderer> ().material.color = Color.white;
 		}
 	}
-
-
+	
+	
 	/*public void StartCondition(){
 		if(-4.5 < OverworldPlayer.instance.moveDestination[0] < -3.5) {
 			
@@ -49,60 +50,47 @@ public class ChrisCube_Dialog : MonoBehaviour {
 	}*/
 	void OnGUI()
 	{
-
+		
 		GUI.skin = MetalGUISkin;
 
 		//START
-
-		GUILayout.BeginArea (new Rect (Screen.width/4, Screen.height/4, 400, 400));
-
-		if (scene == 1) {
 		
-			GUILayout.BeginVertical ("Chris Cube", GUI.skin.GetStyle("window"));
+		GUILayout.BeginArea (new Rect (Screen.width/4, Screen.height/4, 400, 400));
+		
+		if (scene == 1) {
+
+			GUILayout.BeginVertical ("Chain-link fence", GUI.skin.GetStyle("window"));
 			//FIRST WORD
-			GUILayout.Label ("ENTER CODE");
+			if (talkedToYakuza == true){GUILayout.Label ("22222");}
+			GUILayout.Label ("Leaked-out green goop flooded the area beyond the chain-link fence. The stench soared at me, hitting me in the gut. Almost puked out the little content my stomach held.");
 
 			//FIRST CHOICE
-			if (GUILayout.Button ("*Hit the cube*")) {
+			if (GUILayout.Button ("Take a closer look.")) {
 				scene = 2;
 			}
-
+			
 			//SECOND CHOICE
-			if (GUILayout.Button ("*HUG THE CUBE*")) {
+			if (GUILayout.Button ("Walk away.")) {
 				scene = 3;
 			}
 			
 			GUILayout.EndVertical ();
 		} else if (scene == 2) {
-
-			GUILayout.BeginVertical ("Chris Cube", GUI.skin.GetStyle("window"));
+			
+			GUILayout.BeginVertical ("Chain-link fence", GUI.skin.GetStyle("window"));
 			//From CHOICE 2
-			GUILayout.Label ("*CUBE IS SAD*");
+			GUILayout.Label ("But looking past it all- there was a light. A colorful, glaring light of completely dead coldness.");
+			GUILayout.Label (" It came from the streets of the city. Chiba City. Gazing upon that complex mess of steel and flesh for the very first time placed a seed in my mind, a thought of what I wanted to do with my life.");
+			GUILayout.Label (" I wanted to bask in the city lights.");
 
 			//FIRST CHOICE
-			if (GUILayout.Button ("Sorry, Cube... :(")) {
-				scene = 4;
+			if (GUILayout.Button ("Leave.")) {
+				scene = 3;
 			}
-				
-			//SECOND CHOICE
-			if (GUILayout.Button ("Fuck cubes, man! THE GOVERMENT'S CORRUPT!")) {
-				scene = 4;
-			}
-
+			
 			GUILayout.EndVertical ();
-		
+			
 		} else if (scene == 3) {
-			GUILayout.BeginVertical ("Chris Cube", GUI.skin.GetStyle("window"));
-			GUILayout.Label ("*CUBE LOVES YOU*");
-				
-			//ONLY CHOICE
-			if (GUILayout.Button ("Thanks, Chris!")) {
-				scene = 4;
-			}
-				
-			GUILayout.EndVertical ();
-
-		} else if (scene == 4) {
 			transform.GetComponent<Renderer> ().material.color = Color.white;
 			scene = 0;
 		}
@@ -110,3 +98,4 @@ public class ChrisCube_Dialog : MonoBehaviour {
 		GUILayout.EndArea ();
 	}
 }
+

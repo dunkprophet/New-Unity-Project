@@ -14,26 +14,28 @@ public class Gate_Dialog : MonoBehaviour {
 
 	void Update(){
 		if (scene != 0) {
-			OverworldPlayer.instance.moveDestination [0] = 2.60f;
-			OverworldPlayer.instance.moveDestination [2] = -3.54f;
+			OverworldPlayer.instance.moveDestination [0] = 1.22f;
+			OverworldPlayer.instance.moveDestination [2] = 9.74f;
 		}
 	}
 
 	void OnMouseOver ()
 	{
-		if (Input.GetMouseButtonDown (0)) {
+		if (Input.GetMouseButtonDown (0) && Yakuza_Dialog.talkedToYakuza == true) {
 			scene = 1;
 		}
 	}
 	
 	void OnMouseEnter()
 	{
-		transform.GetComponent<Renderer>().material.color = Color.gray;
+		if (Yakuza_Dialog.talkedToYakuza == true) {
+			transform.GetComponent<Renderer> ().material.color = Color.gray;
+		}
 	}
 	
 	void OnMouseExit()
 	{
-		if (scene == 0) {
+		if (scene == 0 && Yakuza_Dialog.talkedToYakuza == true) {
 			transform.GetComponent<Renderer> ().material.color = Color.white;
 		}
 	}
@@ -57,51 +59,18 @@ public class Gate_Dialog : MonoBehaviour {
 		
 		if (scene == 1) {
 			
-			GUILayout.BeginVertical ("Fence Gate", GUI.skin.GetStyle("window"));
+			GUILayout.BeginVertical ("Gate", GUI.skin.GetStyle("window"));
 			//FIRST WORD
-			GUILayout.Label ("ENTER CODEENTER CODEENTER CODEENTER CODE");
+			GUILayout.Label ("The gate had marks strewn across its surface, like someone had punched it repeatidly for quite a while. But that would have been impossible. Who could be strong enough to punch solid steel?");
 			
 			//FIRST CHOICE
-			if (GUILayout.Button ("*Hit the cube*")) {
+			if (GUILayout.Button ("Leave.")) {
 				scene = 2;
 			}
 			
-			//SECOND CHOICE
-			if (GUILayout.Button ("*HUG THE CUBE*")) {
-				scene = 3;
-			}
-			
 			GUILayout.EndVertical ();
+
 		} else if (scene == 2) {
-			
-			GUILayout.BeginVertical ("Fence Gate", GUI.skin.GetStyle("window"));
-			//From CHOICE 2
-			GUILayout.Label ("*CUBE IS SAD*");
-			
-			//FIRST CHOICE
-			if (GUILayout.Button ("Sorry, Cube... :(")) {
-				scene = 4;
-			}
-			
-			//SECOND CHOICE
-			if (GUILayout.Button ("Fuck cubes, man! THE GOVERMENT'S CORRUPT!")) {
-				scene = 4;
-			}
-			
-			GUILayout.EndVertical ();
-			
-		} else if (scene == 3) {
-			GUILayout.BeginVertical ("Fence Gate", GUI.skin.GetStyle("window"));
-			GUILayout.Label ("*CUBE LOVES YOU*");
-			
-			//ONLY CHOICE
-			if (GUILayout.Button ("Thanks, Chris!")) {
-				scene = 4;
-			}
-			
-			GUILayout.EndVertical ();
-			
-		} else if (scene == 4) {
 			transform.GetComponent<Renderer> ().material.color = Color.white;
 			scene = 0;
 		}
