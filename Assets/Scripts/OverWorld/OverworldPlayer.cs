@@ -3,7 +3,9 @@ using System.Collections;
 
 public class OverworldPlayer : MonoBehaviour {
 	public static OverworldPlayer instance;
-	
+
+	//public static bool playerTalking = false;
+
 	public float moveSpeed = 6.0F;
 	public float jumpSpeed = 8.0F;
 	public float gravity = 20.0F;
@@ -17,7 +19,8 @@ public class OverworldPlayer : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		moveDestination [0] = transform.localPosition.x;
+		moveDestination[2] = transform.localPosition.z;
 	}
 	
 	// Update is called once per frame
@@ -66,6 +69,17 @@ public class OverworldPlayer : MonoBehaviour {
 				transform.position = moveDestination;
 				
 			}
+			
+			/*if (playerTalking == true) {
+				transform.position = moveDestination;
+			}*/
+			
 		}
 	}
+
+	/*void OnTriggerEnter (Collision collision) {
+		moveDestination [0] = transform.localPosition.x;
+		moveDestination[2] = transform.localPosition.z;
+	}*/
+
 }

@@ -2,8 +2,15 @@
 using System.Collections;
 
 public class Gate_Dialog : MonoBehaviour {
-	public GUISkin skin;
 	int scene = 0;
+
+	//public static bool playerTalking = false;
+	
+	private GUISkin MetalGUISkin;
+
+	void Start () {
+		MetalGUISkin = Resources.Load("MetalGUISkin") as GUISkin;
+	}
 
 	void Update(){
 		if (scene != 0) {
@@ -42,19 +49,20 @@ public class Gate_Dialog : MonoBehaviour {
 	void OnGUI()
 	{
 		
-		GUI.skin = skin;
+		GUI.skin = MetalGUISkin;
+
 		//START
 		
-		GUILayout.BeginArea (new Rect (50, 50, 250, 250));
+		GUILayout.BeginArea (new Rect (Screen.width/4, Screen.height/4, 400, 400));
 		
 		if (scene == 1) {
 			
-			GUILayout.BeginVertical ();
+			GUILayout.BeginVertical ("Fence Gate", GUI.skin.GetStyle("window"));
 			//FIRST WORD
-			GUILayout.Label ("ENTER CODE");
+			GUILayout.Label ("ENTER CODEENTER CODEENTER CODEENTER CODE");
 			
 			//FIRST CHOICE
-			if (GUILayout.Button ("*HIT THE CUBE*")) {
+			if (GUILayout.Button ("*Hit the cube*")) {
 				scene = 2;
 			}
 			
@@ -66,7 +74,7 @@ public class Gate_Dialog : MonoBehaviour {
 			GUILayout.EndVertical ();
 		} else if (scene == 2) {
 			
-			GUILayout.BeginVertical ();
+			GUILayout.BeginVertical ("Fence Gate", GUI.skin.GetStyle("window"));
 			//From CHOICE 2
 			GUILayout.Label ("*CUBE IS SAD*");
 			
@@ -83,7 +91,7 @@ public class Gate_Dialog : MonoBehaviour {
 			GUILayout.EndVertical ();
 			
 		} else if (scene == 3) {
-			GUILayout.BeginVertical ();
+			GUILayout.BeginVertical ("Fence Gate", GUI.skin.GetStyle("window"));
 			GUILayout.Label ("*CUBE LOVES YOU*");
 			
 			//ONLY CHOICE
@@ -100,5 +108,5 @@ public class Gate_Dialog : MonoBehaviour {
 		
 		GUILayout.EndArea ();
 	}
-	
 }
+

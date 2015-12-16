@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ChrisCube_Dialog : MonoBehaviour {
-	public GUISkin skin;
+public class Gate2_Dialog : MonoBehaviour {
 	int scene = 0;
 
 	//public static bool playerTalking = false;
-
+	
 	private GUISkin MetalGUISkin;
 
 	void Start () {
@@ -15,8 +14,8 @@ public class ChrisCube_Dialog : MonoBehaviour {
 
 	void Update(){
 		if (scene != 0) {
-			OverworldPlayer.instance.moveDestination [0] = -3.18f;
-			OverworldPlayer.instance.moveDestination [2] = 8.47f;
+			OverworldPlayer.instance.moveDestination [0] = 2.60f;
+			OverworldPlayer.instance.moveDestination [2] = -3.54f;
 		}
 	}
 
@@ -26,20 +25,20 @@ public class ChrisCube_Dialog : MonoBehaviour {
 			scene = 1;
 		}
 	}
-
+	
 	void OnMouseEnter()
 	{
 		transform.GetComponent<Renderer>().material.color = Color.gray;
 	}
-
+	
 	void OnMouseExit()
 	{
 		if (scene == 0) {
 			transform.GetComponent<Renderer> ().material.color = Color.white;
 		}
 	}
-
-
+	
+	
 	/*public void StartCondition(){
 		if(-4.5 < OverworldPlayer.instance.moveDestination[0] < -3.5) {
 			
@@ -49,24 +48,24 @@ public class ChrisCube_Dialog : MonoBehaviour {
 	}*/
 	void OnGUI()
 	{
-
+		
 		GUI.skin = MetalGUISkin;
 
 		//START
-
-		GUILayout.BeginArea (new Rect (Screen.width/4, Screen.height/4, 400, 400));
-
-		if (scene == 1) {
 		
-			GUILayout.BeginVertical ("Chris Cube", GUI.skin.GetStyle("window"));
+		GUILayout.BeginArea (new Rect (Screen.width/4, Screen.height/4, 400, 400));
+		
+		if (scene == 1) {
+			
+			GUILayout.BeginVertical ("Fence Gate", GUI.skin.GetStyle("window"));
 			//FIRST WORD
-			GUILayout.Label ("ENTER CODE");
-
+			GUILayout.Label ("ENTER CODEENTER CODEENTER CODEENTER CODE");
+			
 			//FIRST CHOICE
 			if (GUILayout.Button ("*Hit the cube*")) {
 				scene = 2;
 			}
-
+			
 			//SECOND CHOICE
 			if (GUILayout.Button ("*HUG THE CUBE*")) {
 				scene = 3;
@@ -74,34 +73,34 @@ public class ChrisCube_Dialog : MonoBehaviour {
 			
 			GUILayout.EndVertical ();
 		} else if (scene == 2) {
-
-			GUILayout.BeginVertical ("Chris Cube", GUI.skin.GetStyle("window"));
+			
+			GUILayout.BeginVertical ("Fence Gate", GUI.skin.GetStyle("window"));
 			//From CHOICE 2
 			GUILayout.Label ("*CUBE IS SAD*");
-
+			
 			//FIRST CHOICE
 			if (GUILayout.Button ("Sorry, Cube... :(")) {
 				scene = 4;
 			}
-				
+			
 			//SECOND CHOICE
 			if (GUILayout.Button ("Fuck cubes, man! THE GOVERMENT'S CORRUPT!")) {
 				scene = 4;
 			}
-
+			
 			GUILayout.EndVertical ();
-		
+			
 		} else if (scene == 3) {
-			GUILayout.BeginVertical ("Chris Cube", GUI.skin.GetStyle("window"));
+			GUILayout.BeginVertical ("Fence Gate", GUI.skin.GetStyle("window"));
 			GUILayout.Label ("*CUBE LOVES YOU*");
-				
+			
 			//ONLY CHOICE
 			if (GUILayout.Button ("Thanks, Chris!")) {
 				scene = 4;
 			}
-				
+			
 			GUILayout.EndVertical ();
-
+			
 		} else if (scene == 4) {
 			transform.GetComponent<Renderer> ().material.color = Color.white;
 			scene = 0;
@@ -110,3 +109,4 @@ public class ChrisCube_Dialog : MonoBehaviour {
 		GUILayout.EndArea ();
 	}
 }
+
