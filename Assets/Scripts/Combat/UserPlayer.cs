@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class UserPlayer : Player {
 
 	public int health;
+	public int moves;
 	//public int moves = 3;
 	//int movesPerMove = 1;
 	private GUISkin MetalGUISkin;
@@ -14,8 +16,12 @@ public class UserPlayer : Player {
 
 	public Rect tempRect;
 
+	public bool allowedToMove;
+
 	public float tempPositionX;
 	public float tempPositionY;
+
+	public Queue<Vector3> markedTiles;
 
 	//public Vector3 moveDestination;
 
@@ -23,7 +29,12 @@ public class UserPlayer : Player {
 	// Use this for initialization
 	void Start ()
 	{
+
+		markedTiles = new Queue<Vector3>();
+
+		moves = 3;
 		health = 1;
+		allowedToMove = false;
 		MetalGUISkin = Resources.Load("MetalGUISkin") as GUISkin;
 		turnTexture = (Texture2D)Resources.Load("arrow.png");
 	}
@@ -46,12 +57,12 @@ public class UserPlayer : Player {
 
 	public override void TurnUpdate ()
 	{
-		health = GameManager.instance.healthUpdate();
+		health = markedTiles.Count;
 		//transform.FindChild("Sprite").transform.GetComponent<Renderer>().material.color = Color.red;
 		//Graphics.DrawTexture(new Rect(200, 200, 200, 200), turnTexture);
-			if (GameManager.instance.moves <= 0) {
+			if (moves <= 0) {
 
-				transform.FindChild("Sprite").transform.GetComponent<Renderer>().material.color = Color.white;
+				//transform.FindChild("Sprite").transform.GetComponent<Renderer>().material.color = Color.white;
 				
 				GameManager.instance.NextTurn();
 			}

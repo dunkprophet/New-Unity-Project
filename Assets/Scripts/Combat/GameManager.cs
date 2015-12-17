@@ -10,15 +10,16 @@ public class GameManager : MonoBehaviour {
 	public GameObject UserPlayerPrefab;
 	public GameObject AIPlayerPrefab;
 
-	public int moves = 3;
+	//public int moves = 3;
 	public Vector3 currentPlayerPosition;
 	public bool movingPlayer;
 
-	public Queue<Vector3> markedTiles;
-
 	public List<Player> players = new List<Player>();
+	//public List<Vector3> tilesVectors = new List<Vector3>();
+	public List<Vector3> tiles = new List<Vector3>();
 
-
+	public int tempTile;
+	public int tempIndex;
 
 	int currentPlayerIndex = 0;
 
@@ -30,7 +31,7 @@ public class GameManager : MonoBehaviour {
 
 	void Start ()
 	{	
-		markedTiles = new Queue<Vector3>();
+
 
 		UserPlayer player;
 		
@@ -47,6 +48,8 @@ public class GameManager : MonoBehaviour {
 			new Vector3(2,0,1),
 			Quaternion.Euler(new Vector3()))
 		    ).GetComponent<UserPlayer>();
+		
+		players.Add(player);
 
 		/*AIPlayer aiplayer = 
 			((GameObject)Instantiate(
@@ -57,7 +60,6 @@ public class GameManager : MonoBehaviour {
 		
 		players.Add(aiplayer);*/
 
-		players.Add(player);
 		
 		movingPlayer = false;
 	}
@@ -65,8 +67,22 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
+		if (players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Count > 4) {
+			players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Dequeue();
+		}
+
+		//if (tiles.Contains){
+		//
+		//}
+
 		currentPlayerPosition = players[currentPlayerIndex].transform.position;
 		players[currentPlayerIndex].TurnUpdate();
+
+		currentPlayerPosition = players[currentPlayerIndex].transform.position;
+		//if (currentPlayerPosition = tiles.Find (currentPlayerPosition)) {
+			//tiles.
+		//}
+
 	}
 
 	void OnMouseDown()
@@ -79,12 +95,12 @@ public class GameManager : MonoBehaviour {
 
 	public void NextTurn()
 	{
-		//movingPlayer = false;
-		if (currentPlayerIndex +1 < players.Count) {
+		if (currentPlayerIndex + 1 < players.Count) {
 			
-			movingPlayer = false;
-			moves = 3;
+
 			currentPlayerIndex++;
+			players[currentPlayerIndex].GetComponent<UserPlayer>().moves = 3;
+
 			//if (players[currentPlayerIndex].notAI == false) {
 
 			//}
@@ -93,22 +109,23 @@ public class GameManager : MonoBehaviour {
 		} else
 		{
 			currentPlayerIndex = 0;
-			movingPlayer = false;
-			moves = 3;
+			players[currentPlayerIndex].GetComponent<UserPlayer>().moves = 3;
 		}
 	}
 
-	public int healthUpdate(){
-		return markedTiles.Count;
-	}
+	//public int healthUpdate(){
+	//	return markedTiles.Count;
+	//}
 
 	public void MoveCurrentPlayer(Vector3 tilePosition)
 	{
-
-		moves = moves - 1;
-		//if (movingPlayer = false){
-		players[currentPlayerIndex].transform.position = tilePosition;
-		//}
+		players[currentPlayerIndex].GetComponent<UserPlayer>().moves--;
+		if (movingPlayer == false) {
+			players [currentPlayerIndex].transform.position = tilePosition;
+		}
+		if (players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == false) {
+			players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Enqueue (tilePosition);
+		}
 	}
 
 	public void attack()

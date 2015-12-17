@@ -1,28 +1,34 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Tile : MonoBehaviour {
 
 
 	public Vector2 gridPosition = Vector2.zero;
-	private bool tileSelected;
+	private bool movableTile;
 	public bool tileMarked;
 	public Vector3 tilePosition;
 	public bool tileHoldingMark;
 	public Vector3 tempVector;
+	public int blue;
 
 	// Use this for initialization
 	void Start ()
 	{
 		tilePosition = transform.position;
+		movableTile = false;
+		//GameManager.instance.tiles.Add(tilePosition);
+		//Tile tile;
+		GameManager.instance.tiles.Add(transform.position);
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) < 1.1f) {
-			transform.GetComponent<Renderer> ().material.color = Color.blue;
-		}
+
+		//transform.GetComponent<Renderer>().material.color = Color.white;
+
 		/*if (GameManager.instance.markedTiles.Count >= 4) {
 			if (GameManager.instance.markedTiles.Peek() == transform.localPosition){
 				transform.GetComponent<Renderer>().material.color = Color.white;
@@ -33,13 +39,9 @@ public class Tile : MonoBehaviour {
 			transform.GetComponent<Renderer>().material.color = Color.green;
 		}*/
 
-		/*if (GameManager.instance.currentPlayerPosition == tilePosition) {
-			if (tileHoldingMark == true){
-				GameManager.instance.markedTiles.Enqueue(transform.localPosition);
-				tileHoldingMark = false;
-			}
+		if (GameManager.instance.currentPlayerPosition == tilePosition) {
 			tileMarked = true;
-		}*/
+		}/*
 
 		/*if (Vector3.Distance (transform.position, GameManager.instance.currentPlayerPosition) < 1) {
 			transform.GetComponent<Renderer>().material.color = Color.green;
@@ -48,38 +50,36 @@ public class Tile : MonoBehaviour {
 
 	}
 
-	void MakeMeWhite(){
+	public void AddToQueue(){
+
+	}
+
+	public void MakeMeWhite(){
 		transform.GetComponent<Renderer>().material.color = Color.white;
 	}
-	void MakeMeGreen(){
+	public void MakeMeGreen(){
 		transform.GetComponent<Renderer> ().material.color = Color.green;
 	}
-	void MakeMeRed(){
+	public void MakeMeRed(){
 		transform.GetComponent<Renderer>().material.color = Color.red;
 	}
 
 	void OnMouseEnter()
 	{
 		if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) < 1.1f) {
-			tileSelected = true;
+			movableTile = true;
 		}
 	}
 
 	void OnMouseExit()
 	{
-		tileSelected = false;
-		if (transform.GetComponent<Renderer> ().material.color == Color.blue) {
-			transform.GetComponent<Renderer> ().material.color = Color.white;
-		}
-
+		movableTile = false;
 	}
 	void OnMouseDown (){
-		if (tileSelected == true) {
-			GameManager.instance.movingPlayer = true;
+		GameManager.instance.movingPlayer = false;
+
+		if (tilePosition != GameManager.instance.currentPlayerPosition && movableTile == true) {
 			GameManager.instance.MoveCurrentPlayer(tilePosition);
-			if (transform.GetComponent<Renderer> ().material.color != Color.green){
-				tileHoldingMark = true;
-			}
 		}
 	}
 }
