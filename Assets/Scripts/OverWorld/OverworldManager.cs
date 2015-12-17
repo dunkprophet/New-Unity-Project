@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(AudioSource))]
 public class OverworldManager : MonoBehaviour {
 	public static OverworldManager instance;
 	/*
@@ -27,7 +28,8 @@ public class OverworldManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {	
-
+		AudioSource audio = GetComponent<AudioSource>();
+		audio.Play();
 	}
 	
 	// Update is called once per frame

@@ -8,6 +8,8 @@ public class UserPlayer : Player {
 	//int movesPerMove = 1;
 	private GUISkin MetalGUISkin;
 
+	public Texture turnTexture;
+
 	public string healthString;
 
 	public Rect tempRect;
@@ -23,6 +25,7 @@ public class UserPlayer : Player {
 	{
 		health = 1;
 		MetalGUISkin = Resources.Load("MetalGUISkin") as GUISkin;
+		turnTexture = (Texture2D)Resources.Load("arrow.png");
 	}
 
 	// Update is called once per frame
@@ -44,8 +47,8 @@ public class UserPlayer : Player {
 	public override void TurnUpdate ()
 	{
 		health = GameManager.instance.healthUpdate();
-		transform.FindChild("Sprite").transform.GetComponent<Renderer>().material.color = Color.red;
-
+		//transform.FindChild("Sprite").transform.GetComponent<Renderer>().material.color = Color.red;
+		//Graphics.DrawTexture(new Rect(200, 200, 200, 200), turnTexture);
 			if (GameManager.instance.moves <= 0) {
 
 				transform.FindChild("Sprite").transform.GetComponent<Renderer>().material.color = Color.white;
@@ -61,7 +64,6 @@ public class UserPlayer : Player {
 		GUI.skin = MetalGUISkin;
 
 		Rect tempRect = new Rect(tempPositionX, tempPositionY, 200, 200);
-
 		GUILayout.BeginArea (tempRect);
 		GUILayout.BeginVertical ("Health", GUI.skin.GetStyle("box"));
 		GUILayout.Label(healthString);

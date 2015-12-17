@@ -20,6 +20,9 @@ public class Tile : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
+		if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) < 1.1f) {
+			transform.GetComponent<Renderer> ().material.color = Color.blue;
+		}
 		/*if (GameManager.instance.markedTiles.Count >= 4) {
 			if (GameManager.instance.markedTiles.Peek() == transform.localPosition){
 				transform.GetComponent<Renderer>().material.color = Color.white;
@@ -60,8 +63,6 @@ public class Tile : MonoBehaviour {
 		if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) < 1.1f) {
 			tileSelected = true;
 		}
-		transform.GetComponent<Renderer>().material.color = Color.blue;
-
 	}
 
 	void OnMouseExit()
