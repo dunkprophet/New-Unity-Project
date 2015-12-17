@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class GameManager : MonoBehaviour {
 
@@ -18,10 +19,14 @@ public class GameManager : MonoBehaviour {
 	//public List<Vector3> tilesVectors = new List<Vector3>();
 	public List<Vector3> tiles = new List<Vector3>();
 
+	public List<Vector3> tilesList;
+	
+	public List<Vector3> tilesList2;
+
 	public int tempTile;
 	public int tempIndex;
 
-	int currentPlayerIndex = 0;
+	public int currentPlayerIndex = 0;
 
 	void Awake ()
 	{
@@ -71,6 +76,8 @@ public class GameManager : MonoBehaviour {
 			players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Dequeue();
 		}
 
+		/*tilesList = players [0].GetComponent<UserPlayer> ().markedTiles.ToList();
+		tilesList2 = players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.ToList ();*/
 		//if (tiles.Contains){
 		//
 		//}

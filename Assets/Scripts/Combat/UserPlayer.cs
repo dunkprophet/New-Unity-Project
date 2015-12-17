@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class UserPlayer : Player {
 
@@ -16,10 +17,15 @@ public class UserPlayer : Player {
 
 	public Rect tempRect;
 
+	public int tempCount;
+	public Vector3 tempVector;
+
 	public bool allowedToMove;
 
 	public float tempPositionX;
 	public float tempPositionY;
+
+	public Texture marked;
 
 	public Queue<Vector3> markedTiles;
 
@@ -37,11 +43,26 @@ public class UserPlayer : Player {
 		allowedToMove = false;
 		MetalGUISkin = Resources.Load("MetalGUISkin") as GUISkin;
 		turnTexture = (Texture2D)Resources.Load("arrow.png");
+		marked = (Texture2D)Resources.Load("arrow.png");
+		tempCount = 0;
+
+		markedTiles.Enqueue (transform.position);
+
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
+
+
+
+		if (tempCount > 10) {
+			tempCount = 0;
+		}   tempCount++;
+		tempVector = markedTiles.ToList()[tempCount];
+		print (tempVector);
+
+
 		//if (GameManager.instance.movingPlayer == true){
 			//transform.position = Vector3.MoveTowards(transform.position, Tile.instance.transform.position, 0.5f);
 		//}
@@ -74,7 +95,8 @@ public class UserPlayer : Player {
 	public void OnGUI() {
 		GUI.skin = MetalGUISkin;
 
-		Rect tempRect = new Rect(tempPositionX, tempPositionY, 200, 200);
+		Rect tempRect = new Rect(500, 500, 200, 200);
+
 		GUILayout.BeginArea (tempRect);
 		GUILayout.BeginVertical ("Health", GUI.skin.GetStyle("box"));
 		GUILayout.Label(healthString);

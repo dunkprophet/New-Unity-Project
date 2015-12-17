@@ -26,9 +26,13 @@ public class Tile : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-
-		//transform.GetComponent<Renderer>().material.color = Color.white;
-
+		/*if (GameManager.instance.tilesList.Contains(transform.position)) {
+			transform.GetComponent<Renderer>().material.color = Color.green;
+		}
+		if (GameManager.instance.tilesList.Contains(transform.position) && GameManager.instance.tilesList2.Contains(transform.position)) {
+			transform.GetComponent<Renderer>().material.color = Color.white;
+		}*/
+		//if (GameManager.instance.players [0].GetComponent<UserPlayer> ().markedTiles.Contains(transform.position)
 		/*if (GameManager.instance.markedTiles.Count >= 4) {
 			if (GameManager.instance.markedTiles.Peek() == transform.localPosition){
 				transform.GetComponent<Renderer>().material.color = Color.white;
@@ -39,9 +43,9 @@ public class Tile : MonoBehaviour {
 			transform.GetComponent<Renderer>().material.color = Color.green;
 		}*/
 
-		if (GameManager.instance.currentPlayerPosition == tilePosition) {
+		/*if (GameManager.instance.currentPlayerPosition == tilePosition) {
 			tileMarked = true;
-		}/*
+		}*/
 
 		/*if (Vector3.Distance (transform.position, GameManager.instance.currentPlayerPosition) < 1) {
 			transform.GetComponent<Renderer>().material.color = Color.green;
