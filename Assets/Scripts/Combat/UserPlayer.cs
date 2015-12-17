@@ -9,13 +9,12 @@ public class UserPlayer : Player {
 	public int moves;
 	//public int moves = 3;
 	//int movesPerMove = 1;
-	private GUISkin MetalGUISkin;
 
 	public Texture turnTexture;
 
-	public string healthString;
+	public bool playerSelected;
 
-	public Rect tempRect;
+	public string healthString;
 
 	public int tempCount;
 	public Vector3 tempVector;
@@ -24,6 +23,8 @@ public class UserPlayer : Player {
 
 	public float tempPositionX;
 	public float tempPositionY;
+
+	public int playerNumber;
 
 	public Texture marked;
 
@@ -38,10 +39,11 @@ public class UserPlayer : Player {
 
 		markedTiles = new Queue<Vector3>();
 
+		playerNumber = GameManager.instance.players [UserPlayer];
+
 		moves = 3;
 		health = 1;
 		allowedToMove = false;
-		MetalGUISkin = Resources.Load("MetalGUISkin") as GUISkin;
 		turnTexture = (Texture2D)Resources.Load("arrow.png");
 		marked = (Texture2D)Resources.Load("arrow.png");
 		tempCount = 0;
@@ -91,20 +93,18 @@ public class UserPlayer : Player {
 
 		base.TurnUpdate ();
 	}
-
-	public void OnGUI() {
-		GUI.skin = MetalGUISkin;
-
-		Rect tempRect = new Rect(500, 500, 200, 200);
-
-		GUILayout.BeginArea (tempRect);
-		GUILayout.BeginVertical ("Health", GUI.skin.GetStyle("box"));
-		GUILayout.Label(healthString);
-		if (GUILayout.Button ("Attack")) {
-			//GameManager.attack();
-		}
-		GUILayout.EndVertical ();
-		GUILayout.EndArea ();
+	void OnMouseEnter() {
+		playerSelected = true;
 	}
+	void OnMouseExit(){
+		playerSelected = false;
+	}
+	void OnMouseDown(){
+		if (playerSelected = true && GameManager.instance.currentPlayerPosition != transform.position) {
+			GameManager.instance.currentPlayerIndex = playerNumber;
+		}
+	}
+
+
 }
 

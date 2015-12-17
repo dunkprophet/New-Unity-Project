@@ -6,6 +6,9 @@ using System.Linq;
 public class GameManager : MonoBehaviour {
 
 	public static GameManager instance;
+	
+	private GUISkin MetalGUISkin;
+	public Rect tempRect;
 
 	public GameObject TilePrefab;
 	public GameObject UserPlayerPrefab;
@@ -36,7 +39,8 @@ public class GameManager : MonoBehaviour {
 
 	void Start ()
 	{	
-
+		
+		MetalGUISkin = Resources.Load("MetalGUISkin") as GUISkin;
 
 		UserPlayer player;
 		
@@ -191,4 +195,29 @@ public class GameManager : MonoBehaviour {
 		
 		players.Add(aiplayer);
 	}*/
+	public void OnGUI() {
+		GUI.skin = MetalGUISkin;
+		
+		Rect tempRect = new Rect(10, 10, 200, 200);
+		
+		GUILayout.BeginArea (tempRect);
+		GUILayout.BeginVertical ("Health", GUI.skin.GetStyle("box"));
+		GUILayout.Label(players[currentPlayerIndex].GetComponents<UserPlayer> ().healthString);
+		if (GUILayout.Button ("Attack")) {
+			//GameManager.attack();
+		}
+		GUILayout.EndVertical ();
+		GUILayout.EndArea ();
+
+		tempRect = new Rect(10, 200, 200, 200);
+		
+		GUILayout.BeginArea (tempRect);
+		GUILayout.BeginVertical ("Health", GUI.skin.GetStyle("box"));
+		GUILayout.Label(healthString);
+		if (GUILayout.Button ("Attack")) {
+			//GameManager.attack();
+		}
+		GUILayout.EndVertical ();
+		GUILayout.EndArea ();
+	}
 }
