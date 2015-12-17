@@ -3,6 +3,7 @@ using System.Collections;
 
 public class AIPlayer : Player {
 
+	public static bool notAI = false;
 	//int moves = 3;
 	//int movesPerMove = 1;
 	
@@ -20,7 +21,7 @@ public class AIPlayer : Player {
 	
 	}
 
-	public override void TurnUpdate ()
+	/*public override void TurnUpdate ()
 	{
 		if (Vector3.Distance(moveDestination, transform.position) > 0.1f)
 		{
@@ -40,5 +41,5 @@ public class AIPlayer : Player {
 		}
 		
 		base.TurnUpdate ();
-	}
+	}*/
 }

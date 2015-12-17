@@ -67,7 +67,7 @@ public class Yakuza_Dialog : MonoBehaviour {
 			GUILayout.BeginVertical ("Strange man", GUI.skin.GetStyle("window"));
 			//FIRST WORD
 			GUILayout.Label ("\"Look, man, I'm not gonna wasting a single more second of my life out here.\"");
-			GUILayout.Label ("The man I found standing by the warehouse entrance was talking into some kind earpiece. An old model, the kind you would only read about on niece tech-forums at four in the morning. His hair was jet black, like oil dripping from his scalp, and just as greasy too. I glimpsed a handgun beneath his long jacked, and his eyes were hidden behind by a pair of dual-light glasses. Expensive taste.");
+			GUILayout.Label ("The man I found standing by the warehouse entrance was talking into some kind earpiece. An old model, the kind you would only read about on niche tech-forums at four in the morning. His hair was jet black, like oil dripping from his scalp, and just as greasy too. I glimpsed a handgun beneath his long jacket, and his eyes were hidden behind by a pair of dual-light glasses. Expensive taste.");
 			GUILayout.Label ("\"Goro, you dick, get me out of here! I'm not going to-\"");
 			GUILayout.Label ("The man froze when he noticed me.");
 			GUILayout.Label ("After a short silence, he continued his call: \"I don't care, Goro. I'm getting out. I'll see you tonight.\"");
@@ -143,7 +143,7 @@ public class Yakuza_Dialog : MonoBehaviour {
 
 		} else if (scene == 6) {
 			GUILayout.BeginVertical ("Saboru", GUI.skin.GetStyle("window"));
-			GUILayout.Label ("\"No catch. No drawbacks. Just get me the fuck out of here, and I'll be a happy man. And, I mean, you probably don't want to spend your evening in this stinking hellhold either, right? So just, get us out of here, and fast.\"");
+			GUILayout.Label ("\"No catch. No drawbacks. Just get me the fuck out of here, and I'll be a happy man. And, I mean, you probably don't want to spend your evening in this stinking hell hole either, right? So just get us out of here, and fast.\"");
 			
 			if (GUILayout.Button ("Take the deal.")) {
 				scene = 7;

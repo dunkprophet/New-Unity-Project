@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
+
 	public static GameManager instance;
 
 	public GameObject TilePrefab;
@@ -10,12 +11,15 @@ public class GameManager : MonoBehaviour {
 	public GameObject AIPlayerPrefab;
 
 	public int moves = 3;
-	public Vector3 currentPlayerPosition; 
-	public int mapSize = 11;
+	public Vector3 currentPlayerPosition;
 	public bool movingPlayer;
 
-	//List <List<Tile>> map = new List<List<Tile>>();
+	public Queue<Vector3> markedTiles;
+
 	public List<Player> players = new List<Player>();
+
+
+
 	int currentPlayerIndex = 0;
 
 	void Awake ()
@@ -23,9 +27,11 @@ public class GameManager : MonoBehaviour {
 		instance = this;
 
 	}
-	// Use this for initialization
+
 	void Start ()
 	{	
+		markedTiles = new Queue<Vector3>();
+
 		UserPlayer player;
 		
 		player = ((GameObject)Instantiate(
@@ -41,10 +47,17 @@ public class GameManager : MonoBehaviour {
 			new Vector3(2,0,1),
 			Quaternion.Euler(new Vector3()))
 		    ).GetComponent<UserPlayer>();
+
+		/*AIPlayer aiplayer = 
+			((GameObject)Instantiate(
+			AIPlayerPrefab,
+			new Vector3(-1,0,7),
+			Quaternion.Euler(new Vector3()))
+			).GetComponent<AIPlayer>();
 		
+		players.Add(aiplayer);*/
+
 		players.Add(player);
-		//GenerateMap();
-		//GeneratePlayers();
 		
 		movingPlayer = false;
 	}
@@ -72,6 +85,10 @@ public class GameManager : MonoBehaviour {
 			movingPlayer = false;
 			moves = 3;
 			currentPlayerIndex++;
+			//if (players[currentPlayerIndex].notAI == false) {
+
+			//}
+
 
 		} else
 		{
@@ -81,6 +98,10 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public int healthUpdate(){
+		return markedTiles.Count;
+	}
+
 	public void MoveCurrentPlayer(Vector3 tilePosition)
 	{
 
@@ -88,6 +109,11 @@ public class GameManager : MonoBehaviour {
 		//if (movingPlayer = false){
 		players[currentPlayerIndex].transform.position = tilePosition;
 		//}
+	}
+
+	public void attack()
+	{
+		//Attack code here
 	}
 
 	/*void GenerateMap()
