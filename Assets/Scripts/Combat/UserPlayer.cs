@@ -7,14 +7,8 @@ public class UserPlayer : Player {
 
 	public int health;
 	public int moves;
-	//public int moves = 3;
-	//int movesPerMove = 1;
-
-	public Texture turnTexture;
 
 	public bool playerSelected;
-
-	public string healthString;
 
 	public int tempCount;
 	public Vector3 tempVector;
@@ -26,9 +20,9 @@ public class UserPlayer : Player {
 
 	public int playerNumber;
 
-	public Texture marked;
+	public List<Vector3> markedTiles;
 
-	public Queue<Vector3> markedTiles;
+	public List<Vector3> specificTiles;
 
 	//public Vector3 moveDestination;
 
@@ -37,33 +31,47 @@ public class UserPlayer : Player {
 	void Start ()
 	{
 
-		markedTiles = new Queue<Vector3>();
+		markedTiles = new List<Vector3>();
+		
+		markedTiles.Add (transform.position);
 
-		playerNumber = GameManager.instance.players [UserPlayer];
+		specificTiles.Add (transform.position);
+
+		//playerNumber = GameManager.instance.players [UserPlayer];
 
 		moves = 3;
 		health = 1;
 		allowedToMove = false;
-		turnTexture = (Texture2D)Resources.Load("arrow.png");
-		marked = (Texture2D)Resources.Load("arrow.png");
 		tempCount = 0;
 
-		markedTiles.Enqueue (transform.position);
+		if (transform.position == GameManager.instance.startingVector1 || transform.position == GameManager.instance.startingVector2) {
+			GameManager.instance.tilesListBothPlayers.Add(transform.position);
+			if (GameManager.instance.currentPlayerIndex == 0){
+				GameManager.instance.playerTiles1.Add (transform.position);
+			}
+			if (GameManager.instance.currentPlayerIndex == 1){
+				GameManager.instance.playerTiles2.Add (transform.position);
+			}
+		}
 
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
+		if (specificTiles.Contains (transform.position) == false) {
+			specificTiles.Add (transform.position);
+		}
+		if (health == 0) {
+			//Destroy(this, 1,0f)
+		}
 
-
-
-		if (tempCount > 10) {
+		/*if (tempCount > 10) {
 			tempCount = 0;
 		}   tempCount++;
 		tempVector = markedTiles.ToList()[tempCount];
 		print (tempVector);
-
+		print (markedTiles);*/
 
 		//if (GameManager.instance.movingPlayer == true){
 			//transform.position = Vector3.MoveTowards(transform.position, Tile.instance.transform.position, 0.5f);
@@ -71,7 +79,7 @@ public class UserPlayer : Player {
 
 		//tempPositionX = transform.localPosition.x;
 		//tempPositionY = transform.localPosition.z;
-		healthString = health.ToString ();
+
 	}
 
 	public static bool notAI (){
@@ -86,7 +94,7 @@ public class UserPlayer : Player {
 			if (moves <= 0) {
 
 				//transform.FindChild("Sprite").transform.GetComponent<Renderer>().material.color = Color.white;
-				
+				//GameManager.instance.tilesListBothPlayers.AddRange(markedTiles.ToList());
 				GameManager.instance.NextTurn();
 			}
 
