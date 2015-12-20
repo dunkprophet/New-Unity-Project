@@ -10,10 +10,17 @@ public class UserPlayer : Player {
 
 	public bool playerSelected;
 
+	public bool doingItOnce;
+
 	public int tempCount;
 	public Vector3 tempVector;
+	public Player tempPlayer;
+
+	public GameObject player;
 
 	public bool allowedToMove;
+	public bool hasAttacked;
+	public bool noMovesSelected;
 
 	public float tempPositionX;
 	public float tempPositionY;
@@ -21,6 +28,9 @@ public class UserPlayer : Player {
 	public int playerNumber;
 
 	public List<Vector3> markedTiles;
+
+	public List<Vector3> markedTilesLastTurn;
+	public Vector3 positionLastTurn;
 
 	public List<Vector3> specificTiles;
 
@@ -33,53 +43,88 @@ public class UserPlayer : Player {
 
 		markedTiles = new List<Vector3>();
 		
+		markedTilesLastTurn = new List<Vector3>();
+		
 		markedTiles.Add (transform.position);
+
+		GameManager.instance.tilesListBothPlayers.Add (transform.position);
 
 		specificTiles.Add (transform.position);
 
 		//playerNumber = GameManager.instance.players [UserPlayer];
+
+		doingItOnce = false;
+		hasAttacked = false;
+		noMovesSelected = false;
 
 		moves = 3;
 		health = 1;
 		allowedToMove = false;
 		tempCount = 0;
 
-		if (transform.position == GameManager.instance.startingVector1 || transform.position == GameManager.instance.startingVector2) {
-			GameManager.instance.tilesListBothPlayers.Add(transform.position);
-			if (GameManager.instance.currentPlayerIndex == 0){
-				GameManager.instance.playerTiles1.Add (transform.position);
-			}
-			if (GameManager.instance.currentPlayerIndex == 1){
-				GameManager.instance.playerTiles2.Add (transform.position);
-			}
-		}
+		positionLastTurn = transform.position;
+		markedTilesLastTurn = markedTiles;
 
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
-		if (specificTiles.Contains (transform.position) == false) {
-			specificTiles.Add (transform.position);
+
+		if (GameManager.instance.matchStarted == true) {
+			
+			if (health == 0) {
+				Destroy(this.gameObject);
+			}
+			if (doingItOnce == false) {
+				Player player;
+				player = this;
+				playerNumber = GameManager.instance.players.IndexOf(player);
+				doingItOnce = true;
+			}
+
+		health = markedTiles.Count;
+
+		if (playerNumber == GameManager.instance.currentPlayerIndex) {
+			transform.FindChild("Sprite").GetComponent<SpriteRenderer>().sprite = GameManager.instance.selected;
+			//transform.GetComponent<Renderer>().material.mainTexture = GameManager.instance.selected;
 		}
-		if (health == 0) {
-			//Destroy(this, 1,0f)
+		if (playerNumber != GameManager.instance.currentPlayerIndex) {
+			transform.FindChild("Sprite").GetComponent<SpriteRenderer>().sprite = GameManager.instance.notSelected;
 		}
 
-		/*if (tempCount > 10) {
+		if (GameManager.instance.turnChange == true) {
+			//Fix this
+			tempPlayer = GameManager.instance.players[playerNumber];
+			GameManager.instance.playersThatCanMove.Add(tempPlayer);
+			positionLastTurn = transform.position;
+			markedTilesLastTurn = markedTiles;
+			hasAttacked = false;
+			noMovesSelected = false;
+			//print ("TurnChange Works");
+			//print (playerNumber);
+			if (GameManager.instance.players.Count == GameManager.instance.playersThatCanMove.Count){
+				GameManager.instance.turnChange = false;
+			}
+		}
+
+
+
+			/*if (tempCount > 10) {
 			tempCount = 0;
 		}   tempCount++;
 		tempVector = markedTiles.ToList()[tempCount];
 		print (tempVector);
 		print (markedTiles);*/
 
-		//if (GameManager.instance.movingPlayer == true){
+			//if (GameManager.instance.movingPlayer == true){
 			//transform.position = Vector3.MoveTowards(transform.position, Tile.instance.transform.position, 0.5f);
-		//}
+			//}
 
-		//tempPositionX = transform.localPosition.x;
-		//tempPositionY = transform.localPosition.z;
+			//tempPositionX = transform.localPosition.x;
+			//tempPositionY = transform.localPosition.z;
 
+		}
 	}
 
 	public static bool notAI (){
@@ -88,16 +133,14 @@ public class UserPlayer : Player {
 
 	public override void TurnUpdate ()
 	{
-		health = markedTiles.Count;
 		//transform.FindChild("Sprite").transform.GetComponent<Renderer>().material.color = Color.red;
 		//Graphics.DrawTexture(new Rect(200, 200, 200, 200), turnTexture);
-			if (moves <= 0) {
-
-				//transform.FindChild("Sprite").transform.GetComponent<Renderer>().material.color = Color.white;
-				//GameManager.instance.tilesListBothPlayers.AddRange(markedTiles.ToList());
-				GameManager.instance.NextTurn();
-			}
-
+		
+		if (moves <= 0 && noMovesSelected == false) {
+			//transform.FindChild("Sprite").transform.GetComponent<Renderer>().material.color = Color.white;
+			//GameManager.instance.tilesListBothPlayers.AddRange(markedTiles.ToList());
+			GameManager.instance.NextProgram();
+		}
 
 		base.TurnUpdate ();
 	}
@@ -108,8 +151,16 @@ public class UserPlayer : Player {
 		playerSelected = false;
 	}
 	void OnMouseDown(){
-		if (playerSelected = true && GameManager.instance.currentPlayerPosition != transform.position) {
-			GameManager.instance.currentPlayerIndex = playerNumber;
+		if (GameManager.instance.matchStarted == true) {
+			if (playerSelected == true) {
+				if (moves <= 0){
+					noMovesSelected = true;
+				}
+				if (moves > 0) {
+					noMovesSelected = false;
+				}
+				GameManager.instance.currentPlayerIndex = playerNumber;
+			}
 		}
 	}
 

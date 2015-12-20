@@ -79,10 +79,22 @@ public class Tile : MonoBehaviour {
 	
 	void OnMouseEnter()
 	{
-		if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) < 1.1f) {
+		if (GameManager.instance.matchStarted == true && GameManager.instance.gamePaused == false) {
+			if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) < 1.1f) {
 
-			movableTile = true;
-
+				if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == false && GameManager.instance.tilesListBothPlayers.Contains (tilePosition) == false) {
+					movableTile = true;
+				}
+				if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == false && GameManager.instance.tilesListBothPlayers.Contains (tilePosition) == true) {
+					movableTile = false;
+				} 
+				if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == true && GameManager.instance.tilesListBothPlayers.Contains (tilePosition) == false) {
+					movableTile = true;
+				}
+				if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == true) {
+					movableTile = true;
+				}
+			}
 		}
 	}
 
@@ -92,15 +104,19 @@ public class Tile : MonoBehaviour {
 	}
 
 	void OnMouseDown (){
-		GameManager.instance.movingPlayer = false;
+		if (GameManager.instance.matchStarted == true && GameManager.instance.gamePaused == false ) {
+			GameManager.instance.movingPlayer = false;
 
-		/*if (GameManager.instance.players [GameManager.instance.lastPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition)) {
+			/*if (GameManager.instance.players [GameManager.instance.lastPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition)) {
 			canMove = false;
 		}*/
 
-		if (tilePosition != GameManager.instance.currentPlayerPosition && movableTile == true && canMove == true) {
-			canMove = GameManager.instance.MoveCurrentPlayer(tilePosition);
-			movableTile = false;
+			if (tilePosition != GameManager.instance.currentPlayerPosition && movableTile == true && canMove == true) {
+				if (GameManager.instance.players[GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer>().moves > 0){
+					canMove = GameManager.instance.MoveCurrentPlayer (tilePosition);
+					movableTile = false;
+				}
+			}
 		}
 	}
 

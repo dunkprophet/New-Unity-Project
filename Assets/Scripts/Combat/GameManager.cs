@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour {
 	public Texture turnTexture;
 	public Texture marked;
 	public Texture notMarked;
+	public Sprite selected;
+	public Sprite notSelected;
 	public string healthString;
 
 	public GameObject TilePrefab;
@@ -25,9 +27,17 @@ public class GameManager : MonoBehaviour {
 	public Vector3 lastPosition;
 	public bool movingPlayer;
 
+	public bool turnChange;
+
 	public bool switchMade;
 
+	public bool spawningPlayer;
+
+	public bool matchStarted;
+	public bool gamePaused;
 	public List<Player> players = new List<Player>();
+	public List<Player> playersThatCanMove = new List<Player>();
+
 	//public List<Vector3> tilesVectors = new List<Vector3>();
 	public List<Vector3> tiles = new List<Vector3>();
 
@@ -39,9 +49,12 @@ public class GameManager : MonoBehaviour {
 	public int tempTile;
 	public int tempIndex1;
 	public int tempIndex2;
+	public int tempIndex;
+	public bool tempBool;
 	public List<Vector3> tempList;
 	public Vector3 tempVectorInList1;
 	public Vector3 tempVectorInList2;
+	public Player tempPlayer;
 
 	public int round;
 
@@ -51,8 +64,7 @@ public class GameManager : MonoBehaviour {
 	private int tempCount;
 	private Vector3 tempVector;
 
-	public Vector3 startingVector1;
-	public Vector3 startingVector2;
+	public Vector3 startingVector;
 
 	void Awake ()
 	{
@@ -62,19 +74,24 @@ public class GameManager : MonoBehaviour {
 
 	void Start ()
 	{	
-
+		turnChange = false;
+		matchStarted = false;
+		gamePaused = false;
+		spawningPlayer = false;
 		switchMade = false;
-		startingVector1 = new Vector3 (1, 0, 1);
-		startingVector2 = new Vector3 (2, 0, 1);
+		//startingVector1 = new Vector3 (1, 0, 1);
+		//startingVector2 = new Vector3 (2, 0, 1);
 		
 		MetalGUISkin = Resources.Load("MetalGUISkin") as GUISkin;
 		marked 	= Resources.Load("Textures/markedTexture") as Texture;
-		notMarked 	= Resources.Load("Textures/Ground1") as Texture;
+		notMarked = Resources.Load("Textures/Ground1") as Texture;
+		selected = Resources.Load<Sprite>("Textures/Bug_selected");
+		notSelected	= Resources.Load<Sprite>("Textures/Bug");
 		//turnTexture = (Texture2D)Resources.Load(".png");
 		//(Texture2D)Resources.Load("arrow.png");
 
-		UserPlayer player;
-		
+		//UserPlayer player;
+		/*
 		player = ((GameObject)Instantiate(
 			UserPlayerPrefab,
 			startingVector1,
@@ -91,7 +108,7 @@ public class GameManager : MonoBehaviour {
 		
 		players.Add(player);
 
-		/*AIPlayer aiplayer = 
+		AIPlayer aiplayer = 
 			((GameObject)Instantiate(
 			AIPlayerPrefab,
 			new Vector3(-1,0,7),
@@ -100,6 +117,7 @@ public class GameManager : MonoBehaviour {
 		
 		players.Add(aiplayer);*/
 
+
 		
 		movingPlayer = false;
 
@@ -107,10 +125,15 @@ public class GameManager : MonoBehaviour {
 
 	}
 
+	public void spawnPlayer (Vector3 spawnerPosition){
+		startingVector = spawnerPosition;
+		spawningPlayer = true;
+	}
+
 	// Update is called once per frame
 	void Update ()
 	{
-
+		if (matchStarted == true && gamePaused == false){
 		/*tilesList = players [0].GetComponent<UserPlayer> ().markedTiles.ToList();
 		tilesList2 = players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.ToList ();*/
 		//if (tiles.Contains){
@@ -132,7 +155,7 @@ public class GameManager : MonoBehaviour {
 		}   tempCount++;
 		tempVector = players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.ToList()[tempCount];*/
 
-
+		}
 	}
 
 	void OnMouseDown()
@@ -143,28 +166,61 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	public void NextTurn()
+	public void NextProgram()
 	{
-		round++;
-		lastPlayerIndex = currentPlayerIndex;
-		if (currentPlayerIndex + 1 < players.Count) {
-			
-
+		playersThatCanMove.Remove (players [currentPlayerIndex]);
+		//HERE IS THE PROBLEM:
+		//AS ONE PLAYER IS OUT OF MOVES, THIS THING IS RUN TO TRY TO FIND A PLAYER THAT DOES HAVE MOVES(Unless the player is selected AND out of moves,
+		//in which case it is allowed to undo its actions.
+		/*if (currentPlayerIndex + 1 < players.Count) {
 			currentPlayerIndex++;
-			players[currentPlayerIndex].GetComponent<UserPlayer>().moves = 3;
-
-			//if (players[currentPlayerIndex].notAI == false) {
-
-			//}
-
-
-		} else
-		{
-			currentPlayerIndex = 0;
-			players[currentPlayerIndex].GetComponent<UserPlayer>().moves = 3;
+		} */
+		if (playersThatCanMove.Count > 0) {
+				tempPlayer = playersThatCanMove[playersThatCanMove.Count-1];
+				currentPlayerIndex = players.IndexOf(tempPlayer);
+				print ("PLayerthatcanmove works");
+		} else {
+			gamePaused = true;
 		}
+		/*for (int b = 0; b < players.Count-1; b++) {
+			print (b);
+			if (players[b].GetComponent<UserPlayer> ().moves > 0) {
+				currentPlayerIndex = b;
+				print ("hELOEL");
+			}
+		}*/
 	}
 
+	public void AITurn(){
+
+		//AI characters do what they do.
+
+	}
+
+	public void undo(){
+		if (players [currentPlayerIndex].GetComponent<UserPlayer> ().hasAttacked == false) {
+			players [currentPlayerIndex].GetComponent<UserPlayer> ().transform.position = players [currentPlayerIndex].GetComponent<UserPlayer> ().positionLastTurn;
+			players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles = players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTilesLastTurn;
+			for (int x = 0; x< players[currentPlayerIndex].GetComponent<UserPlayer>().markedTiles.Count; x++) {
+				tempVector = players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles [x];
+				if (tempVector != players [currentPlayerIndex].GetComponent<UserPlayer> ().positionLastTurn) {
+					tilesListBothPlayers.Remove (tempVector);
+				}
+			}
+			players [currentPlayerIndex].GetComponent<UserPlayer> ().moves = 3;
+			playersThatCanMove.Add (players[currentPlayerIndex]);
+			gamePaused = false;
+		}
+		//Move player back 
+	
+	}
+
+	public void doNothing(){
+	
+		players [currentPlayerIndex].GetComponent<UserPlayer> ().moves = 0;
+		players [currentPlayerIndex].GetComponent<UserPlayer> ().hasAttacked = true;
+	
+	}
 	//public int healthUpdate(){
 	//	return markedTiles.Count;
 	//}
@@ -305,30 +361,71 @@ public class GameManager : MonoBehaviour {
 	}*/
 	public void OnGUI() {
 
-		tempRect = new Rect (500, 500, 100, 100);
+		tempRect = new Rect (Screen.width-200, 200, 150, 250);
 
 		GUI.skin = MetalGUISkin;
 		
 		//Graphics.DrawTexture (tempRect, marked);
 
 		GUILayout.BeginArea (tempRect);
-		GUILayout.BeginVertical ("Health", GUI.skin.GetStyle("box"));
+		GUILayout.BeginVertical ("Selected Program", GUI.skin.GetStyle("box"));
 		GUILayout.Label(healthString);
-		if (GUILayout.Button ("Attack")) {
-			//GameManager.attack();
+		if (matchStarted == true) {
+			if (players [currentPlayerIndex].GetComponent<UserPlayer> ().hasAttacked == false) {
+				if (GUILayout.Button ("Attack")) {
+					attack ();
+				}
+			}
 		}
-		GUILayout.EndVertical ();
-		GUILayout.EndArea ();
+		if (GUILayout.Button ("Do Nothing")) {
+			doNothing();
+		}
+		if (GUILayout.Button ("Undo")) {
+			undo();
+		}
+		if (matchStarted == true && gamePaused == true) {
+			if (GUILayout.Button ("Next Turn")) {
+				turnChange = true;
+				AITurn ();
+				round++;
+				currentPlayerIndex = 0;
+				for (int y = 0; y < players.Count; y++) {
+					players[y].GetComponent<UserPlayer> ().moves = 3;
+					print ("players given moves works");
+				}
+				gamePaused = false;
+			}
 
-		tempRect = new Rect(10, 200, 200, 200);
-		
-		GUILayout.BeginArea (tempRect);
-		GUILayout.BeginVertical ("Health", GUI.skin.GetStyle("box"));
-		GUILayout.Label(healthString);
-		if (GUILayout.Button ("Attack")) {
-			//GameManager.attack();
 		}
 		GUILayout.EndVertical ();
 		GUILayout.EndArea ();
+		if (matchStarted == false) {
+			tempRect = new Rect (10, Screen.height - 500, 200, 400);
+			GUILayout.BeginArea (tempRect);
+			GUILayout.BeginVertical ("Match Setup", GUI.skin.GetStyle ("window"));
+			GUILayout.Label (healthString);
+			if (spawningPlayer == true){
+				if (GUILayout.Button ("Spawn Bug.Alpha")) {
+					UserPlayer player;
+					player = ((GameObject)Instantiate(
+						UserPlayerPrefab,
+						startingVector,
+						Quaternion.Euler(new Vector3()))
+				        	).GetComponent<UserPlayer>();
+
+					players.Add(player);
+
+					spawningPlayer = false;
+				}
+			}
+			if (players.Count == 2){
+				if (GUILayout.Button ("Start Match")){
+					matchStarted = true;
+					turnChange = true;
+				}
+			}
+			GUILayout.EndVertical ();
+			GUILayout.EndArea ();
+		}
 	}
 }

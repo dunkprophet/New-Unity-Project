@@ -66,8 +66,8 @@ public class Yakuza_Dialog : MonoBehaviour {
 		
 			GUILayout.BeginVertical ("Strange man", GUI.skin.GetStyle("window"));
 			//FIRST WORD
-			GUILayout.Label ("\"Look, man, I'm not gonna wasting a single more second of my life out here.\"");
-			GUILayout.Label ("The man I found standing by the warehouse entrance was talking into some kind earpiece. An old model, the kind you would only read about on niche tech-forums at four in the morning. His hair was jet black, like oil dripping from his scalp, and just as greasy too. I glimpsed a handgun beneath his long jacket, and his eyes were hidden behind by a pair of dual-light glasses. Expensive taste.");
+			GUILayout.Label ("\"Look, man, I'm not wasting a single more second of my life out here.\"");
+			GUILayout.Label ("The man I found standing by the warehouse entrance was talking into some kind of earpiece. An old model, the kind you would only read about on niche tech-forums at four in the morning. His hair was jet black, like oil dripping from his scalp, and just as greasy too. I glimpsed a handgun beneath his long jacket, and his eyes were hidden behind by a pair of dual-light glasses. Expensive taste.");
 			GUILayout.Label ("\"Goro, you dick, get me out of here! I'm not going to-\"");
 			GUILayout.Label ("The man froze when he noticed me.");
 			GUILayout.Label ("After a short silence, he continued his call: \"I don't care, Goro. I'm getting out. I'll see you tonight.\"");
