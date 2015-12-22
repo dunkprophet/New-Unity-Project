@@ -21,9 +21,13 @@ public class UserPlayer : Player {
 	public bool allowedToMove;
 	public bool hasAttacked;
 	public bool noMovesSelected;
+	public bool attacking;
 
 	public float tempPositionX;
 	public float tempPositionY;
+
+	public float attackRange;
+	public int attackDamage;
 
 	public int playerNumber;
 
@@ -40,6 +44,7 @@ public class UserPlayer : Player {
 	// Use this for initialization
 	void Start ()
 	{
+		//Vector3.zero = GameManager.instance.transform.position;
 
 		markedTiles = new List<Vector3>();
 		
@@ -56,6 +61,7 @@ public class UserPlayer : Player {
 		doingItOnce = false;
 		hasAttacked = false;
 		noMovesSelected = false;
+		attacking = false;
 
 		moves = 3;
 		health = 1;
@@ -108,8 +114,6 @@ public class UserPlayer : Player {
 			}
 		}
 
-
-
 			/*if (tempCount > 10) {
 			tempCount = 0;
 		}   tempCount++;
@@ -136,11 +140,19 @@ public class UserPlayer : Player {
 		//transform.FindChild("Sprite").transform.GetComponent<Renderer>().material.color = Color.red;
 		//Graphics.DrawTexture(new Rect(200, 200, 200, 200), turnTexture);
 		
-		if (moves <= 0 && noMovesSelected == false) {
+		if (moves <= 0 && hasAttacked == true/*&& noMovesSelected == false*/) {
 			//transform.FindChild("Sprite").transform.GetComponent<Renderer>().material.color = Color.white;
 			//GameManager.instance.tilesListBothPlayers.AddRange(markedTiles.ToList());
 			GameManager.instance.NextProgram();
 		}
+		if (moves <= 0 && hasAttacked == false) {
+			GameManager.instance.attack ();
+		}
+
+		if (attacking == true) {
+			
+		}
+
 
 		base.TurnUpdate ();
 	}
@@ -151,14 +163,16 @@ public class UserPlayer : Player {
 		playerSelected = false;
 	}
 	void OnMouseDown(){
+
 		if (GameManager.instance.matchStarted == true) {
 			if (playerSelected == true) {
-				if (moves <= 0){
+				/*if (moves <= 0){
 					noMovesSelected = true;
+					print ("nomoves works");
 				}
 				if (moves > 0) {
 					noMovesSelected = false;
-				}
+				}*/
 				GameManager.instance.currentPlayerIndex = playerNumber;
 			}
 		}

@@ -9,7 +9,7 @@ public class OverworldPlayer : MonoBehaviour {
 	public float moveSpeed = 6.0F;
 	public float jumpSpeed = 8.0F;
 	public float gravity = 20.0F;
-	private Vector3 moveDirection = Vector3.zero;
+	//private Vector3 moveDirection = Vector3.zero;
 	public Vector3 moveDestination;
 
 	void Awake () {

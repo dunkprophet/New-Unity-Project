@@ -14,6 +14,7 @@ public class SpriteScript : Player {
 	}
 	void OnMouseEnter() {
 		playerSelected = true;
+		print("OnmouseEnter works");
 	}
 	void OnMouseExit(){
 		playerSelected = false;

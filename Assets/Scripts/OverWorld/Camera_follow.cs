@@ -11,7 +11,7 @@ using System.Collections;
 
 	// Use this for initialization
 	void Start () {
-		bool gameStart = false;
+		//bool gameStart = false;
 	}
 	
 	// Update is called once per frame
