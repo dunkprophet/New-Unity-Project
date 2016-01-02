@@ -5,6 +5,7 @@ using System.Linq;
 
 public class Tile : MonoBehaviour {
 
+	public static int targetDistance;
 
 	public Vector2 gridPosition = Vector2.zero;
 	private bool movableTile;
@@ -13,15 +14,20 @@ public class Tile : MonoBehaviour {
 	public Vector3 tilePosition;
 	public bool tileHoldingMark;
 	public Vector3 tempVector;
+	public int tempInt;
 	public int blue;
+
+	public List<Vector3> nearbyTiles = new List<Vector3>();
 
 	public bool canMove;
 
 	// Use this for initialization
 	void Start ()
 	{
+
+		//GameManager.instance.tilesObj.Add (this.gameObject);
+		GameManager.instance.tilesPos.Add (transform.position);
 		//Vector3.zero = GameManager.instance.transform.position;
-		GameManager.instance.tiles.Add (transform.position);
 		canMove = true;
 		tilePosition = transform.position;
 		movableTile = false;
@@ -34,18 +40,32 @@ public class Tile : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
+		if (movableTile == true) {
+			if (GameManager.instance.players[GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer>().moves <= 0){
+				movableTile = false;
+			}
+		}
+
+		if (GameManager.instance.tileBool == true) {
+			GameManager.instance.tiles [(int)transform.position.x, (int)transform.position.z] = 0;
+		}
+
 		if (GameManager.instance.matchStarted == true) {
 			if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().attacking == true) {
 				if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) < GameManager.instance.currentPlayerAttackRange) {
 					attackableTile = true;
 				}
 			}
-		
+			tempVector = GameManager.instance.players[GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer>().transform.position;
+			tempInt = GameManager.instance.players[GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer>().moves;
+
 			if (GameManager.instance.tilesListBothPlayers.Contains (transform.position)) {
 				GetComponent<Renderer> ().material.mainTexture = GameManager.instance.marked;
-			} else if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().attacking == true && attackableTile == true) {
+			} 
+			else if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().attacking == true && attackableTile == true) {
 				GetComponent<Renderer> ().material.mainTexture = GameManager.instance.attackTexture;
-			} else {
+			} 
+			else {
 				GetComponent<Renderer> ().material.mainTexture = GameManager.instance.notMarked;
 			} 
 			if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().hasAttacked == true){
@@ -55,9 +75,28 @@ public class Tile : MonoBehaviour {
 				GetComponent<Renderer> ().material.mainTexture = GameManager.instance.AImarked;
 			}
 
+//CHANGE THIS TO PREFABS OR SOMETHING, NOT TEXTURE CHANGERS ---------------------------------------------------------------------------------------------
 
-			//IF AI MOVES
-			if (GameManager.instance.AImoving == true && GameManager.instance.tilesListBothPlayers.Contains(transform.position) == false){
+			if (GameManager.instance.players[GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer>().attacking == false){
+				if (tilePosition == new Vector3(tempVector.x+tempInt, 0, tempVector.z) || tilePosition == new Vector3(tempVector.x, 0, tempVector.z+tempInt) || Vector3.Distance(tempVector, tilePosition) <= tempInt-0.5 || tilePosition == new Vector3(tempVector.x, 0, tempVector.z-tempInt) || tilePosition == new Vector3(tempVector.x-tempInt, 0, tempVector.z) ){
+					//Create TILE
+					/*Object movableTilePrefab;
+					movableTilePrefab =
+					Instantiate (
+							GameManager.instance.movableTilePrefab,
+							new Vector3 (tilePosition.x, tilePosition.y, tilePosition.z),
+							Quaternion.Euler (new Vector3 ()));*/
+				} else {
+					//DELETE TILE
+				}
+			}
+
+			//If AI trying to find good tile
+			if (GameManager.instance.findGoodTile == true){
+
+			}
+
+			/*if (GameManager.instance.AImoving == true && GameManager.instance.tilesListBothPlayers.Contains(transform.position) == false){
 				if (Vector3.Distance (GameManager.instance.AIplayers [GameManager.instance.currentAIPlayerIndex].GetComponent<AIPlayer> ().currentAIPlayerPosition, transform.position) < 1.1f){
 					print ("AI finds several tiles!");
 					for (float y = 0; y < 2f; y=y+0.1f){
@@ -71,7 +110,10 @@ public class Tile : MonoBehaviour {
 				else {
 					GameManager.instance.MoveCurrentAIPlayer(GameManager.instance.AIplayers [GameManager.instance.currentAIPlayerIndex].GetComponent<AIPlayer> ().transform.position);
 				}
-			}
+			}*/
+
+
+
 		}
 		/*if (tileMarked == true) {
 			transform.GetComponent<Renderer>().material.color = Color.green;
@@ -120,7 +162,7 @@ public class Tile : MonoBehaviour {
 		if (GameManager.instance.matchStarted == true && GameManager.instance.gamePaused == false) {
 			if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) < 1.1f) {
 
-				if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == false && GameManager.instance.tilesListBothPlayers.Contains (tilePosition) == false) {
+				if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == false && GameManager.instance.tilesListBothPlayers.Contains (tilePosition) == false ) {
 					movableTile = true;
 				}
 				if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == false && GameManager.instance.tilesListBothPlayers.Contains (tilePosition) == true) {
@@ -131,6 +173,9 @@ public class Tile : MonoBehaviour {
 				}
 				if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == true) {
 					movableTile = true;
+				}
+				if (GameManager.instance.tilesListAllAIPlayers.Contains(tilePosition) == true){
+					movableTile = false;
 				}
 			}
 		}
@@ -156,7 +201,15 @@ public class Tile : MonoBehaviour {
 				}
 			}
 			if (attackableTile == true){
-				GameManager.instance.attackDone(tilePosition);
+				GameManager.instance.players[GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer>().attacking = false;
+				if (GameManager.instance.tilesListAllAIPlayers.Contains (tilePosition) == true){
+				GameManager.instance.attackPosition = tilePosition;
+				if (GameManager.instance.attackPosition != tilePosition){
+					GameManager.instance.attackDone(tilePosition);
+				}
+				} else {
+					GameManager.instance.attackDone(tilePosition);
+				}
 			}
 		}
 	}

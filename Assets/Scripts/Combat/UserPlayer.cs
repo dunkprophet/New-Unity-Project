@@ -7,6 +7,7 @@ public class UserPlayer : Player {
 
 	public int health;
 	public int moves;
+	public int maxHealth;
 
 	public bool playerSelected;
 
@@ -25,6 +26,8 @@ public class UserPlayer : Player {
 
 	public float tempPositionX;
 	public float tempPositionY;
+
+	public int tempInt;
 
 	public float attackRange;
 	public int attackDamage;
@@ -62,8 +65,7 @@ public class UserPlayer : Player {
 		hasAttacked = false;
 		noMovesSelected = false;
 		attacking = false;
-
-		moves = 3;
+		
 		health = 1;
 		allowedToMove = false;
 		tempCount = 0;
@@ -90,6 +92,34 @@ public class UserPlayer : Player {
 			}
 
 		health = markedTiles.Count;
+
+			if (attacking == true){
+				GameManager.instance.attackDamage = attackDamage;
+			}
+			if (markedTiles.Contains(GameManager.instance.attackPosition)){
+				GameManager.instance.attackHit = false;
+				GameManager.instance.attackDamage = tempInt;
+				while (tempInt > 0){
+					tempVector = markedTiles[0];
+					markedTiles.RemoveAt(0);
+					GameManager.instance.tilesListAllAIPlayers.Remove(tempVector);
+					tempInt--;
+				}
+				if (health <= 0){
+					Destroy(this.gameObject);
+				}
+				GameManager.instance.attackPosition = new Vector3(-1,-1,-1);
+			}
+
+
+
+			/*if (markedTiles.Contains (transform.position) == false) {
+				
+				markedTiles.Add(transform.position);
+				
+			}*/
+
+
 
 		if (playerNumber == GameManager.instance.currentPlayerIndex) {
 			transform.FindChild("Sprite").GetComponent<SpriteRenderer>().sprite = GameManager.instance.selected;

@@ -60,7 +60,7 @@ public class Yakuza_Dialog : MonoBehaviour {
 
 		//START
 
-		GUILayout.BeginArea (new Rect (Screen.width/4, Screen.height/4, 400, 500));
+		GUILayout.BeginArea (new Rect (Screen.width/4, 10, 400, 600));
 
 		if (scene == 1) {
 		
