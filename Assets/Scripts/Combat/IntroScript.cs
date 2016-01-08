@@ -65,13 +65,13 @@ public class IntroScript : MonoBehaviour {
 		
 		if (scene == 1) {
 			
-			GUILayout.BeginVertical ("Memoir", GUI.skin.GetStyle("window"));
+			GUILayout.BeginVertical ("ContainerCorp コンテナ 2.43, BLACK ICE DEFENSE", GUI.skin.GetStyle("window"));
 			
-			GUILayout.Label ("My name is Calvin. \n\n I landed here three years ago, by the oiled-up shores of Chiba City. A week had gone by since I snuck onboard the massive cargo ship on my home island in the pacific, and the pain in my limbs could confirm it. Having spent most of my time hiding inside of a cramped container, watching for crewmen, and silently laying still for hours upon hours, the few mucles I had back then felt as if they had withered and died. As I jumped from the railings towards one of the empty docking stations, the pain made me promise myself to never again set foot upon a boat.");
-			GUILayout.Label ("\n The first thing that struck me about the docking station was the smell- the smell of dead rats, and exploded sewer pipes. I had lucked out. The entire area appeared to have been abandoned. The lights placed onto poles around the place were unlit. None of them seemed functional, by either neglect, vandalism, or both. So it was dark, and the ground beneath my feet was sticky. Like someone had spilt out a reserve of artifical sweetener around the entirety of the docking station.");
-			GUILayout.Label ("\n All I had to do was find my way to the streets. \n");
+			GUILayout.Label ("\n \"DO YOU HEAR ME? GOOD. YOU'RE IN. THE ONLY REASON THIS PLACE FRIED ME, WAS THE BLACK ICE PROGRAM INSTALLED ON THE SERVER. YEAH, BLACK ICE. PROGRAMMED TO KILL INTRUDERS. I REALLY DID NOT EXPECT SUCH A PROGRAM TO BE ON A SHITTY LITTLE PANEL AT THE BACK OF THE HARBOR, BUT HEY. WE ALL MAKE MISTAKES.\"" +
+				"\n\n \"LUCKILY FOR YOU, I MANAGED TO DESTROY MOST OF IT BEFORE I BURNED. SO ALL THAT IS LEFT NOW, IS TWO TINY SHIELD PROGRAMS. YOU DO KNOW HOW TO FIGHT IN CYBERSPACE, DO YOU?\"" +
+			                 "\n\n \"I, uh...\"\n\n \"OF COURSE YOU DON'T. LISTEN, IT'S REAL SIMPLE. JUST CLICK ON THE SPAWNER, AND CHOOSE A PROGRAM. ONLY ONE IS PREINSTALLED AT THE MOMENT. THEN START THE MATCH AND MOVE AROUND THE SERVERSPACE, ONE STEP AT A TIME. EVERY STEP GIVES YOU MORE SERVER CONTROL, WHICH ALSO REPRESENTS THE STRENGHT YOUR PROGRAMS HAS OVER THE SERVERSPACE. YOUR HEALTHBAR, ESSENTIALLY. YOU'VE PLAYED VIDEO GAMES, RIGHT? SURE YOU HAVE. OTHER THAN THAT, YOU JUST HAVE TO ATTACK THE OTHER PROGRAMS. SINCE THEY'RE SPECIFICALLY *BLACK* INTRUSION COUNTERMESURE ELECTRONICS, YOU'LL DIE IF YOU LOSE. SO DON'T LOSE.\"\n");
 			
-			if (GUILayout.Button ("Search the area.")) {
+			if (GUILayout.Button ("\"...\"")) {
 				scene = 2;
 			}
 			

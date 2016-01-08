@@ -62,7 +62,7 @@ public class Fence_Dialog : MonoBehaviour {
 			GUILayout.BeginVertical ("Chain-link fence", GUI.skin.GetStyle("window"));
 			//FIRST WORD
 			if (talkedToYakuza == true){GUILayout.Label ("22222");}
-			GUILayout.Label ("Leaked-out green goop flooded the area beyond the chain-link fence. The stench soared at me, hitting me in the gut. Almost puked out the little content my stomach held.");
+			GUILayout.Label ("Leaked-out green goop flooded the area beyond the chain-link fence. The stench soared at me, hitting me in the gut. Almost puked out what little content my stomach held.");
 
 			//FIRST CHOICE
 			if (GUILayout.Button ("Take a closer look.")) {
@@ -81,7 +81,7 @@ public class Fence_Dialog : MonoBehaviour {
 			//From CHOICE 2
 			GUILayout.Label ("But looking past it all- there was a light. A colorful, glaring light of completely dead coldness.");
 			GUILayout.Label (" It came from the streets of the city. Chiba City. Gazing upon that complex mess of steel and flesh for the very first time placed a seed in my mind, a thought of what I wanted to do with my life.");
-			GUILayout.Label (" I wanted to bask in the city lights.");
+			GUILayout.Label (" ");
 
 			//FIRST CHOICE
 			if (GUILayout.Button ("Leave.")) {

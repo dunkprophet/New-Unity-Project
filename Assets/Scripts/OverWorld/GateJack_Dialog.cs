@@ -9,6 +9,7 @@ public class GateJack_Dialog : MonoBehaviour {
 	public float fadeSpeed = 1.5f;
 
 	private GUISkin MetalGUISkin;
+	public bool hackable = false;
 
 	void Awake ()
 	{
@@ -53,6 +54,9 @@ public class GateJack_Dialog : MonoBehaviour {
 		if (Input.GetMouseButtonDown (0) && Yakuza_Dialog.talkedToYakuza == true) {
 			scene = 1;
 		}
+		if (Input.GetMouseButtonDown (0) && Yakuza_Dialog.putOnIcebreaker == true) {
+			hackable = true;
+		}
 	}
 	
 	void OnMouseEnter()
@@ -90,11 +94,14 @@ public class GateJack_Dialog : MonoBehaviour {
 			
 			GUILayout.BeginVertical ("Panel", GUI.skin.GetStyle ("window"));
 			//FIRST WORD
-			GUILayout.Label ("When I booted up the old panel, it flickered and sparked a bit. Always a good sign.");
-			
+			GUILayout.Label ("The panel flickered a bit. I have no way of using it however, " +
+				"as the controls seemed to be broken. The only input avaliable was the grimy port on the side.");
+
 			//FIRST CHOICE
-			if (GUILayout.Button ("Jack in.")) {
-				scene = 2;
+			if (hackable == true){
+				if (GUILayout.Button ("Jack in.")) {
+					scene = 2;
+				}
 			}
 			
 			//SECOND CHOICE

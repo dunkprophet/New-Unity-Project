@@ -102,8 +102,12 @@ public class UserPlayer : Player {
 				while (tempInt > 0){
 					tempVector = markedTiles[0];
 					markedTiles.RemoveAt(0);
-					GameManager.instance.tilesListAllAIPlayers.Remove(tempVector);
+					GameManager.instance.tilesListBothPlayers.Remove(tempVector);
 					tempInt--;
+					health = markedTiles.Count;
+					if (health <= 0){
+						Destroy(this.gameObject);
+					}
 				}
 				if (health <= 0){
 					Destroy(this.gameObject);

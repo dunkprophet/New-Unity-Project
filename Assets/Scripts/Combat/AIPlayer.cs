@@ -212,6 +212,10 @@ public class AIPlayer : Player {
 			markedTiles.RemoveAt(0);
 			GameManager.instance.tilesListAllAIPlayers.Remove(tempVector);
 			tempInt--;
+			health = markedTiles.Count;
+			if (health <= 0){
+				Destroy(this.gameObject);
+			}
 		}
 		if (health <= 0){
 			Destroy(this.gameObject);

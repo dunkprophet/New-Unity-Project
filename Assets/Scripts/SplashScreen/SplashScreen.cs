@@ -38,8 +38,9 @@ public class SplashScreen : MonoBehaviour {
 		FadeToBlack();
 		
 		// If the screen is almost black...
-		if(GetComponent<GUITexture>().color.a >= 0.95f)
+		if (GetComponent<GUITexture> ().color.a >= 0.95f)
 			// ... reload the level.
+			Intro_Dialog.SplashDone = true;
 			Application.LoadLevel(1);
 			//Application.LoadLevel(0);
 	}
