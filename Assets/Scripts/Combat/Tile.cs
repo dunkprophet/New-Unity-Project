@@ -20,6 +20,7 @@ public class Tile : MonoBehaviour {
 	void OnMouseEnter()
 	{
 		transform.GetComponent<Renderer>().material.color = Color.blue;
+		Debug.Log(gridPosition);
 
 	}
 
@@ -35,6 +36,7 @@ public class Tile : MonoBehaviour {
 		{
 			GameManager.instance.MoveCurrentPlayer(this);
 			GameManager.instance.movingPlayer = true;
+
 		}
 	}
 

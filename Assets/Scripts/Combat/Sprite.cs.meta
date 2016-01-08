@@ -1,11 +1,10 @@
 fileFormatVersion: 2
-guid: 34376df7f7bb5ae45ba9e0c925c94575
-timeCreated: 1445438351
+guid: c4e892b4ff013af448d0c3cfaa6810c2
+timeCreated: 1445443650
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences:
-  - ChrisCube: {fileID: 139574, guid: 0803a2d7128a7c045b49990f51afba4e, type: 2}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

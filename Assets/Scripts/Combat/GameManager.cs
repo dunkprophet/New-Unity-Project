@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour {
 
 	List <List<Tile>> map = new List<List<Tile>>();
 	List <Player> players = new List<Player>();
+	List <Player> movedPlayers = new List<Player>();
+	List <Player> unMovedPlayers = new List<Player>();
 	int currentPlayerIndex = 0;
 
 	void Awake ()
@@ -26,19 +28,21 @@ public class GameManager : MonoBehaviour {
 	{	
 		GenerateMap();
 		GeneratePlayers();
+
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
-
 		players[currentPlayerIndex].TurnUpdate();
+
 	}
 
 	public void NextTurn()
 	{
 		movingPlayer = false;
-		if (currentPlayerIndex +1 < players.Count) {
+		if (currentPlayerIndex +1 < players.Count)
+		{
 			currentPlayerIndex++;
 
 		} else
@@ -47,7 +51,8 @@ public class GameManager : MonoBehaviour {
 
 		}
 	}
-
+	//the Tile class calls this function if movingPlayer is false.
+	//MoveCurrentPlayer moves the current player to the destination tile.
 	public void MoveCurrentPlayer(Tile destTile)
 	{
 		players[currentPlayerIndex].moveDestination = destTile.transform.position;
@@ -57,7 +62,8 @@ public class GameManager : MonoBehaviour {
 	void GenerateMap()
 	{
 		map = new List<List<Tile>>();
-		for (int i = 0;i < mapSize; i++){
+		for (int i = 0;i < mapSize; i++)
+		{
 			List <Tile> row = new List<Tile>();
 			for (int j = 0;j < mapSize; j++)
 			{
@@ -69,8 +75,10 @@ public class GameManager : MonoBehaviour {
 					 ).GetComponent<Tile>();
 				tile.gridPosition = new Vector2(i, j);
 				row.Add(tile);
+
 			}
 			map.Add(row);
+
 		}
 	}
 
@@ -104,5 +112,6 @@ public class GameManager : MonoBehaviour {
 			 ).GetComponent<AIPlayer>();
 		
 		players.Add(aiplayer);
+
 	}
 }

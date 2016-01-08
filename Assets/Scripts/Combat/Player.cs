@@ -7,8 +7,9 @@ public class Player : MonoBehaviour {
 
 	public Vector3 moveDestination;
 
-	private int moves;
-	private int movesPerMove;
+	public int moves;
+	public int movesPerMove;
+	public bool selectable = true;
 
 	void Awake ()
 	{
@@ -26,6 +27,11 @@ public class Player : MonoBehaviour {
 	void Update ()
 	{
 	
+	}
+
+	public bool IsSelectable()
+	{
+		return selectable;
 	}
 
 	public virtual void TurnUpdate()

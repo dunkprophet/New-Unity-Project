@@ -3,13 +3,13 @@ using System.Collections;
 
 public class AIPlayer : Player {
 
-	int moves = 3;
-	int movesPerMove = 1;
+
 
 	// Use this for initialization
 	void Start ()
 	{
-	
+		moves = 3;
+		movesPerMove = 1;
 	}
 	
 	// Update is called once per frame
