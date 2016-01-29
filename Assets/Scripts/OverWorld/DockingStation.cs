@@ -44,12 +44,12 @@ public class DockingStation : MonoBehaviour {
 			}
 			if (OverworldManager.instance.dialogController == 3) {
 				OverworldManager.instance.deleteOldText = false;
-				OverworldManager.instance.text = "\"Ugh...\"";
+				OverworldManager.instance.text = "Stepping off the ship onto the harbor, Calvin found himself midst a crowd of foreigners and ship-workers.";
 
 			}
 			if (OverworldManager.instance.dialogController == 4) {
-
-				OverworldManager.instance.text = " The crowded space forced him up against a grimy wall.";
+				OverworldManager.instance.deleteOldText = true;
+				OverworldManager.instance.text = " In a slow pace they moved across the long steel-and-concrete walkway, until the sound of footsteps and mumbling started echoing up in the high ceiling.";
 					/*"\"Next!\" the guard yelled across the docking station. The crewman first in line took a step forward. " +
 					"He held up his passport with a shaking hand.";
 					The guard glanced at it and placed his hand on the crewman's shoulder. \"Step aside.\"
@@ -63,30 +63,28 @@ public class DockingStation : MonoBehaviour {
 
 			}
 			if (OverworldManager.instance.dialogController == 5) {
-				OverworldManager.instance.deleteOldText = true;
-				OverworldManager.instance.text = " Being surrounded by a collection of heavyset crewmen made it even harder to breathe.";
+
+				OverworldManager.instance.text = "Soon they were all stopped by a line of checkpoint, entryways into the city guarded by people in black and blue riot gear.";
 
 			}
 			if (OverworldManager.instance.dialogController == 6) {
-				OverworldManager.instance.text = "Calvin tried looking beyond the mountains of flesh obscuring his vision. What he found was a queue slowly being formed by the docking station's exit.";
+				OverworldManager.instance.text = "The ship's crew held up their passports, after which they were waved along by the security.";
 
 			}
 			if (OverworldManager.instance.dialogController == 7) {
-				OverworldManager.instance.deleteOldText = false;
-				OverworldManager.instance.text = "A queue leading through a pass control.";
+				OverworldManager.instance.text = "While those like Calvin, those without passports, were examined in great detail.";
 
 			}
 			if (OverworldManager.instance.dialogController == 8) {
-				OverworldManager.instance.deleteOldText = true;
-				OverworldManager.instance.text = " \"Shit.\"";
+				OverworldManager.instance.text = " \"Your name and occupation.\"";
 
 			}
 			if (OverworldManager.instance.dialogController == 9) {
-				OverworldManager.instance.text = "One by one the men in the crowd stepped forth to the unmoving guards, passing them while holding out their passports.";
+				OverworldManager.instance.text = "\"Purpose for coming to Chiba.\"";
 
 			}
 			if (OverworldManager.instance.dialogController == 10) {
-				OverworldManager.instance.text = "Calvin spun his head around, searching for a way out. Instead his attention was drawn towards the front of the line.";
+				OverworldManager.instance.text = "Questions asked so many times they no longer sounded like they needed answering.";
 
 			}
 			/*if (OverworldManager.instance.dialogController == 10) {
@@ -112,48 +110,62 @@ public class DockingStation : MonoBehaviour {
 				OverworldManager.instance.text = "3 is picked";
 			}*/
 			if (OverworldManager.instance.dialogController == 11) {
-				OverworldManager.instance.text = "\"Passport,\" one of the guards said. \"Do you have a passport?\"";
+				OverworldManager.instance.text = "It didn't matter either way. They let everyone in.";
 			}
 			if (OverworldManager.instance.dialogController == 12) {
-				OverworldManager.instance.text = "The leen man at the front of the line mumbled something in response. A weak whimper.";
+				OverworldManager.instance.text = "From the ship Calvin had travelled on came a drove of Chinese civilians fleeing the war, people from the States searching for better lives, and even a few Indonesian families trying to escape the waste.";
 			}
 			if (OverworldManager.instance.dialogController == 13) {
 				OverworldManager.instance.deleteOldText = false;
-				OverworldManager.instance.text = "With a deep sight the guard said, \"Stand still, gaijin,\" and took out a stun gun.";
+				OverworldManager.instance.text = "In Chiba, everyone had a place.";
 			}
 			if (OverworldManager.instance.dialogController == 14) {
 				OverworldManager.instance.deleteOldText = true;
-				OverworldManager.instance.text = " The man shook his head, pleading in some broken Japanese accent.";
+				OverworldManager.instance.text = ".. or so he had heard.";
 			}
 			if (OverworldManager.instance.dialogController == 15) {
 
-				OverworldManager.instance.text = "When no one answered him, and he noticed the weapon being pointed towards his chest, he screamed.";
+				OverworldManager.instance.text = "For an hour he stood in line looking on as they crowd slowly melted through the arching entrances to the city... long enough a time to get used to both the smell of sewers and the monotony of queuing.";
 			}
 			if (OverworldManager.instance.dialogController == 16) {
-				OverworldManager.instance.deleteOldText = false;
-				OverworldManager.instance.text = "A roar of desperation followed by him swinging his fists, knocking the gun out of the guard's hands.";
+
+				OverworldManager.instance.text = "When he finally reached the checkpoint his body felt numb to the core.";
 			}
 			if (OverworldManager.instance.dialogController == 17) {
-				OverworldManager.instance.text = " Then he ran.";
+				OverworldManager.instance.deleteOldText = false;
+				OverworldManager.instance.text = "\"Kid,\" the guardsman said, ready to write down whatever he said onto a clipboard. \"Name and origin.\"";
 			}
 			if (OverworldManager.instance.dialogController == 18) {
 				OverworldManager.instance.deleteOldText = true;
-				OverworldManager.instance.text = " Straight forward, in some mad attempt to break one of the most secure border controls in the world.";
+				OverworldManager.instance.text = "\n\n\"...\"";
+				OverworldManager.instance.responseWanted = true;
+				OverworldManager.instance.response1 = "[Truth] Calvin, Ogasawara.";
+				OverworldManager.instance.response2 = "[Lie] Jiro, Hong Kong.";
+				//OverworldManager.instance.response3 = "[Enter own name.]";
 			}
-			if (OverworldManager.instance.dialogController == 19) {
-				OverworldManager.instance.text = "He failed, obviously, getting hit by three or four charges of shockbolts from all directions after only a few seconds.";
+			if (OverworldManager.instance.dialogController == 19 && OverworldManager.instance.response1picked == true) {
+				OverworldManager.instance.text = "\"Calvin, Ogasawara.\"";
 			}
-			if (OverworldManager.instance.dialogController == 20) {
-				OverworldManager.instance.text = "\"Next!\" the guard called out, none in the crowd really caring about the unconcious man who just got dragged off.";
+			if (OverworldManager.instance.dialogController == 20 && OverworldManager.instance.response1picked == true) {
+				OverworldManager.instance.text = "The guard laughed. \"An islander? Then you're technically a metropolis citizen. No passport?\"";
 			}
-			if (OverworldManager.instance.dialogController == 21) {
-				OverworldManager.instance.text = "Calvin found himself caring immensly, however.";
+			if (OverworldManager.instance.dialogController == 21 && OverworldManager.instance.response1picked == true) {
+				OverworldManager.instance.text = "Calvin shook his head. \"Never got one.\"";
+			}
+			if (OverworldManager.instance.dialogController == 19 && OverworldManager.instance.response2picked == true) {
+				OverworldManager.instance.text = "\"Jiro, Hong Kong.\"";
+			}
+			if (OverworldManager.instance.dialogController == 20 && OverworldManager.instance.response2picked == true) {
+				OverworldManager.instance.text = "The guard stared at him. \"Lone kid from the mainland... \"";
+			}
+			if (OverworldManager.instance.dialogController == 21 && OverworldManager.instance.response2picked == true) {
+				OverworldManager.instance.text = "";
 			}
 			if (OverworldManager.instance.dialogController == 22) {
-				OverworldManager.instance.text = "He did not have a passport";
+				OverworldManager.instance.text = "";
 			}
 			if (OverworldManager.instance.dialogController == 23) {
-				OverworldManager.instance.text = "Whatever he would do, he had to do it fast.";
+				OverworldManager.instance.text = "";
 				OverworldManager.instance.responseWanted = true;
 				OverworldManager.instance.response1 = "Search the back of the station.";
 				OverworldManager.instance.response2 = "Look around the damp walls.";

@@ -88,6 +88,9 @@ public class OverworldManager : MonoBehaviour {
 	public bool response3picked = false;
 	public bool response4picked = false;
 
+	//STORY BOOLEANS
+	public bool govermentKnowsName;
+
 	public Vector2 scrollPosition;
 
 	void Awake ()
