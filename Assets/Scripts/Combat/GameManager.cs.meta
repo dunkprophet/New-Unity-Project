@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: ed54852e23727244cb058ef76ba43f7c
-timeCreated: 1450620195
+timeCreated: 1452356662
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
@@ -8,10 +8,17 @@ MonoImporter:
   - turnTexture: {instanceID: 0}
   - marked: {instanceID: 0}
   - notMarked: {instanceID: 0}
+  - attackTexture: {instanceID: 0}
+  - AImarked: {instanceID: 0}
+  - movableTile: {instanceID: 0}
   - selected: {instanceID: 0}
   - notSelected: {instanceID: 0}
+  - movableTilePrefab: {instanceID: 0}
+  - attackableTilePrefab: {instanceID: 0}
+  - markedTilePrefab: {instanceID: 0}
+  - markedAITilePrefab: {instanceID: 0}
   - TilePrefab: {fileID: 175316, guid: eb199af30a8fd86438f1661663d4b39d, type: 2}
-  - UserPlayerPrefab: {fileID: 192776, guid: ac9ef2c63d35cf746871ddc9c9776209, type: 2}
+  - UserPlayerPrefab: {fileID: 152228, guid: ac9ef2c63d35cf746871ddc9c9776209, type: 2}
   - AIPlayerPrefab: {fileID: 180992, guid: 8979c9fb4286b8a44b24dc1dce9ad06f, type: 2}
   - tempPlayer: {instanceID: 0}
   executionOrder: 0

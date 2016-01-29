@@ -21,8 +21,8 @@ public class IntroScript : MonoBehaviour {
 	void Start () {
 		MetalGUISkin = Resources.Load("MetalGUISkin") as GUISkin;
 		scene = 1;
-		AudioSource audio = GetComponent<AudioSource>();
-		audio.Play();
+		/*AudioSource audio = GetComponent<AudioSource>();
+		audio.Play();*/
 	}
 	
 	// Update is called once per frame

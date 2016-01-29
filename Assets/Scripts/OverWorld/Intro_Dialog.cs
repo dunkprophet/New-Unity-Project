@@ -5,44 +5,244 @@ public class Intro_Dialog : MonoBehaviour {
 	public GUISkin skin;
 	public bool written = true;
 	public bool started = false;
+	public bool ready = true;
 	public static bool SplashDone = false;
-	int scene = 0;
+	public int p = 0;
+	public int k = 0;
+	public static string note;
+	public bool tempBool = false;
 	
 	//public static bool playerTalking = false;
 	
 	private GUISkin DOS2;
 	
 	void Start () {
-		DOS2 = Resources.Load("DOS2") as GUISkin;
-		scene = 1;
-		SplashDone = true;
 	}
 	
 	void Update(){
-		if (scene != 0) {
-			OverworldPlayer.instance.moveDestination [0] = transform.position.x;
-			OverworldPlayer.instance.moveDestination [2] = transform.position.y;
-		}
-
-
-	}
-	
-	void OnGUI()
-	{
-		if (started == false && SplashDone == true){
-		if (UnityEngine.Input.GetMouseButtonDown(0)) {
-			if (scene < 8 && written == true) {
-				scene++;
-				written = false;
+		if (OverworldManager.instance.scene  == 0) {
+			if (OverworldManager.instance.dialogControllerMenu == 0) {
+				OverworldManager.instance.textForLog = "Welcome to DOS65";
+				if (ready == true){
+					StartCoroutine(pause(0.5f));
+				}
 			}
-		}
-		if (UnityEngine.Input.GetMouseButtonUp(0)){
-			written = true;
-		}
-		GUI.skin = DOS2;
+			if (OverworldManager.instance.dialogControllerMenu == 1) {
+				OverworldManager.instance.textForLog = "\n\n\nVRS-Jock v1.9.2 alpha 1 [DOS65] \nInstalled at EYE/2 port \n\n" +
+					"AKIHABARA コンピュータストア CB80 1.0\n" +
+					"Copyright 2063, 64, 65 愚かなアメリカ版\n\n" +
+					"Volume in drive D is 3F1F2U05P\nDirectory of D:\\\n" +
+					"\nFDOS            <DIR>    09-21-82  6:47p" +
+					"\nAUTOEXEC BAT      435    09-21-82  6:47p" +
+					"\nBOOTSECT BIN      512    09-21-82  6:47p" +
+					"\nCOMMAND  COM   93,963    09-21-82  6:47p" +
+					"\nCONFIG   SYS      435    09-21-82  6:47p" +
+					"\nFDOSBOOT BIN      435    09-21-82  6:47p" +
+					"\nSECTIONL SYS      435    02-12-65  12:22a" +
+					"\n         9 file(s)       142,038,154 bytes" +
+					"\n         1 dir(s)  1,064,517,632,863 bytes 無料で" +
+					"\n\n\nD:\\>";
+				if (ready == true){
+					StartCoroutine(pause(2.0f));
+				}
 
-		GUILayout.BeginArea (new Rect (0, 0, Screen.width/2, Screen.height));
-		
+			}
+			if (OverworldManager.instance.dialogControllerMenu == 2){
+				OverworldManager.instance.textForLog = "User\\CAL\\Files\\>";
+				if (ready == true){
+					StartCoroutine(pause(2.5f));
+				}
+
+			}
+			if (OverworldManager.instance.dialogControllerMenu == 3){
+				OverworldManager.instance.textForLog = "run Icebreaker.exe";
+				if (ready == true){
+					StartCoroutine(pause(1.5f));
+				}
+			}
+			if (OverworldManager.instance.dialogControllerMenu == 4){
+				OverworldManager.instance.textForLog = "\n\n...";
+				if (ready == true){
+					StartCoroutine(pause(3.5f));
+				}
+			}
+			if (OverworldManager.instance.dialogControllerMenu == 5){
+
+				OverworldManager.instance.textForLog = "\n\n...\n\nStartup Successful";
+				if (ready == true){
+					StartCoroutine(pause(2.5f));
+				}
+			}
+			if (OverworldManager.instance.dialogControllerMenu == 6){
+
+				OverworldManager.instance.textForLog = "\n\nStartup Successful" + note;
+
+				if (ready == true){
+					StartCoroutine(pause(1.5f));
+				}
+			}
+			if (OverworldManager.instance.dialogControllerMenu == 7){
+				OverworldManager.instance.textForLog = "\n\nReading Data...\n" + note;
+				OverworldManager.instance.updateLog();
+				k++;
+				if (k == 27 && tempBool == false) {
+					k = 0;
+					tempBool = true;
+				}
+				if (k == 27 && tempBool == true){
+					if (ready == true){
+						StartCoroutine(pause(2.5f));
+					}
+				}
+			}
+			if (OverworldManager.instance.dialogControllerMenu == 8){
+
+				OverworldManager.instance.textForLog = "\n\nStartup Successful";
+
+				OverworldManager.instance.textForLog = "\n\n人はどのような女の子を殺すためにマシンを構築しますか？" +
+					"\nいいえ、彼は彼の手を使用していませんでした。" +
+					"\nスマート男のように、彼はツールを使用しました。" +
+					"\nしかし、単に同じ、" +
+					"\nどのようにあなたは誰のせいだ質問ができますか？" +
+					"\n彼女の名前は何でしたか？" +
+					"\nそれは問題ではありません。" +
+					"\n今聞きます..." +
+					"\n「名医」は支払わなければなりません！";
+				if (ready == true){
+					StartCoroutine(pause(3.5f));
+				}
+			}
+			if (OverworldManager.instance.dialogControllerMenu == 9){
+				OverworldManager.instance.textForLog = "";
+				OverworldManager.instance.eraseLog();
+				if (ready == true){
+					StartCoroutine(pause(1.0f));
+				}
+			}
+
+			if (OverworldManager.instance.dialogControllerMenu == 10){
+				OverworldManager.instance.textForLog = "";
+				if (ready == true){
+					StartCoroutine(pause(0.0f));
+				}
+			}
+			if (OverworldManager.instance.dialogControllerMenu == 11 && p == 5){
+				OverworldManager.instance.textForLog = "\n\n  1 2 3 4 5 6 7";
+				if (ready == true){
+					StartCoroutine(pause(3.0f));
+				}
+			}
+			else if (OverworldManager.instance.dialogControllerMenu == 11){
+				OverworldManager.instance.textForLog = "\n\nEntering Menu";
+				if (ready == true){
+					StartCoroutine(pause(3.0f));
+				}
+			}
+			if (OverworldManager.instance.dialogControllerMenu >= 12){
+				OverworldManager.instance.dialogControllerMenu = 10;
+				p++;
+			}
+			if (p == 6){
+				p = 0;
+			}
+
+		}
+		if (k == 0) {
+			note = SystemInfo.deviceModel;
+		}
+		if (k == 10) {
+			note = SystemInfo.deviceName;
+		}
+		if (k == 20) {
+			note = SystemInfo.deviceType.ToString();
+		}
+		/*if (k == 3) {
+			note = SystemInfo.deviceUniqueIdentifier.ToString();
+		}
+		if (k == 4) {
+			note = SystemInfo.graphicsDeviceID.ToString();
+		}
+		if (k == 5) {
+			note = SystemInfo.graphicsDeviceName.ToString();
+		}
+		if (k == 6) {
+			note = SystemInfo.graphicsDeviceType.ToString();
+		}
+		if (k == 7) {
+			note = SystemInfo.graphicsDeviceVendor.ToString();
+		}
+		if (k == 8) {
+			note = SystemInfo.graphicsDeviceVendorID.ToString();
+		}
+		if (k == 9) {
+			note = SystemInfo.graphicsDeviceVersion.ToString();
+		}
+		if (k == 10) {
+			note = SystemInfo.graphicsMemorySize.ToString();
+		}
+		if (k == 11) {
+			note = SystemInfo.graphicsMultiThreaded.ToString();
+		}
+		if (k == 12) {
+			note = SystemInfo.graphicsShaderLevel.ToString();
+		}
+		if (k == 13) {
+			note = SystemInfo.maxTextureSize.ToString();
+		}
+		if (k == 14) {
+			note = SystemInfo.npotSupport.ToString();
+		}
+		if (k == 15) {
+			note = SystemInfo.operatingSystem.ToString();
+		}
+		if (k == 16) {
+			note = SystemInfo.processorCount.ToString();
+		}
+		if (k == 17) {
+			note = SystemInfo.supportedRenderTargetCount.ToString();
+		}
+		if (k == 18) {
+			note = SystemInfo.processorType.ToString();
+		}
+		if (k == 19) {
+			note = SystemInfo.supports3DTextures.ToString();
+		}
+		if (k == 20) {
+			note = SystemInfo.supportsAccelerometer.ToString();
+		}
+		if (k == 21) {
+			note = SystemInfo.supportsComputeShaders.ToString();
+		}
+		if (k == 22) {
+			note = SystemInfo.supportsGyroscope.ToString();
+		}
+		if (k == 23) {
+			note = SystemInfo.supportsImageEffects.ToString();
+		}
+		if (k == 24) {
+			note = SystemInfo.supportsLocationService.ToString();
+		}
+		if (k == 25) {
+			note = SystemInfo.systemMemorySize.ToString();
+		}*/
+		if (k == 26) {
+			note = "";
+		}
+	}
+	public IEnumerator pause(float delay) {
+		ready = false;
+		yield return new WaitForSeconds(delay);
+		print ("DialogController++");
+		if (OverworldManager.instance.dialogReady == true) {
+			OverworldManager.instance.updateLog();
+			OverworldManager.instance.dialogControllerMenu++;
+			//OverworldManager.instance.i = 0;
+		}
+
+		ready = true;
+	}
+
+		/*
 		if (scene == 1) {
 			
 			GUILayout.BeginVertical ("", GUI.skin.GetStyle("label"));
@@ -248,7 +448,7 @@ public class Intro_Dialog : MonoBehaviour {
 			scene = 0;
 		}
 		
-		GUILayout.EndArea ();
-	}
-	}
+		GUILayout.EndArea ();*/
+
+
 }

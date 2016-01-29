@@ -7,9 +7,9 @@ public class SplashScreen : MonoBehaviour {
 	public float timeToDisplayImage;
 	public int nextLevelToLoad;
 
-	public float fadeSpeed = 1.5f;          
+	public float fadeSpeed = 1.5f;        
 
-	//private bool sceneStarting = true;  
+	//private bool sceneStarting = true;
 	
 	private float timeForNextLevel;
 

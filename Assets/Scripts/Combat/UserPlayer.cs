@@ -126,11 +126,11 @@ public class UserPlayer : Player {
 
 
 		if (playerNumber == GameManager.instance.currentPlayerIndex) {
-			transform.FindChild("Sprite").GetComponent<SpriteRenderer>().sprite = GameManager.instance.selected;
+			//stransform.FindChild("Sprite").GetComponent<SpriteRenderer>().sprite = GameManager.instance.selected;
 			//transform.GetComponent<Renderer>().material.mainTexture = GameManager.instance.selected;
 		}
 		if (playerNumber != GameManager.instance.currentPlayerIndex) {
-			transform.FindChild("Sprite").GetComponent<SpriteRenderer>().sprite = GameManager.instance.notSelected;
+			//transform.FindChild("Sprite").GetComponent<SpriteRenderer>().sprite = GameManager.instance.notSelected;
 		}
 
 		if (GameManager.instance.turnChange == true) {
@@ -174,7 +174,7 @@ public class UserPlayer : Player {
 		//transform.FindChild("Sprite").transform.GetComponent<Renderer>().material.color = Color.red;
 		//Graphics.DrawTexture(new Rect(200, 200, 200, 200), turnTexture);
 		
-		if (moves <= 0 && hasAttacked == true/*&& noMovesSelected == false*/) {
+		if (moves <= 0 && hasAttacked == true  /*&& noMovesSelected == false*/) {
 			//transform.FindChild("Sprite").transform.GetComponent<Renderer>().material.color = Color.white;
 			//GameManager.instance.tilesListBothPlayers.AddRange(markedTiles.ToList());
 			GameManager.instance.NextProgram();
