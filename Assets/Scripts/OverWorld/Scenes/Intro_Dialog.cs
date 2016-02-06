@@ -9,6 +9,7 @@ public class Intro_Dialog : MonoBehaviour {
 	public static bool SplashDone = false;
 	public int p = 0;
 	public int k = 0;
+	public int c = 0;
 	public static string note;
 	public bool tempBool = false;
 	
@@ -21,6 +22,7 @@ public class Intro_Dialog : MonoBehaviour {
 	
 	void Update(){
 		if (OverworldManager.instance.scene  == 0) {
+			OverworldManager.instance.scrollPosition.y = Mathf.Infinity;
 			if (OverworldManager.instance.dialogControllerMenu == 0) {
 				OverworldManager.instance.textForLog = "Welcome to DOS65";
 				if (ready == true){
@@ -135,6 +137,7 @@ public class Intro_Dialog : MonoBehaviour {
 			else if (OverworldManager.instance.dialogControllerMenu == 11){
 				OverworldManager.instance.textForLog = "\n\nEntering Menu";
 				if (ready == true){
+					c++;
 					StartCoroutine(pause(3.0f));
 				}
 			}
@@ -144,6 +147,10 @@ public class Intro_Dialog : MonoBehaviour {
 			}
 			if (p == 6){
 				p = 0;
+			}
+			if (c == 30) {
+				OverworldManager.instance.eraseLog();
+				c = 0;
 			}
 
 		}
