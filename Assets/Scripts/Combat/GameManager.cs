@@ -440,7 +440,7 @@ public class GameManager : MonoBehaviour {
 		if (playersThatCanMove.Count > 0) {
 				tempPlayer = playersThatCanMove[playersThatCanMove.Count-1];
 				currentPlayerIndex = players.IndexOf(tempPlayer);
-				print ("PLayerthatcanmove works");
+				print ("Playerthatcanmove works");
 		} else {
 			gamePaused = true;
 			nextTurn();

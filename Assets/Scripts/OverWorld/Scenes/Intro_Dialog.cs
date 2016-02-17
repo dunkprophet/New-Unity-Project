@@ -25,11 +25,17 @@ public class Intro_Dialog : MonoBehaviour {
 			OverworldManager.instance.scrollPosition.y = Mathf.Infinity;
 			if (OverworldManager.instance.dialogControllerMenu == 0) {
 				OverworldManager.instance.textForLog = "Welcome to DOS65";
+				if (tempBool == false){
+					OverworldManager.instance.GetComponent<AudioSource>().clip = OverworldManager.instance.song1;
+					OverworldManager.instance.GetComponent<AudioSource>().Play();
+					tempBool = true;
+				}
 				if (ready == true){
 					StartCoroutine(pause(0.5f));
 				}
 			}
 			if (OverworldManager.instance.dialogControllerMenu == 1) {
+				tempBool = false;
 				OverworldManager.instance.textForLog = "\n\n\nVRS-Jock v1.9.2 alpha 1 [DOS65] \nInstalled at EYE/2 port \n\n" +
 					"AKIHABARA コンピュータストア CB80 1.0\n" +
 					"Copyright 2063, 64, 65 愚かなアメリカ版\n\n" +

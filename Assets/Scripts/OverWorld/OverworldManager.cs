@@ -12,6 +12,7 @@ public class OverworldManager : MonoBehaviour {
 		public int money;
 		public int coding;
 		public int day;
+		public string date;
 		
 	//}
 
@@ -19,10 +20,10 @@ public class OverworldManager : MonoBehaviour {
 	public bool freeMode = false;
 
 	public float fadeSpeed = 0.5f;
-	private int textFlash = 0;
+	public int textFlash = 0;
 
-	private GUISkin MetalGUISkin;
-	private GUISkin DOS2;
+	public GUISkin MetalGUISkin;
+	public GUISkin DOS2;
 
 	//Textures
 	public Texture scene1Background;
@@ -40,6 +41,9 @@ public class OverworldManager : MonoBehaviour {
 	public Color lerpingColor;
 	public bool fadeToWhite = false;
 	public bool fadeToBlack = false;
+	public bool fadeInMusic = false;
+	public bool fadeOutMusic = false;
+
 
 	public string tempString; 
 
@@ -63,18 +67,30 @@ public class OverworldManager : MonoBehaviour {
 	public string messageText = "";
 	public string nodeTitle = "";
 	public string nodeDescription = "";
+	public string programDescription = "";
 
 	public int nodeNumber;
 	public bool showNode = false;
+	public bool grayNode = false;
+	public bool nodeHover = false;
+	public bool tempBool = false;
+
+	public Vector3 selectedNode;
+	public Vector3 cameraPosition;
+
+	public bool showProgramList = false;
 
 	public List<string> messages = new List<string>();
 	public List<string> messagesTitle = new List<string>();
 	public List<string> sites = new List<string> ();
 	public List<string> placesToGo = new List<string> ();
+	public List<string> programList = new List<string> ();
+	public List<string> programText = new List<string> ();
 
 	public Rect GIWindow;
 	public float guiAlpha;
 	public Color tempColor;
+	public Rect netscapeBoxSize;
 
 	//Audio Stuff
 	public AudioSource audio;
@@ -95,6 +111,7 @@ public class OverworldManager : MonoBehaviour {
 
 	public int dialogController = 0;
 	public int dialogControllerMenu = 0;
+	public float textSpeed = 0.02f;
 
 	public int defaultWidth;
 
@@ -137,8 +154,9 @@ public class OverworldManager : MonoBehaviour {
 
 		defaultWidth = 1080;
 		InvokeRepeating("flash", 0, 0.3f);
-		InvokeRepeating("textPrinter", 0, 0.02f);
+		InvokeRepeating("textPrinter", 0, textSpeed);
 		InvokeRepeating ("fader", 0, 0.01f);
+		InvokeRepeating ("fadeMusic", 0, 0.01f);
 		InvokeRepeating ("backgroundAnimator", 0, 0.01f);
 
 		i = 0;
@@ -150,13 +168,14 @@ public class OverworldManager : MonoBehaviour {
 
 		scene1Background1 = Resources.Load ("Textures/background_scene1_light") as Texture;
 		scene1Background2 = Resources.Load ("Textures/background_scene1_nolight") as Texture;
-		scene2Background = Resources.Load ("Textures/arrow") as Texture;
+		scene1Background = Resources.Load ("Textures/arrow") as Texture;
 		map = Resources.Load ("Textures/map") as Texture;
 
 		flickeringLight = Resources.Load ("audio/flickering") as AudioClip;
 		click = Resources.Load ("audio/click") as AudioClip;
 		train = Resources.Load ("audio/train") as AudioClip;
-		song1 = Resources.Load ("audio/Shinjuku_Golden_Street") as AudioClip;
+		song1 = Resources.Load ("audio/Stavarsky - Posthuman") as AudioClip;
+		song2 = Resources.Load ("audio/Shinjuku_Golden_Street") as AudioClip;
 
 		//song1 = Resources.Load ("audio/Shinjuku_Golden_Street") as AudioClip;
 		//song2 = Resources.Load ("audio/Shinjuku_Golden_Street") as AudioSource;
@@ -192,7 +211,7 @@ public class OverworldManager : MonoBehaviour {
 			StartScene ();
 		}
 
-		if (menuStarted == false && Input.GetMouseButtonDown (0)) {
+		if (menuStarted == false && Input.GetMouseButtonDown (0) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space)) {
 			if (freeMode == false && dialogReady == true && responseWanted == false) {
 				print ("You pressed!");
 				dialogController++;
@@ -217,11 +236,10 @@ public class OverworldManager : MonoBehaviour {
 
 			} 
 		}
-		if (menuStarted == false && Input.GetKeyDown(KeyCode.Escape)) {
-			menuStarted = true;
-		}
-		if (menuStarted == true && Input.GetKeyDown(KeyCode.Escape)) {
-			menuStarted = false;
+		if (Input.GetKeyDown(KeyCode.Escape)) {
+			if (menuStarted == false){
+				menuStarted = true;
+			} else {menuStarted = false;}
 		}
 
 	}
@@ -291,16 +309,35 @@ public class OverworldManager : MonoBehaviour {
 		response4 = "";
 		GetComponent<AudioSource>().PlayOneShot(click);
 	}
-	public void nodeClicked (int node, string nodeName, string nodeText){
+	public void nodeClicked (int node, string nodeName, string nodeText, Vector3 nodePosition){
+
+		selectedNode = nodePosition;
+		selectedNode = new Vector3 (selectedNode.x - 20, selectedNode.y + 20, selectedNode.z - 20);
 		nodeTitle = nodeName;
 		nodeDescription = nodeText;
 		nodeNumber = node;
 		showNode = true;
 	}
+	public void nodeHovered (string nodeName){
+		nodeTitle = nodeName;
+		nodeHover = true;
+		tempBool = true;
+
+	}
+	public void nodeUnHovered (){
+		nodeTitle = "";
+		nodeHover = false;
+	}
 	public IEnumerator pause(float delay) {
 		print(Time.time);
 		yield return new WaitForSeconds(20);
 		print(Time.time);
+	}
+	public void cameraFixed (Vector3 cameraFixedPoint){
+		cameraPosition = Camera.main.transform.position;
+		CameraNetscape.instance.transform.position = Vector3.Lerp(cameraPosition, cameraFixedPoint, Time.deltaTime * 2.0f);
+		//MAKE THIS A LERP ---------------------------------------------------------------------------------------------------------------------- : )
+		// new Vector3 (cameraFixedPoint.x - 20, cameraFixedPoint.z + 55, cameraFixedPoint.z - 20);
 	}
 
 	//Fade Code here ---------------------------------------------------------------------------------------------------------------
@@ -373,6 +410,23 @@ public class OverworldManager : MonoBehaviour {
 			}
 		}
 
+	}
+	public void fadeMusic(){
+		if (fadeOutMusic == true) {
+			GetComponent<AudioSource>().volume = GetComponent<AudioSource>().volume - 0.001f;
+			if (GetComponent<AudioSource>().volume <= 0){
+				GetComponent<AudioSource>().Stop();
+				GetComponent<AudioSource>().volume = 0.1f;
+				fadeOutMusic = false;
+			}
+		}
+		if (fadeInMusic == true) {
+			GetComponent<AudioSource>().volume = GetComponent<AudioSource>().volume - 0.001f;
+			if (GetComponent<AudioSource>().volume >= 0.1f){
+				GetComponent<AudioSource>().volume = 0.1f;
+				fadeInMusic = false;
+			}
+		}
 	}
 	public void backgroundAnimator(){
 		if (scene == 1 && guiAlpha >= 1) {
@@ -458,7 +512,7 @@ public class OverworldManager : MonoBehaviour {
 
 		if (scene == 2 && menuStarted == false && freeMode == true) {
 
-			computerText = day.ToString()+"日目 - Day "+day.ToString()+"\n"+money+"¥";
+			computerText = day.ToString()+"日目 - Day "+day.ToString()+"\n"+date+"\n¥"+money;
 
 			if (netscapeOpen == false){
 			GUILayout.BeginArea (new Rect (Screen.width*0.05f, Screen.height*0.05f, Screen.width-Screen.width*0.1f, Screen.height-Screen.height*0.1f));
@@ -488,7 +542,7 @@ public class OverworldManager : MonoBehaviour {
 					if (placesToGo.Count <= 0){
 						i = 0;
 						textBoxShown = true;
-						text = "I haven't got anything else to do.";
+						text = "You're kidding, right?";
 					}else {
 						mapOpen = true;
 					}
@@ -513,10 +567,10 @@ public class OverworldManager : MonoBehaviour {
 				GUILayout.EndArea ();
 			}
 			if (inboxOpen == true){
-				GUILayout.BeginArea (new Rect (Screen.width*0.07f, Screen.height/3, Screen.width/4, Screen.height/2));
+				GUILayout.BeginArea (new Rect (Screen.width*0.07f, Screen.height/3, Screen.width/3, Screen.height/2));
 				GUILayout.BeginVertical ("", GUI.skin.GetStyle ("comp"));
 				//scrollPosition = GUILayout.BeginScrollView (scrollPosition, GUILayout.Width (Screen.width/2), GUILayout.Height (Screen.height/6));
-				for (int m = 0; m < messages.Count; m++){
+				for (int m = messages.Count-1; m >= 0; m--){
 					if (GUILayout.Button(messagesTitle[m])){
 						messageText = messages[m];
 					}
@@ -528,41 +582,121 @@ public class OverworldManager : MonoBehaviour {
 				//GUILayout.EndScrollView ();
 				GUILayout.EndVertical ();
 				GUILayout.EndArea ();
-				GUILayout.BeginArea (new Rect (Screen.width/2.5f, Screen.height/8, Screen.width/2, Screen.height/1.2f));
-				//GUILayout.BeginVertical ("", GUI.skin.GetStyle ("comp"));
-				scrollPosition = GUILayout.BeginScrollView (scrollPosition, GUI.skin.GetStyle("comp"), GUILayout.Width (Screen.width/2 - 24), GUILayout.Height (Screen.height/1.5f));
+
+				GUILayout.BeginArea (new Rect (Screen.width/2.3f, Screen.height/6, Screen.width/2, Screen.height/1.5f));
+
+				GUILayout.BeginVertical ("", GUI.skin.GetStyle ("comp"));
+				scrollPosition = GUILayout.BeginScrollView (scrollPosition, GUI.skin.GetStyle("empty"), GUILayout.Width (Screen.width/2 - 24), GUILayout.Height (Screen.height/1.65f));
 				GUILayout.Label(messageText);
 				GUILayout.EndScrollView ();
-				//GUILayout.EndVertical ();
+				GUILayout.EndVertical ();
 				GUILayout.EndArea ();
 			}
 			if (netscapeOpen == true){
-				GUILayout.BeginArea (new Rect (Screen.width*0.07f, Screen.height/3, Screen.width/6, Screen.height/4));
-				GUILayout.BeginVertical ("", GUI.skin.GetStyle ("comp"));
 
-				if (GUILayout.Button ("Return")) {
-					netscapeOpen = false;
-					showNode = false;
+				//AREA -----------------------------------------------------------------------------------------------------------
+				GUILayout.BeginArea (new Rect (0,0,Screen.width/5,Screen.height/12));
+				GUILayout.BeginHorizontal("", GUI.skin.GetStyle("empty"));
+
+				if (GUILayout.Button ("[Return]")) {
+					if (showProgramList == false){
+						netscapeOpen = false;
+						showNode = false;
+						grayNode = true;
+					}
+					else {
+						showProgramList = false;
+					}
+				}
+				if (showProgramList == false){
+					if (GUILayout.Button ("  [Programs]")) {
+						showProgramList = true;
+					}
+				}
+
+				GUILayout.EndHorizontal();
+				GUILayout.EndArea();
+
+
+				GUILayout.BeginArea (netscapeBoxSize);
+				if (showNode == false){
+					netscapeBoxSize = new Rect (Screen.width, Screen.height, 0, 0);
+				} else {
+					cameraFixed(selectedNode);
+					netscapeBoxSize = new Rect (Screen.width/4, Screen.height/6, Screen.width/2, Screen.height/2);
+				}
+
+				//VERTICAL -------------------------------------------------------------
+
+				GUILayout.BeginVertical ("", GUI.skin.GetStyle ("netscape"));
+				GUI.skin.label.fontSize = Mathf.RoundToInt (30 * Screen.width / (OverworldManager.instance.defaultWidth* 1.0f));
+
+				GUI.skin.label.fontSize = Mathf.RoundToInt (18 * Screen.width / (OverworldManager.instance.defaultWidth* 1.0f));
+
+				if (showNode == true){
+
+					GUI.skin.label.fontSize = Mathf.RoundToInt (30 * Screen.width / (OverworldManager.instance.defaultWidth* 1.0f));
+					GUILayout.Label(nodeTitle+"\n");
+					GUI.skin.label.fontSize = Mathf.RoundToInt (18 * Screen.width / (OverworldManager.instance.defaultWidth* 1.0f));
+
+					scrollPosition = GUILayout.BeginScrollView (scrollPosition, GUI.skin.GetStyle("empty"), GUILayout.Width (Screen.width/2.05f), GUILayout.Height (Screen.height/3.5f));
+					GUILayout.Label(nodeDescription);
+					GUILayout.EndScrollView ();
+
+					GUILayout.BeginHorizontal("", GUI.skin.GetStyle("empty"));
+					if (GUILayout.Button("[Connect to Node]")){
+						nodeUnHovered ();
+						showNode = false;
+						grayNode = true;
+						loadBattle(nodeNumber);
+						//Application.LoadLevel(nodeNumber);
+					}
+					if (GUILayout.Button("  [Close]")){
+						nodeUnHovered ();
+						showNode = false;
+						grayNode = true;
+					}
+					GUILayout.EndHorizontal();
+
+
+				}
+
+				//VERTICAL -------------------------------------------------------------
+				//HORIZONTAL --------------------------------------------------
+				/*GUILayout.BeginHorizontal ("", GUI.skin.GetStyle ("netscape"));
+
+				if (showProgramList == false && programList.Count > 0){
+					if (GUILayout.Button ("Programs")) {
+						showProgramList = true;
+						showNode = false;
+						grayNode = true;
+					}
+				} else {
+					for (int p = 0; p < programList.Count; p++){
+						if (GUILayout.Button(programList[p])){
+							programDescription = programText[p];
+						}
+					}
 				}
 				
+				GUILayout.EndHorizontal ();*/
 				GUILayout.EndVertical ();
+				//HORIZONTAL --------------------------------------------------
+
 				GUILayout.EndArea ();
-				if (showNode == true){
+
+				//AREA -----------------------------------------------------------------------------------------------------------
+
+				/*if (showProgramList == true){
 					GUILayout.BeginArea (new Rect (Screen.width/2.5f, Screen.height/8, Screen.width/2, Screen.height/1.2f));
 					GUILayout.BeginVertical ("", GUI.skin.GetStyle ("comp"));
 					scrollPosition = GUILayout.BeginScrollView (scrollPosition, GUILayout.Width (Screen.width/2 - 24), GUILayout.Height (Screen.height/1.5f));
-					GUILayout.Label(nodeNumber+". "+nodeTitle+"\n\n"+nodeDescription+"\n\n");
+					GUILayout.Label(programDescription);
 					GUILayout.EndScrollView ();
-					GUILayout.Label("--------------------------------------------------");
-					if (GUILayout.Button("Connect to Node")){
-						showNode = false;
-					}
-					if (GUILayout.Button("Close")){
-						showNode = false;
-					}
 					GUILayout.EndVertical ();
 					GUILayout.EndArea ();
-				}
+				}*/
+
 			}
 			
 		}
@@ -572,7 +706,7 @@ public class OverworldManager : MonoBehaviour {
 
 		//TEXT BOX----------------------------------------------------------------------------------------------------------------------------ZZ
 
-		if (textBoxShown == true) {
+		if (textBoxShown == true && menuStarted == false) {
 
 			GUILayout.BeginArea (new Rect (Screen.width / 6, Screen.height / 1.5f, Screen.width / 1.5f, Screen.height / 5));
 			GUILayout.BeginVertical ("", GUI.skin.GetStyle ("window"));
@@ -588,7 +722,7 @@ public class OverworldManager : MonoBehaviour {
 
 		}
 
-		if (responseWanted == true) {
+		if (responseWanted == true && menuStarted == false) {
 
 			GUILayout.BeginArea (new Rect (Screen.width / 3, Screen.height / 2, Screen.width / 2, Screen.height / 8));
 			GUILayout.BeginVertical ("", GUI.skin.GetStyle ("window"));
@@ -623,7 +757,7 @@ public class OverworldManager : MonoBehaviour {
 			//Log on interface, all text displayed here
 			GUILayout.BeginArea (new Rect (10, 10, Screen.width / 3, Screen.height - 10));
 			//GUILayout.BeginVertical ("コンピュータログ", GUI.skin.GetStyle ("window"));
-			GUILayout.BeginVertical ("", GUI.skin.GetStyle ("box"));
+			GUILayout.BeginVertical ("", GUI.skin.GetStyle ("comp"));
 			scrollPosition = GUILayout.BeginScrollView (scrollPosition, GUILayout.Width (Screen.width / 3 - 27), GUILayout.Height (Screen.height - 60));
 
 
@@ -649,11 +783,12 @@ public class OverworldManager : MonoBehaviour {
 
 			//Buttons on interface
 			GUILayout.BeginArea (new Rect (Screen.width / 3 + 20, Screen.height * 0.76f, Screen.width - 30 - Screen.width / 3, Screen.height * 0.238f));
-			GUILayout.BeginVertical ("", GUI.skin.GetStyle ("box"));
+			GUILayout.BeginVertical ("", GUI.skin.GetStyle ("comp"));
 
 			//MENY, START LOAD OPTIONS EXIT
 			if (menuStarted == true) {
 				if (GUILayout.Button (">Application.LoadLevel(1);")) {
+					fadeOutMusic = true;
 					scene = 1;
 					dialogController = -1;
 					menuStarted = false;
@@ -684,6 +819,12 @@ public class OverworldManager : MonoBehaviour {
 			GUILayout.EndVertical ();
 			GUILayout.EndArea ();
 
+		}
+	}
+	void loadBattle(int level){
+		if (level == 9) {//Training Grounds
+			matchStarted = true;
+			Application.LoadLevel (1);//Tutorial Battle with Aya
 		}
 	}
 }

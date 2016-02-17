@@ -28,5 +28,6 @@ public class CameraMap : MonoBehaviour {
 		}
 		GetComponent<Camera>().pixelRect = new Rect (Screen.width / cameraPosX, Screen.height/5, Screen.width/1.48f, Screen.height * 0.72f);
 
+
 	}
 }

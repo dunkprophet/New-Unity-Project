@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.ComponentModel;
 
 public class AIPlayer : Player {
 
@@ -223,6 +224,16 @@ public class AIPlayer : Player {
 		if (health <= 0){
 			GameManager.instance.AIplayers.RemoveAt(indexAI);
 			GameManager.instance.attackPosition = new Vector3(-1,-1,-1);
+			for (int l = 0; l < 12; l++){
+				if (GameManager.instance.AIplayers[indexAI+l] != null){
+						GameManager.instance.currentAIPlayerIndex = indexAI+l;
+					}
+			}
+			for (int l = 0; l > 12; l++){
+				if (GameManager.instance.AIplayers[indexAI-l] != null){
+					GameManager.instance.currentAIPlayerIndex = indexAI-l;
+				}
+			}
 			Destroy(this.gameObject);
 		}
 	}
@@ -237,12 +248,32 @@ public class AIPlayer : Player {
 			if (health <= 0){
 				GameManager.instance.AIplayers.RemoveAt(indexAI);
 				GameManager.instance.attackPosition = new Vector3(-1,-1,-1);
+				for (int l = 0; l < 12; l++){
+					if (GameManager.instance.AIplayers[indexAI+l] != null){
+						GameManager.instance.currentAIPlayerIndex = indexAI+l;
+					}
+				}
+				for (int l = 0; l > 12; l++){
+					if (GameManager.instance.AIplayers[indexAI-l] != null){
+						GameManager.instance.currentAIPlayerIndex = indexAI-l;
+					}
+				}
 				Destroy(this.gameObject);
 			}
 		}
 		if (health <= 0){
 			GameManager.instance.AIplayers.RemoveAt(indexAI);
 			GameManager.instance.attackPosition = new Vector3(-1,-1,-1);
+			for (int l = 0; l < 12; l++){
+				if (GameManager.instance.AIplayers[indexAI+l] != null){
+					GameManager.instance.currentAIPlayerIndex = indexAI+l;
+				}
+			}
+			for (int l = 0; l > 12; l++){
+				if (GameManager.instance.AIplayers[indexAI-l] != null){
+					GameManager.instance.currentAIPlayerIndex = indexAI-l;
+				}
+			}
 			Destroy(this.gameObject);
 		}
 		GameManager.instance.attackPosition = new Vector3(-1,-1,-1);

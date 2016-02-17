@@ -21,12 +21,13 @@ public class CameraNetscape : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (OverworldManager.instance.netscapeOpen == true) {
-			cameraPosX = 4;
-		} else {
-			cameraPosX = 1;
-		}
-		GetComponent<Camera>().pixelRect = new Rect (Screen.width / cameraPosX, Screen.height/5, Screen.width/1.48f, Screen.height * 0.72f);
 
+		if (OverworldManager.instance.netscapeOpen == true) {
+			cameraPosX = 0;
+		} else {
+			cameraPosX = Screen.width;
+		}
+		//GetComponent<Camera>().pixelRect = new Rect (Screen.width / cameraPosX, Screen.height/5, Screen.width/1.48f, Screen.height * 0.72f);
+		GetComponent<Camera>().pixelRect = new Rect (cameraPosX, 0, Screen.width, Screen.height);
 	}
 }

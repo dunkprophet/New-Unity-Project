@@ -244,7 +244,7 @@ public class DockingStation : MonoBehaviour {
 				OverworldManager.instance.text = "\"For wanting my due payment? No.\"";
 			}
 			if (OverworldManager.instance.dialogController == 40) {
-				OverworldManager.instance.text = "At the end of the alley, Calvin saw two groups of men glaring at each other at the end of the alley.";
+				OverworldManager.instance.text = "Calvin saw two groups of men glaring at each other at the end of the alley.";
 			}
 			if (OverworldManager.instance.dialogController == 41) {
 				OverworldManager.instance.text = "\"Go fuck youself,\" said the guy to the right, a gangly fellow wearing a black jacket and a cloth around his face.";
@@ -305,7 +305,7 @@ public class DockingStation : MonoBehaviour {
 				OverworldManager.instance.text = "Every step they took drenched their boots in blood.";
 			}
 			if (OverworldManager.instance.dialogController == 59) {
-				OverworldManager.instance.text = "The Yakuza looked on, pale-faced. \"Kuso.\" Calvin saw him clenching his gun, aiming it towards the cops, his hands shaking in either anger or grief.";
+				OverworldManager.instance.text = "The Yakuza looked on, pale-faced. \"Kuso.\" Calvin saw him clenching his gun, aiming it towards the cops, his hands shaking.";
 			}
 			if (OverworldManager.instance.dialogController == 60) {
 				OverworldManager.instance.text = "\"They'll pay for this,\" he said, lowering his weapon. \"Follow me.\"";
@@ -371,7 +371,7 @@ public class DockingStation : MonoBehaviour {
 			}
 			if (OverworldManager.instance.dialogController == 79) {
 				OverworldManager.instance.responseWanted = true;
-				OverworldManager.instance.response1 = "\"Calvin.\"";
+				OverworldManager.instance.response1 = "\"I'm Calvin.\"";
 				OverworldManager.instance.response2 = "\"...\"";
 				OverworldManager.instance.text = "\"...\"";
 			}
@@ -381,8 +381,11 @@ public class DockingStation : MonoBehaviour {
 			if (OverworldManager.instance.dialogController == 80 && OverworldManager.instance.response2picked == true) {
 				OverworldManager.instance.text = "\"...\"";
 			}
-			if (OverworldManager.instance.dialogController == 81) {
+			if (OverworldManager.instance.dialogController == 81 && OverworldManager.instance.response1picked == true) {
 				OverworldManager.instance.text = "\"Actually,\" Saburo interuppted him. \"I don't care. Just give me your adress.\"";
+			}
+			if (OverworldManager.instance.dialogController == 81 && OverworldManager.instance.response2picked == true) {
+				OverworldManager.instance.text = "\"Fine, whatever,\" Saburo said. \"I don't care. Just give me your adress.\"";
 			}
 			if (OverworldManager.instance.dialogController == 82) {
 				OverworldManager.instance.text = "Calvin paused for a second, before mumbling the old nickname he'd used when he registered for his first e-mail at age nine.";
@@ -402,7 +405,7 @@ public class DockingStation : MonoBehaviour {
 			if (OverworldManager.instance.dialogController == 86 && OverworldManager.instance.response1picked == true) {
 				OverworldManager.instance.responseWanted = true;
 				OverworldManager.instance.response1 = "\"What do you want from me?\"";
-				OverworldManager.instance.response2 = "\"Thank you for not shooting me.\"";
+				OverworldManager.instance.response2 = "\"Thank you.\"";
 				OverworldManager.instance.text = "\"Yeah?\"\n\n\"...\"";
 			}
 			if (OverworldManager.instance.dialogController == 86 && OverworldManager.instance.response2picked == true) {
@@ -415,7 +418,7 @@ public class DockingStation : MonoBehaviour {
 				OverworldManager.instance.text = "Saburo shook his head. \"I don't want anything. I just need you to be my witness.\"";
 			}
 			if (OverworldManager.instance.dialogController == 89 && OverworldManager.instance.response1picked == true) {
-				OverworldManager.instance.text = "He took a deep breath of smoke. \"I'll contact you when the it's time. Until then, as I said, I just need you to stay alive.\"";
+				OverworldManager.instance.text = "He took a deep drag of his cigarette. \"I'll contact you when the it's time. Until then, as I said, I just need you to stay alive.\"";
 			}
 			if (OverworldManager.instance.dialogController == 90 && OverworldManager.instance.response1picked == true) {
 				OverworldManager.instance.text = "\"Sounds good?\"";
@@ -427,7 +430,7 @@ public class DockingStation : MonoBehaviour {
 				OverworldManager.instance.text = "He smirked in return. \"Alright. See ya.\"";
 			}
 			if (OverworldManager.instance.dialogController == 86 && OverworldManager.instance.response2picked == true) {
-				OverworldManager.instance.text = "\"Thank you for not shooting me.\"";
+				OverworldManager.instance.text = "\"Thank you.\"";
 			}
 			if (OverworldManager.instance.dialogController == 87 && OverworldManager.instance.response2picked == true) {
 				OverworldManager.instance.text = "Saburo smirked. \"No problem. I kind of need you to stay alive, after all. See ya.\"";
@@ -485,7 +488,7 @@ public class DockingStation : MonoBehaviour {
 				OverworldManager.instance.text = "He never did too well in school- the main reason why he's wandering the streets of Chiba in the middle of night instead of sleeping at some fancy student-complex.";
 			}
 			if (OverworldManager.instance.dialogController == 108) {
-				OverworldManager.instance.text = "...wandering through the dark tunnel-like passageways of Inaga was starting to get to him.";
+				OverworldManager.instance.text = "...the dark tunnel-like passageways of Inaga were starting to get to him.";
 			}
 			if (OverworldManager.instance.dialogController == 109) {
 				OverworldManager.instance.deleteOldText = false;
@@ -499,7 +502,7 @@ public class DockingStation : MonoBehaviour {
 				OverworldManager.instance.text = "On the site it had said, \"ENTRANCE HIDDEN BEHIND ELECTRONICS STORE,\" which only made it harder to find. Every street in Inaga had a store like that.";
 			}
 			if (OverworldManager.instance.dialogController == 112) {
-				OverworldManager.instance.text = "Having walked around for almost two hours, Calvin finally crossed paths with someone. A man in a cloak.";
+				OverworldManager.instance.text = "Having walked around for almost two hours, Calvin finally crossed paths with someone. A man in a cape.";
 			}
 			if (OverworldManager.instance.dialogController == 113) {
 				OverworldManager.instance.text = "He spotted him walking in circles by a street corner, mumbling to himself.";
@@ -523,7 +526,7 @@ public class DockingStation : MonoBehaviour {
 				OverworldManager.instance.text = "Calvin took a step back.";
 			}
 			if (OverworldManager.instance.dialogController == 120) {
-				OverworldManager.instance.text = "The old man laughed. \"You're that kid, right? The one who signed up for box 106?\"";
+				OverworldManager.instance.text = "The old man chuckled. \"You're that kid, right? The one who signed up for box 106?\"";
 			}
 			if (OverworldManager.instance.dialogController == 121) {
 				OverworldManager.instance.text = "Calvin nodded and walked up to him. \"Yes! You're Hachi?\"";
@@ -604,16 +607,41 @@ public class DockingStation : MonoBehaviour {
 				OverworldManager.instance.dialogController = 0;
 				OverworldManager.instance.text = "";
 				OverworldManager.instance.day = 2;
+				OverworldManager.instance.date = "22 September";
 				OverworldManager.instance.scene = 2;
 				OverworldManager.instance.freeMode = true;
+
 				OverworldManager.instance.unreadMessages++;
-				OverworldManager.instance.messagesTitle.Add("[06:28]: Hey Kid");
-				OverworldManager.instance.messages.Add("Hey Kid\n\nI'm sure you feel as shitty as I do about what happened yesterday. " +
+				OverworldManager.instance.messagesTitle.Add("09/22 - Hey Kid");
+				OverworldManager.instance.messages.Add("[06:28:15]: Hey Kid\n\nI'm sure you feel as shitty as I do about what happened yesterday. " +
 					"Actually, no, I should feel worse considering they were my friends. " +
 					"Then again, you probably have a lot less experience with death, and killings, whilst I have tons." +
 					"\n\n...whatever, look. I want this to be over with too, so just do as I say: LAY LOW. Don't make anyone look at you funny, " +
 					"and don't fucking talk about what you saw yesterday. Okay? Good. I'll write to you in three days, THREE DAYS, " +
 					"to tell you where I want you, and when.\n\nDon't fuck up till then.\n\n/Saburo");
+				OverworldManager.instance.unreadMessages++;
+				OverworldManager.instance.messagesTitle.Add("09/22 - Concerning payment");
+				OverworldManager.instance.messages.Add("[18:02:59]: From Hachi\n\nYou didn't listen to me yesterday, so here's the info again:" +
+					"\n\n-¥35000 a month, delvered to me PERSONALLY" +
+					"\n-No drugs" +
+					"\n-No pets" +
+					"\n-No loud noises after midnight" +
+					"\n-NO HACKING!" +
+					"\n\nI know your type. Hoping to relive the lives of the \"netscapers\" by living on their old street. Bah." +
+					" If you want to be a dank hacker, then you can find some other place to live. Or use a proxy.");
+				OverworldManager.instance.unreadMessages++;
+				OverworldManager.instance.messagesTitle.Add("09/22 - Calvin!");
+				OverworldManager.instance.messages.Add("[20:09:30]: Calvin!\n\n" +
+				    "I just got your message, sorry for not looking in my inbox sooner (;﹏;) I've been REALLY busy at school\n\n" +
+					"But cool! Moving to Chiba all by yourself, that's awesome! " +
+					"Would have been even better if you would have gotten in somewhere..." +
+					" but you can always try for a spot next year! Don't forget to get a job too, " +
+					"just a temporary one, of course, but still! You need to be able to pay for your apartment.\n\n" +
+					"You DO have an apartment, don't you? Chiba is the easiest place in the world for that right now," +
+					" so it shouln't be a problem :) Just write if you need any help with anything, I promise to answer you this time!!!" +
+					"\n\n /Aya\n\nPS. If you wanna talk, just head on over to the Training Ground on the net. I can show you some of the" +
+				    " stuff we do at TT in our spare time! (Hint: It involves programming v(￣∇￣))");
+					
 
 			}
 
