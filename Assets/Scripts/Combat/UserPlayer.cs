@@ -7,6 +7,7 @@ public class UserPlayer : Player {
 
 	public int health;
 	public int moves;
+	public int maxMoves;
 	public int maxHealth;
 
 	public bool playerSelected;
@@ -23,6 +24,9 @@ public class UserPlayer : Player {
 	public bool hasAttacked;
 	public bool noMovesSelected;
 	public bool attacking;
+
+	public bool dead = false;
+	public bool deadCheck = false;
 
 	public float tempPositionX;
 	public float tempPositionY;
@@ -78,12 +82,24 @@ public class UserPlayer : Player {
 	// Update is called once per frame
 	void Update ()
 	{
+		if (dead == true) {
+			markedTiles.Clear ();
+			transform.position = new Vector3 (45 + playerNumber, 0, 46);
+			moves = 0;
+			
+			if (deadCheck == false){
+				deadCheck = true;
+				GameManager.instance.deadPlayers++;
+			}
+			
+		}
+
+		if (GameManager.instance.tilesListBothPlayers.Contains (transform.position) == false) {
+			GameManager.instance.tilesListBothPlayers.Add (transform.position);
+		}
 
 		if (GameManager.instance.matchStarted == true) {
-			
-			if (health == 0) {
-				Destroy(this.gameObject);
-			}
+
 			if (doingItOnce == false) {
 				Player player;
 				player = this;
@@ -97,22 +113,7 @@ public class UserPlayer : Player {
 				GameManager.instance.attackDamage = attackDamage;
 			}
 			if (markedTiles.Contains(GameManager.instance.attackPosition)){
-				GameManager.instance.attackHit = false;
-				GameManager.instance.attackDamage = tempInt;
-				while (tempInt > 0){
-					tempVector = markedTiles[0];
-					markedTiles.RemoveAt(0);
-					GameManager.instance.tilesListBothPlayers.Remove(tempVector);
-					tempInt--;
-					health = markedTiles.Count;
-					if (health <= 0){
-						Destroy(this.gameObject);
-					}
-				}
-				if (health <= 0){
-					Destroy(this.gameObject);
-				}
-				GameManager.instance.attackPosition = new Vector3(-1,-1,-1);
+				takingDamage();
 			}
 
 
@@ -163,6 +164,30 @@ public class UserPlayer : Player {
 			//tempPositionY = transform.localPosition.z;
 
 		}
+	}
+
+	public void takingDamage(){
+		
+		tempInt = GameManager.instance.attackDamage;
+		while (tempInt > 0 && dead == false) {
+			tempVector = markedTiles [0];
+			markedTiles.RemoveAt (0);
+			GameManager.instance.tilesListBothPlayers.Remove (tempVector);
+			tempInt--;
+			health = markedTiles.Count;
+			if (health <= 0) {
+
+				//Destroy(this.gameObject);
+				dead = true;
+			}
+		}
+		
+		if (health <= 0){
+			GameManager.instance.attackPosition = new Vector3(-1,-1,-1);
+
+			dead = true;
+		}
+		GameManager.instance.attackPosition = new Vector3(-1,-1,-1);
 	}
 
 	public static bool notAI (){

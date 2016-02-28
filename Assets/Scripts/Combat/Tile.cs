@@ -17,6 +17,10 @@ public class Tile : MonoBehaviour {
 	public int tempInt;
 	public int blue;
 
+	public float markHeight = 0.65f;
+
+	public bool enteredTile = false;
+
 	public bool bumpTileCreated = false;
 	public bool bumpAttackTileCreated = false;
 	public bool bumpMarkedTileCreated = false;
@@ -45,6 +49,20 @@ public class Tile : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
+
+		if (bumpTileCreated == true && GameManager.instance.currentPlayerPosition == transform.position){
+			Destroy (transform.FindChild ("movableTilePrefab(Clone)").gameObject);
+			bumpTileCreated = false;
+		} 
+		if (bumpTileCreated == true && GameManager.instance.tilesListBothPlayers.Contains(transform.position) == true && GameManager.instance.players[GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains(transform.position) == false){
+			Destroy (transform.FindChild ("movableTilePrefab(Clone)").gameObject);
+			bumpTileCreated = false;
+		} 
+		if (bumpTileCreated == true && GameManager.instance.tilesListAllAIPlayers.Contains(transform.position) == true){
+			Destroy (transform.FindChild ("movableTilePrefab(Clone)").gameObject);
+			bumpTileCreated = false;
+		}
+
 		if (movableTile == true) {
 			if (GameManager.instance.players[GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer>().moves <= 0){
 				movableTile = false;
@@ -103,8 +121,21 @@ public class Tile : MonoBehaviour {
 
 					if (bumpTileCreated == false) {
 						print ("Spawning Mark");
-						createMoveMark ();
+						if (GameManager.instance.currentPlayerPosition != transform.position){
+							createMoveMark ();
+						}
+						
+					} else if (bumpTileCreated == true && GameManager.instance.currentPlayerPosition == transform.position){
+						Destroy (transform.FindChild ("movableTilePrefab(Clone)").gameObject);
+						bumpTileCreated = false;
+					} if (bumpTileCreated == true && GameManager.instance.tilesListBothPlayers.Contains(transform.position) == true && GameManager.instance.players[GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains(transform.position) == false){
+						Destroy (transform.FindChild ("movableTilePrefab(Clone)").gameObject);
+						bumpTileCreated = false;
+					} if (bumpTileCreated == true && GameManager.instance.tilesListAllAIPlayers.Contains(transform.position) == true){
+						Destroy (transform.FindChild ("movableTilePrefab(Clone)").gameObject);
+						bumpTileCreated = false;
 					}
+
 
 				} else if (bumpTileCreated == true) {
 					Destroy (transform.FindChild ("movableTilePrefab(Clone)").gameObject);
@@ -121,7 +152,9 @@ public class Tile : MonoBehaviour {
 			if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().attacking == true && attackableTile == true) {
 				if (bumpAttackTileCreated == false) {
 					print ("Spawning Mark");
-					createAttackMark ();
+					if (GameManager.instance.currentPlayerPosition != transform.position){
+						createAttackMark ();
+					}
 				}
 			} 
 			if (bumpAttackTileCreated == true && GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().attacking == false) {
@@ -132,13 +165,19 @@ public class Tile : MonoBehaviour {
 			}
 		}
 	}
-	
+
+	void OnMouseExit() 
+	{
+		movableTile = false;
+	}
+
 	void OnMouseEnter()
 	{
+
 		if (GameManager.instance.matchStarted == true && GameManager.instance.gamePaused == false) {
 			if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) < 1.1f) {
 
-				if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == false && GameManager.instance.tilesListBothPlayers.Contains (tilePosition) == false ) {
+				if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == false && GameManager.instance.tilesListBothPlayers.Contains (tilePosition) == false) {
 					movableTile = true;
 				}
 				if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == false && GameManager.instance.tilesListBothPlayers.Contains (tilePosition) == true) {
@@ -150,12 +189,15 @@ public class Tile : MonoBehaviour {
 				if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == true) {
 					movableTile = true;
 				}
-				if (GameManager.instance.tilesListAllAIPlayers.Contains(tilePosition) == true){
+				if (GameManager.instance.tilesListAllAIPlayers.Contains (tilePosition) == true) {
 					movableTile = false;
 				}
 			}
 		}
+
 	}
+
+
 	void createMarkedMark(){
 		GameObject mark; 
 		mark = (GameObject)Instantiate (
@@ -178,24 +220,20 @@ public class Tile : MonoBehaviour {
 		GameObject mark; 
 		mark = (GameObject)Instantiate (
 			GameManager.instance.movableTilePrefab,
-			new Vector3(transform.position.x, 0.5f,transform.position.z),
+			new Vector3(transform.position.x, 0.65f,transform.position.z),
 			Quaternion.Euler (new Vector3 ()));
 		mark.transform.parent = transform;
 		bumpTileCreated = true;
+		OnMouseEnter ();
 	}
 	void createAttackMark(){
 		GameObject mark; 
 		mark = (GameObject)Instantiate (
 			GameManager.instance.attackableTilePrefab,
-			new Vector3(transform.position.x, 0.5f,transform.position.z),
+			new Vector3(transform.position.x, 0.65f,transform.position.z),
 			Quaternion.Euler (new Vector3 ()));
 		mark.transform.parent = transform;
 		bumpAttackTileCreated = true;
-	}
-
-	void OnMouseExit()
-	{
-		movableTile = false;
 	}
 
 	void OnMouseDown (){

@@ -7,7 +7,7 @@ using System.ComponentModel;
 public class AIPlayer : Player {
 
 	public static bool AI = true;
-	public int moves = 3;
+	public int moves;
 	public Vector3 target;
 	public Vector3 tempVector;
 
@@ -17,11 +17,15 @@ public class AIPlayer : Player {
 	public Vector3 currentAIPlayerPosition;
 
 	public bool attacking;
-	public bool hasAttacked;
 	public bool targetFound;
 	public bool canMove;
 	public bool pathFound;
 	public bool ready = true;
+
+	public bool deadCheck = false;
+
+	//MAKE THIS WORK, MOVE OUTSIDE AND MAKE UNMOVABLE!!___________________________
+	public bool dead = false;
 
 	public List<Vector3> AImovement = new List<Vector3>();
 	public List<Vector3> AImovementSecondary = new List<Vector3>();
@@ -35,6 +39,7 @@ public class AIPlayer : Player {
 
 	public int indexAI;
 	public int maxHealth;
+	public int maxMoves;
 
 	public int attackDamage;
 	public float attackRange;
@@ -67,7 +72,6 @@ public class AIPlayer : Player {
 	void Start ()
 	{
 		//Vector3.zero = GameManager.instance.transform.position;
-		moves = 3;
 		attacking = false;
 		canMove = false;
 		pathFound = false;
@@ -89,142 +93,153 @@ public class AIPlayer : Player {
 		canMove = true;
 		
 		ready = true;
+
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
-		tempInt = (int)transform.position.x;
-		tileX = tempInt;
-		tempInt = (int)transform.position.z;
-		tileY = tempInt;
-		if (markedTiles.Count > maxHealth) {
-			tempVector = markedTiles[0];
-			GameManager.instance.tilesListAllAIPlayers.Remove(tempVector);
-			markedTiles.RemoveAt(0);
-		}
 
-		currentAIPlayerPosition = transform.position;
+		if (dead == true && deadCheck == false) {
+			markedTiles.Clear ();
+			transform.position = new Vector3 (45 + indexAI, 0, 45);
+			moves = 0;
+			deadCheck = true;
+			GameManager.instance.deadAIplayers++;
 
-		//Act2 - Going after the target and coloring tiles
-		GameManager.instance.AIact = 2;
+		} else {
 
-		//If the tile beneath the AI is not in its list, then it will be added.
-		if (markedTiles.Contains (transform.position) == false) {
-
-			markedTiles.Add(transform.position);
-			GameManager.instance.tilesListAllAIPlayers.Add (transform.position);
-
-		}
-		//moveTimer++;
-		//Here, when target is found, a path is found.
-
-		if (targetFound == true) {
-
-			tempFloat1 = target.x;
-			tempFloat2 = target.z;
-			tempInt1 = (int)tempFloat1;
-			tempInt2 = (int)tempFloat2;
-
-			//The great search -----------------------------------------------------------
-			GameManager.instance.GeneratePathTo (tempInt1, tempInt2, transform.position);
-			//----------------------------------------------------------------------------
-			if (ready == true){
-			StartCoroutine(pause(0.3f));
+			tempInt = (int)transform.position.x;
+			tileX = tempInt;
+			tempInt = (int)transform.position.z;
+			tileY = tempInt;
+			if (markedTiles.Count > maxHealth) {
+				tempVector = markedTiles [0];
+				GameManager.instance.tilesListAllAIPlayers.Remove (tempVector);
+				markedTiles.RemoveAt (0);
 			}
-			if (canMove == true){
-				canMove = false;
-			if (currentPath != null) {
-				pathFound = true;
-				print ("Path Found!");
+
+			currentAIPlayerPosition = transform.position;
+
+			//Act2 - Going after the target and coloring tiles
+			GameManager.instance.AIact = 2;
+
+			//If the tile beneath the AI is not in its list, then it will be added.
+			if (markedTiles.Contains (transform.position) == false) {
+
+				markedTiles.Add (transform.position);
+				GameManager.instance.tilesListAllAIPlayers.Add (transform.position);
+
 			}
-			if (Vector3.Distance (target, transform.position) < attackRange){
-				print ("Attackmode for AI activated");
-				attacking = true;
-				moves = 0;
-			}
-			if (GameManager.instance.tilesListBothPlayers.Contains(new Vector3 (currentPath [1].x, 0, currentPath [1].y)) == true){
-				print ("Attackmode for AI activated");
-				attacking = true;
-				moves = 0;
-			}
-			if (currentPath != null && attacking == false) {
-				int currNode = 1;
+			//moveTimer++;
+			//Here, when target is found, a path is found.
+
+			if (targetFound == true && dead == false) {
+
+				tempFloat1 = target.x;
+				tempFloat2 = target.z;
+				tempInt1 = (int)tempFloat1;
+				tempInt2 = (int)tempFloat2;
+
+				//The great search -----------------------------------------------------------
+				if (GameManager.instance.deadPlayers != GameManager.instance.players.Count){
+					GameManager.instance.GeneratePathTo (tempInt1, tempInt2, transform.position);
+				}
+				//----------------------------------------------------------------------------
+				if (ready == true/* && indexAI == GameManager.instance.currentAIPlayerIndex*/) {
+
+					StartCoroutine (pause (0.3f));
+				}
+				if (canMove == true) {
+					canMove = false;
+					if (currentPath != null) {
+						pathFound = true;
+						print ("Path Found!");
+					}
+					if (Vector3.Distance (target, transform.position) < attackRange) {
+						print ("Attackmode for AI activated");
+						attacking = true;
+						moves = 0;
+					}
+					if (currentPath != null){
+						if (GameManager.instance.tilesListBothPlayers.Contains (new Vector3 (currentPath [1].x, 0, currentPath [1].y)) == true) {
+							print ("Attackmode for AI activated");
+							attacking = true;
+							moves = 0;
+						}
+					} else {
+						moves = 0;
+					}
+					if (currentPath != null && attacking == false) {
+						int currNode = 1;
 				
 						print (currentPath [currNode]);
 						Vector3 moveLocation = new Vector3 (currentPath [currNode].x, 0, currentPath [currNode].y);
 						transform.position = moveLocation;
-						if (markedTiles.Contains(transform.position) == false){
+						if (markedTiles.Contains (transform.position) == false) {
 							markedTiles.Add (transform.position);
 							GameManager.instance.tilesListAllAIPlayers.Add (transform.position);
 						}
 						currNode++;
 						moves--;
-						if (Vector3.Distance (target, transform.position) < attackRange) {
+						if (Vector3.Distance (target, transform.position) <= attackRange) {
 							attacking = true;
 							moves = 0;
 						}
 
-			}
-			if (attacking == true){
-				print ("AI looking for tile to attack");
-				if (GameManager.instance.tilesListBothPlayers.Contains(new Vector3(transform.position.x+1,0,transform.position.z))){
-					GameManager.instance.attackPosition = (new Vector3(transform.position.x+1,0,transform.position.z));
-					attacking = false;
-				}
-				if (GameManager.instance.tilesListBothPlayers.Contains(new Vector3(transform.position.x-1,0,transform.position.z))){
-					GameManager.instance.attackPosition = (new Vector3(transform.position.x-1,0,transform.position.z));
-					attacking = false;
-				}
-				if (GameManager.instance.tilesListBothPlayers.Contains(new Vector3(transform.position.x,0,transform.position.z+1))){
-					GameManager.instance.attackPosition = (new Vector3(transform.position.x,0,transform.position.z+1));
-					attacking = false;
-				}
-				if (GameManager.instance.tilesListBothPlayers.Contains(new Vector3(transform.position.x,0,transform.position.z-1))){
-					GameManager.instance.attackPosition = (new Vector3(transform.position.x,0,transform.position.z-1));
-					attacking = false;
-					hasAttacked = true;
-				} else {
-					attacking = false;
-					hasAttacked = true;
-				}
-			}
-			}
+					}
+					if (attacking == true) {
+						print ("AI looking for tile to attack");
 
-			//GameManager.instance.findGoodTile = true;
+						if (Vector3.Distance(target, transform.position) <= attackRange){
 
-		}
-		/*if (pathFound == true && moves > 0) {
+							GameManager.instance.attackDamage = attackDamage;
+							GameManager.instance.attackPosition = target;
+							
+							if (ready == true) {
+								StartCoroutine (pause (0.3f));
+							}
+							attacking = false;
+						} else {
+							attacking = false;
+						}
+					}
+				}
+
+				//GameManager.instance.findGoodTile = true;
+
+			}
+			/*if (pathFound == true && moves > 0) {
 			print ("PathFound!");
 			tempVector = new Vector3 (currentPath[0].x, 0, currentPath[0].y);
 			currentPath.RemoveAt(0);
 			transform.position = tempVector;
 			moves--;
 		}*/
-
-		//When moves are empty, the next program is called for,
-		//End of act 2
-		if (moves <= 0 && attacking == false && indexAI == GameManager.instance.currentAIPlayerIndex) {
-			print ("It senses that it is out of moves");
-			targetFound = false;
-			GameManager.instance.AInextProgram = true;
 		}
+			//When moves are empty, the next program is called for,
+			//End of act 2
+			if (moves <= 0 && attacking == false && indexAI == GameManager.instance.currentAIPlayerIndex) {
+				print ("It senses that it is out of moves");
+				targetFound = false;
+				GameManager.instance.AInextProgram = true;
+			}
 
-		health = markedTiles.Count;
+			health = markedTiles.Count;
 
-		if (attacking == true){
-			GameManager.instance.attackDamage = attackDamage;
-			//AI ATTACK HERE?
-		}
+			if (attacking == true) {
+				GameManager.instance.attackDamage = attackDamage;
+				//AI ATTACK HERE?
+			}
 
-		if (markedTiles.Contains(GameManager.instance.attackPosition)){
-			takingDamage();
-		}
+			if (markedTiles.Contains (GameManager.instance.attackPosition)) {
+				takingDamage ();
+			}
 
-		if (health <= 0){
-			GameManager.instance.AIplayers.RemoveAt(indexAI);
-			GameManager.instance.attackPosition = new Vector3(-1,-1,-1);
-			for (int l = 0; l < 12; l++){
+			if (health <= 0) {
+				//GameManager.instance.AIplayers.RemoveAt(indexAI);
+				GameManager.instance.attackPosition = new Vector3 (-1, -1, -1);
+				/*for (int l = 0; l < 12; l++){
 				if (GameManager.instance.AIplayers[indexAI+l] != null){
 						GameManager.instance.currentAIPlayerIndex = indexAI+l;
 					}
@@ -233,48 +248,29 @@ public class AIPlayer : Player {
 				if (GameManager.instance.AIplayers[indexAI-l] != null){
 					GameManager.instance.currentAIPlayerIndex = indexAI-l;
 				}
+			}*/
+				//Destroy(this.gameObject);
+				dead = true;
 			}
-			Destroy(this.gameObject);
-		}
+
 	}
 	public void takingDamage(){
+
 		tempInt = GameManager.instance.attackDamage;
-		while (tempInt > 0){
-			tempVector = markedTiles[0];
-			markedTiles.RemoveAt(0);
-			GameManager.instance.tilesListAllAIPlayers.Remove(tempVector);
+		while (tempInt > 0 && dead == false) {
+			tempVector = markedTiles [0];
+			markedTiles.RemoveAt (0);
+			GameManager.instance.tilesListAllAIPlayers.Remove (tempVector);
 			tempInt--;
 			health = markedTiles.Count;
-			if (health <= 0){
-				GameManager.instance.AIplayers.RemoveAt(indexAI);
-				GameManager.instance.attackPosition = new Vector3(-1,-1,-1);
-				for (int l = 0; l < 12; l++){
-					if (GameManager.instance.AIplayers[indexAI+l] != null){
-						GameManager.instance.currentAIPlayerIndex = indexAI+l;
-					}
-				}
-				for (int l = 0; l > 12; l++){
-					if (GameManager.instance.AIplayers[indexAI-l] != null){
-						GameManager.instance.currentAIPlayerIndex = indexAI-l;
-					}
-				}
-				Destroy(this.gameObject);
+			if (health <= 0) {
+					dead = true;
 			}
 		}
+	
 		if (health <= 0){
-			GameManager.instance.AIplayers.RemoveAt(indexAI);
 			GameManager.instance.attackPosition = new Vector3(-1,-1,-1);
-			for (int l = 0; l < 12; l++){
-				if (GameManager.instance.AIplayers[indexAI+l] != null){
-					GameManager.instance.currentAIPlayerIndex = indexAI+l;
-				}
-			}
-			for (int l = 0; l > 12; l++){
-				if (GameManager.instance.AIplayers[indexAI-l] != null){
-					GameManager.instance.currentAIPlayerIndex = indexAI-l;
-				}
-			}
-			Destroy(this.gameObject);
+			dead = true;
 		}
 		GameManager.instance.attackPosition = new Vector3(-1,-1,-1);
 	}

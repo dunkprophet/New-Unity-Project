@@ -604,12 +604,15 @@ public class DockingStation : MonoBehaviour {
 			}
 			if (OverworldManager.instance.dialogController == 144) {
 				OverworldManager.instance.textBoxShown = false;
-				OverworldManager.instance.dialogController = 0;
+				OverworldManager.instance.dialogController = -1;
 				OverworldManager.instance.text = "";
 				OverworldManager.instance.day = 2;
 				OverworldManager.instance.date = "22 September";
 				OverworldManager.instance.scene = 2;
 				OverworldManager.instance.freeMode = true;
+
+				OverworldManager.instance.programList.Add("Bug");
+				OverworldManager.instance.programList.Add("GOD");
 
 				OverworldManager.instance.unreadMessages++;
 				OverworldManager.instance.messagesTitle.Add("09/22 - Hey Kid");

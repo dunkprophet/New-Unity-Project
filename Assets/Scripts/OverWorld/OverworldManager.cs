@@ -57,6 +57,8 @@ public class OverworldManager : MonoBehaviour {
 
 	public bool once = true;
 
+	public bool isometricBattle = false;
+
 	//private List<string> Log = new List<string>();
 	public string textPrint = "";
 	private string logText = "";
@@ -151,7 +153,7 @@ public class OverworldManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {	
-
+		Application.LoadLevel (1);
 		defaultWidth = 1080;
 		InvokeRepeating("flash", 0, 0.3f);
 		InvokeRepeating("textPrinter", 0, textSpeed);
@@ -597,7 +599,7 @@ public class OverworldManager : MonoBehaviour {
 				//AREA -----------------------------------------------------------------------------------------------------------
 				GUILayout.BeginArea (new Rect (0,0,Screen.width/5,Screen.height/12));
 				GUILayout.BeginHorizontal("", GUI.skin.GetStyle("empty"));
-
+				if (matchStarted == false){
 				if (GUILayout.Button ("[Return]")) {
 					if (showProgramList == false){
 						netscapeOpen = false;
@@ -612,6 +614,7 @@ public class OverworldManager : MonoBehaviour {
 					if (GUILayout.Button ("  [Programs]")) {
 						showProgramList = true;
 					}
+				}
 				}
 
 				GUILayout.EndHorizontal();
@@ -824,7 +827,7 @@ public class OverworldManager : MonoBehaviour {
 	void loadBattle(int level){
 		if (level == 9) {//Training Grounds
 			matchStarted = true;
-			Application.LoadLevel (1);//Tutorial Battle with Aya
+			Application.LoadLevel (2);//Tutorial Battle with Aya
 		}
 	}
 }

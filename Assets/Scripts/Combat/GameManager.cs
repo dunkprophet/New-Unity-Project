@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour {
 
 	//STRINGS
 	public string healthString;
+	public string winTextDescription;
+	public string loseTextDescription;
 
 	//GAMEOBJECTS - LOADED
 	public GameObject movableTilePrefab;
@@ -33,8 +35,9 @@ public class GameManager : MonoBehaviour {
 
 	//GAMEOBJECTS SELECTED
 	public GameObject TilePrefab;
-	public GameObject UserPlayerPrefab;
-	public GameObject AIPlayerPrefab;
+	public GameObject Bug;
+	public GameObject GOD;
+	public GameObject Golem;
 
 	//Positions of programs
 	public Vector3 currentPlayerPosition;
@@ -57,6 +60,8 @@ public class GameManager : MonoBehaviour {
 	public bool gamePaused;
 	public bool ready;
 	public bool canAttack;
+	public bool winText = false;
+	public bool loseText = false;
 
 	//Useless shit
 	public int AIact = 0;
@@ -81,13 +86,16 @@ public class GameManager : MonoBehaviour {
 	public int tempIndex2;
 	public int tempIndex;
 	public bool tempBool;
-	public List<Vector3> tempList;
+	public List<Vector3> tempList = new List<Vector3> ();
+	public List<Vector3> tempList2 = new List<Vector3> ();
 	public Vector3 tempVectorInList1;
 	public Vector3 tempVectorInList2;
 	public Player tempPlayer;
 	public float tempFloat;
 	private int tempCount;
 	private Vector3 tempVector;
+	public Ray ray;
+	public RaycastHit hit;
 
 	//Current program attack values
 	public Vector3 attackPosition;
@@ -100,8 +108,10 @@ public class GameManager : MonoBehaviour {
 	public int currentAIPlayerIndex = 0;
 	public int lastPlayerIndex;
 
-	//Round
+	//Match info
 	public int round;
+	public int deadAIplayers = 0;
+	public int deadPlayers = 0;
 
 	//Pathfinding stuff O_o
 	public TileType[] tileTypes;
@@ -306,6 +316,12 @@ public class GameManager : MonoBehaviour {
 		canAttack = false;
 
 		//Loading resources
+
+		//Loading programs
+		Golem = Resources.Load ("Prefabs/Golem") as GameObject;
+		Bug = Resources.Load ("Prefabs/Bug") as GameObject;
+		GOD = Resources.Load ("Prefabs/GOD") as GameObject;
+
 		MetalGUISkin = Resources.Load ("MetalGUISkin") as GUISkin;
 		marked = Resources.Load ("Textures/markedTexture") as Texture;
 		notMarked = Resources.Load ("Textures/Ground1") as Texture;
@@ -343,21 +359,23 @@ public class GameManager : MonoBehaviour {
 		startingVector = spawnerPosition;
 		spawningPlayer = true;
 	}
-	public void spawnEnemy (Vector3 spawnerPosition){
+	public void spawnEnemy (Vector3 spawnerPosition, float attackRange, int attackDamage, int maxHealth, int maxMoves, int moves, string enemyName){
 		//ENEMEY SPAWNER
 		AIPlayer aiplayer;
 		aiplayer = 
 			((GameObject)Instantiate (
-				AIPlayerPrefab,
+				//AIPlayerPrefab,
+				Resources.Load ("Prefabs/"+enemyName) as GameObject,
 				spawnerPosition,
 				Quaternion.Euler (new Vector3 ()))
 			 ).GetComponent<AIPlayer> ();
-		print ("Spawning AIplayer");
+		print ("AIplayer spawned");
 		AIplayers.Add (aiplayer);
-		AIplayers[AIplayers.IndexOf(aiplayer)].GetComponent<AIPlayer>().attackRange = 1.1f;
-		AIplayers[AIplayers.IndexOf(aiplayer)].GetComponent<AIPlayer>().attackDamage = 2;
-		AIplayers[AIplayers.IndexOf(aiplayer)].GetComponent<AIPlayer>().maxHealth = 3;
-		AIplayers[AIplayers.IndexOf(aiplayer)].GetComponent<AIPlayer>().moves = 1;
+		AIplayers[AIplayers.IndexOf(aiplayer)].GetComponent<AIPlayer>().attackRange = attackRange;
+		AIplayers[AIplayers.IndexOf(aiplayer)].GetComponent<AIPlayer>().attackDamage = attackDamage;
+		AIplayers[AIplayers.IndexOf(aiplayer)].GetComponent<AIPlayer>().maxHealth = maxHealth;
+		AIplayers[AIplayers.IndexOf(aiplayer)].GetComponent<AIPlayer>().maxMoves = maxMoves;
+		AIplayers[AIplayers.IndexOf(aiplayer)].GetComponent<AIPlayer>().moves = moves;
 		AIplayers[AIplayers.IndexOf(aiplayer)].GetComponent<AIPlayer>().indexAI = AIplayers.IndexOf(aiplayer);
 
 	}
@@ -366,6 +384,7 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
+
 		//END CHECK FOR AI TURN
 		//Act 3 - if the last AI has run its course, the round is ended, and round two begins.
 		//if its not the last AI and the current
@@ -374,26 +393,43 @@ public class GameManager : MonoBehaviour {
 			if (currentAIPlayerIndex >= AIplayers.Count - 1) {
 				AInextProgram = false;
 				round++;
-				currentPlayerIndex = 0;
-				currentAIPlayerIndex = 0;
+
+				for (int y = players.Count-1; y >= 0; y--) {
+					if (players [y].GetComponent<UserPlayer> ().dead == false){
+						currentPlayerIndex = y;
+					}
+				}
+
+				for (int y = AIplayers.Count-1; y >= 0; y--) {
+					if (AIplayers [y].GetComponent<AIPlayer> ().dead == false){
+						currentAIPlayerIndex = y;
+					}
+				}
+
 				for (int y = 0; y < players.Count; y++) {
-					players [y].GetComponent<UserPlayer> ().moves = 3;
-					print ("players given moves");
+					if (players [y].GetComponent<UserPlayer> ().dead == false){
+						players [y].GetComponent<UserPlayer> ().moves = players [y].GetComponent<UserPlayer>().maxMoves;
+						print ("players given moves");
+					}
 				}
 				for (int y = 0; y < AIplayers.Count; y++) {
-					AIplayers [y].GetComponent<AIPlayer> ().moves = 3;
-					print ("AI given moves");
+					if (AIplayers [y].GetComponent<AIPlayer> ().dead == false){
+						AIplayers [y].GetComponent<AIPlayer> ().moves = AIplayers [y].GetComponent<AIPlayer> ().maxMoves;
+						print ("AI given moves");
+					}
 				}
 				turnChange = false;
 				gamePaused = false;
 			} else {
+
 				print (currentAIPlayerIndex);
 				currentAIPlayerIndex++;
-				print ("currentplayerindex increase");
-				print (currentAIPlayerIndex);
+				AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().canMove = false;
+				print ("currentAIplayerindex increase to "+currentAIPlayerIndex);
 				AInextProgram = false;
 				//And it begins again
 				AITurn ();
+
 			}
 		}
 		/*if (turnChange == false && players[currentPlayerIndex] == ) {
@@ -461,18 +497,28 @@ public class GameManager : MonoBehaviour {
 		AIact = 1;
 
 		tempFloat = 10000;
-		for (int g = 0; g < GameManager.instance.tilesListBothPlayers.Count - 1; g++) {
+		for (int g = 0; g < GameManager.instance.tilesListBothPlayers.Count; g++) {
 			print ("Search for target begun");
 			if (tempFloat > Vector3.Distance (AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().transform.position, GameManager.instance.tilesListBothPlayers[g])) {
 				//tempFloat = distance between target and AI
 				tempFloat = Vector3.Distance (AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().transform.position, GameManager.instance.tilesListBothPlayers[g]);
 				AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().target = GameManager.instance.tilesListBothPlayers[g];
+
 			}
 		}
-		print (AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().target);
-		print ("Target found!");
-		//End of act 1 - target found
-		AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().targetFound = true;
+		if (tempFloat < 10000) {
+			print (AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().target);
+			print ("Target found! Or not?");
+			//End of act 1 - target found
+			AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().targetFound = true;
+		} else {
+			for (int eq = 0; eq < players.Count; eq++){
+				if (tempFloat > Vector3.Distance (AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().transform.position, players[eq].GetComponent<UserPlayer>().transform.position)){
+					tempFloat = Vector3.Distance (AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().transform.position, players[eq].GetComponent<UserPlayer>().transform.position);
+					AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().target = players[eq].GetComponent<UserPlayer>().transform.position;
+				}
+			}
+		}
 	}
 	
 	public void undo(){
@@ -509,154 +555,49 @@ public class GameManager : MonoBehaviour {
 		lastPosition = players [currentPlayerIndex].transform.position;
 		players [currentPlayerIndex].transform.position = tilePosition;
 
-		if (players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Count > 3) {
+		if (players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Count >= players [currentPlayerIndex].GetComponent<UserPlayer> ().maxHealth) {
 
 			if (players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == false) {
 
 				tilesListBothPlayers.Remove(players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.First());
 
-				if (currentPlayerIndex == 0) {
-					playerTiles1.Remove(players[currentPlayerIndex].GetComponent<UserPlayer>().markedTiles.First ());
-				}
-				if (currentPlayerIndex == 1) {
-					playerTiles2.Remove(players[currentPlayerIndex].GetComponent<UserPlayer>().markedTiles.First ());
-				}
+				/*for (int o = 0; o < players.Count; o++){
+					if (currentPlayerIndex == o) {
+						playerTiles1.Remove(players[o].GetComponent<UserPlayer>().markedTiles.First ());
+					}
+				}*/
 				players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.RemoveAt(0);
 				switchMade = false;
 			}
 		} 
 
-		if (players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == true && switchMade == true) {
-			tempList = players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles;
-			tempIndex1 = tempList.IndexOf (tilePosition);
-			tempList.RemoveAt (tempIndex1);
-			players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles = tempList;
-		}
+		//TILE THAT GETS STEPPED ON IS PUSHED FORWARD ONE STEP, EXCHANGED WITH IT'S INDEX+1
+		//OLD SPOT GET TAKEN BY LATEST TILE
 
+		if (players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == true /*&& switchMade == true*/) {
+
+			tempList = players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles;
+			
+			tempIndex = tempList.IndexOf (tilePosition);
+
+			tempList.RemoveAt(tempIndex);
+			tempList.Add (tilePosition);
+
+			players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles = tempList;
+
+
+		}
 		if (players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == false) {
 			players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Add (tilePosition);
 			
 		} 
-
-		else if (players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == true && switchMade == false) {
-			//If you walk on your own square, then-
-			tempList = players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles;
-
-			//Index of Tile 2
-			tempIndex1 = tempList.IndexOf (tilePosition);
-			tempIndex2 = tempList.IndexOf (lastPosition);
-			//Take out the vector d
-			tempVectorInList1 = tempList [tempIndex1];
-			tempVectorInList2 = tempList [tempIndex2];
-
-			tempList [tempIndex1] = tempVectorInList2;
-			tempList [tempIndex2] = tempVectorInList1;
-
-			switchMade = true;
-
-
-			players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles = tempList;
-
-			//players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.RemoveAt(0);
-
-			//players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles = new Queue<Vector3>(tempList);
-			//queue = new Queue<T>(list);
-
-			//players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Add (tilePosition);
-		}
-
-		if (tilesListBothPlayers.Contains (tilePosition) == false) {
-			tilesListBothPlayers.Add (tilePosition);
-			if (currentPlayerIndex == 0){
-				playerTiles1.Add (tilePosition);
-			}
-			if (currentPlayerIndex == 1){
-				playerTiles2.Add (tilePosition);
-			}
-		}
 
 		players[currentPlayerIndex].GetComponent<UserPlayer>().moves--;
 
 		return true;
 
 	}
-	/*public bool MoveCurrentAIPlayer(Vector3 tilePosition)
-	{
-		AImoving = false;
-		lastPosition = AIplayers [currentAIPlayerIndex].transform.position;
-		AIplayers [currentAIPlayerIndex].transform.position = tilePosition;
-		
-		if (AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().markedTiles.Count > 3) {
-			
-			if (AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().markedTiles.Contains (tilePosition) == false) {
-				
-				tilesListAllAIPlayers.Remove(AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().markedTiles.First());
-				
-				/*if (currentAIPlayerIndex == 0) {
-					playerTiles1.Remove(players[currentPlayerIndex].GetComponent<UserPlayer>().markedTiles.First ());
-				}
-				if (currentPlayerIndex == 1) {
-					playerTiles2.Remove(players[currentPlayerIndex].GetComponent<UserPlayer>().markedTiles.First ());
-				}
-				AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().markedTiles.RemoveAt(0);
-				switchMade = false;
-			}
-		} 
-		
-		if (AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().markedTiles.Contains (tilePosition) == true && switchMade == true) {
-			tempList = AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().markedTiles;
-			tempIndex1 = tempList.IndexOf (tilePosition);
-			tempList.RemoveAt (tempIndex1);
-			AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().markedTiles = tempList;
-		}
-		
-		if (AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().markedTiles.Contains (tilePosition) == false) {
-			AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().markedTiles.Add (tilePosition);
-			
-		} 
-		
-		else if (AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().markedTiles.Contains (tilePosition) == true && switchMade == false) {
-			//If you walk on your own square, then-
-			tempList = AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().markedTiles;
-			
-			//Index of Tile 2
-			tempIndex1 = tempList.IndexOf (tilePosition);
-			tempIndex2 = tempList.IndexOf (lastPosition);
-			//Take out the vector d
-			tempVectorInList1 = tempList [tempIndex1];
-			tempVectorInList2 = tempList [tempIndex2];
-			
-			tempList [tempIndex1] = tempVectorInList2;
-			tempList [tempIndex2] = tempVectorInList1;
-			
-			switchMade = true;
-			
-			
-			AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().markedTiles = tempList;
-			
-			//players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.RemoveAt(0);
-			
-			//players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles = new Queue<Vector3>(tempList);
-			//queue = new Queue<T>(list);
-			
-			//players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Add (tilePosition);
-		}
-		
-		if (tilesListAllAIPlayers.Contains (tilePosition) == false) {
-			tilesListAllAIPlayers.Add (tilePosition);
-			/*if (currentAIPlayerIndex == 0){
-				playerTiles1.Add (tilePosition);
-			}
-			if (currentPlayerIndex == 1){
-				playerTiles2.Add (tilePosition);
-			}
-		}
-		
-		AIplayers[currentAIPlayerIndex].GetComponent<AIPlayer>().moves--;
-		
-		return true;
-		
-	}*/
+
 
 	public void attack()
 	{
@@ -666,11 +607,7 @@ public class GameManager : MonoBehaviour {
 		AIplayers [currentAIPlayerIndex].GetComponent<AIPlayer> ().attacking = true;
 	}
 	public void attackDone(Vector3 tilePosition){
-		/*for (int h = 0; h < 10; h++){
-		 * if (AIplayers[h].GetComponent<AIPlayer>().markedTiles.Contains(tilePosition) == true){
-		 * 	AIplayer.[h].GetComponent<AIPlayer>().health = AIplayer.[h].GetComponent<AIPlayer>().health-players[currentPlayerIndex].GetComponent<UserPlayer>().attackDamage;
-		 * }
-		 */
+
 		//Attack delay
 
 		if (ready == true) {
@@ -679,61 +616,12 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void nextTurn(){
+		//currentAIPlayerIndex = 0;
 		turnChange = true;
 		AITurn ();
 	}
 
-	/*void GenerateMap()
-	{
-		map = new List<List<Tile>>();
-		for (int i = 0;i < mapSize; i++){
-			List <Tile> row = new List<Tile>();
-			for (int j = 0;j < mapSize; j++)
-			{
-				Tile tile = 
-					((GameObject)Instantiate(
-						TilePrefab,
-						new Vector3(i - Mathf.Floor(mapSize/2),0,j - Mathf.Floor(mapSize/2)),
-						Quaternion.Euler(new Vector3()))
-					 ).GetComponent<Tile>();
-				tile.gridPosition = new Vector2(i, j);
-				row.Add(tile);
-			}
-			map.Add(row);
-		}
-	}*/
 
-	/*void GeneratePlayers()
-	{
-		UserPlayer player;
-
-		player = 
-			((GameObject)Instantiate(
-				UserPlayerPrefab,
-				new Vector3(2,0,1),
-				Quaternion.Euler(new Vector3()))
-			 ).GetComponent<UserPlayer>();
-
-		players.Add(player);
-
-		player = 
-			((GameObject)Instantiate(
-				UserPlayerPrefab,
-				new Vector3(1,0,1),
-				Quaternion.Euler(new Vector3()))
-			 ).GetComponent<UserPlayer>();
-		
-		players.Add(player);
-
-		AIPlayer aiplayer = 
-			((GameObject)Instantiate(
-				AIPlayerPrefab,
-				new Vector3(-1,0,7),
-				Quaternion.Euler(new Vector3()))
-			 ).GetComponent<AIPlayer>();
-		
-		players.Add(aiplayer);
-	}*/
 	public void OnGUI() {
 
 		tempRect = new Rect (Screen.width-200, 200, 150, 250);
@@ -741,6 +629,48 @@ public class GameManager : MonoBehaviour {
 		GUI.skin = MetalGUISkin;
 		
 		//Graphics.DrawTexture (tempRect, marked);
+
+		if (deadAIplayers == AIplayers.Count) {
+			if (winText == false){
+				winText = true;
+				OverworldManager.instance.text = "Infiltration Successful";
+				OverworldManager.instance.i = 0;
+			}
+			GUILayout.BeginArea (new Rect (Screen.width*0.2f, Screen.height*0.1f, Screen.width*0.6f, Screen.height*0.8f));
+			GUILayout.BeginVertical ("Screen.Victory();", GUI.skin.GetStyle ("netscape"));
+			GUI.skin.label.fontSize = Mathf.RoundToInt (36 * Screen.width / (OverworldManager.instance.defaultWidth* 1.0f));
+			GUILayout.Label(OverworldManager.instance.textPrint+"\n");
+			GUI.skin.label.fontSize = Mathf.RoundToInt (18 * Screen.width / (OverworldManager.instance.defaultWidth* 1.0f));
+			GUILayout.Label(winTextDescription+"\n");
+			if (GUILayout.Button("[Exit Node]")){
+				matchStarted = false;
+				OverworldManager.instance.matchStarted = false;
+				Application.LoadLevel(1);
+			}
+			GUILayout.EndVertical();
+			GUILayout.EndArea ();
+		}
+		if (deadPlayers == players.Count && matchStarted == true) {
+			if (loseText == false){
+				loseText = true;
+				OverworldManager.instance.text = "C̶̩o̕n͓̖̳̬͟n̷̜͓̮̳e̥̻̤͇͇ͅc̸̼̪̘̣̗͎ͅţ̝̗i̵͔̩͖͖̹̠o̙͓̞̥̤n̛͕͍͚͇̝ ̗̰̦̥̺͙̥͠L͔̪̥̬̬̱o̡s̶͔̲t͈̼̻";
+				OverworldManager.instance.i = 0;
+			}
+			GUILayout.BeginArea (new Rect (Screen.width*0.2f, Screen.height*0.1f, Screen.width*0.6f, Screen.height*0.8f));
+			GUILayout.BeginVertical ("Screen.Loss();", GUI.skin.GetStyle ("netscape"));
+			GUI.skin.label.fontSize = Mathf.RoundToInt (36 * Screen.width / (OverworldManager.instance.defaultWidth* 1.0f));
+			GUILayout.Label(OverworldManager.instance.textPrint+"\n");
+			GUI.skin.label.fontSize = Mathf.RoundToInt (18 * Screen.width / (OverworldManager.instance.defaultWidth* 1.0f));
+			GUILayout.Label(loseTextDescription+"\n");
+			if (GUILayout.Button("[Exit Node]")){
+				matchStarted = false;
+				OverworldManager.instance.matchStarted = false;
+				Application.LoadLevel(1);
+			}
+			GUILayout.EndVertical();
+			GUILayout.EndArea ();
+		}
+
 
 		if (turnChange == false && matchStarted == true) {	
 		GUILayout.BeginArea (tempRect);
@@ -762,6 +692,19 @@ public class GameManager : MonoBehaviour {
 					undo ();
 				}
 			}
+
+			/*if (GUILayout.Button ("Isometric")) {
+				Camera.main.transform.position = new Vector3 (0,0,-9);
+				Camera.main.transform.rotation = Quaternion.Euler(30,45,0);
+				
+
+			}
+			if (GUILayout.Button ("Old-school")) {
+
+				Camera.main.transform.position = new Vector3 (12,5,-9);
+				Camera.main.transform.rotation = Quaternion.Euler(90,0,0);
+			}*/
+
 			/*if (matchStarted == true && gamePaused == true) {
 				if (GUILayout.Button ("Next Turn")) {
 					turnChange = true;
@@ -780,29 +723,44 @@ public class GameManager : MonoBehaviour {
 			GUILayout.EndVertical ();
 			GUILayout.EndArea ();
 		}
-		if (matchStarted == false) {
-			tempRect = new Rect (10, Screen.height - 500, 200, 400);
+		if (matchStarted == false && gamePaused == false) {
+			tempRect = new Rect (0, 0, Screen.width/5, Screen.height);
 			GUILayout.BeginArea (tempRect);
-			GUILayout.BeginVertical ("Match Setup", GUI.skin.GetStyle ("window"));
+			GUILayout.BeginVertical ("", GUI.skin.GetStyle ("netscape"));
 			GUILayout.Label (healthString);
+			GUI.skin.label.fontSize = Mathf.RoundToInt (18 * Screen.width / (OverworldManager.instance.defaultWidth* 1.0f));
 			if (spawningPlayer == true){
-				if (GUILayout.Button ("Spawn Bug.Alpha")) {
-					UserPlayer player;
-					player = ((GameObject)Instantiate(
-						UserPlayerPrefab,
-						startingVector,
-						Quaternion.Euler(new Vector3()))
-				        	).GetComponent<UserPlayer>();
+				for (int a = 0; a < OverworldManager.instance.programList.Count; a++){
+					if (GUILayout.Button("Spawn "+OverworldManager.instance.programList[a])){
+						UserPlayer player;
+						player = ((GameObject)Instantiate(
+							Resources.Load ("Prefabs/"+OverworldManager.instance.programList[a]) as GameObject,
+							startingVector,
+							Quaternion.Euler(new Vector3()))
+						          ).GetComponent<UserPlayer>();
+						
+						players.Add(player);
 
-					players.Add(player);
-					players[players.IndexOf(player)].GetComponent<UserPlayer>().attackRange = 1.1f;
-					players[players.IndexOf(player)].GetComponent<UserPlayer>().attackDamage = 2;
-					players[players.IndexOf(player)].GetComponent<UserPlayer>().maxHealth = 3;
-					players[players.IndexOf(player)].GetComponent<UserPlayer>().moves = 3;
-
-					spawningPlayer = false;
+						if (OverworldManager.instance.programList[a] == "Bug"){
+							players[players.IndexOf(player)].GetComponent<UserPlayer>().attackRange = 1.1f;
+							players[players.IndexOf(player)].GetComponent<UserPlayer>().attackDamage = 2;
+							players[players.IndexOf(player)].GetComponent<UserPlayer>().maxHealth = 1;
+							players[players.IndexOf(player)].GetComponent<UserPlayer>().maxMoves = 4;
+							players[players.IndexOf(player)].GetComponent<UserPlayer>().moves = 4;
+						}
+						if (OverworldManager.instance.programList[a] == "GOD"){
+							players[players.IndexOf(player)].GetComponent<UserPlayer>().attackRange = 2.2f;
+							players[players.IndexOf(player)].GetComponent<UserPlayer>().attackDamage = 3;
+							players[players.IndexOf(player)].GetComponent<UserPlayer>().maxHealth = 8;
+							players[players.IndexOf(player)].GetComponent<UserPlayer>().maxMoves = 8;
+							players[players.IndexOf(player)].GetComponent<UserPlayer>().moves = 8;
+						}
+						
+						spawningPlayer = false;
+					}
 				}
 			}
+
 			//CHANGE HERE FOR AMOUNT OF PLAYERS IN MATCH
 			if (players.Count >= 1){
 				if (GUILayout.Button ("Start Match")){

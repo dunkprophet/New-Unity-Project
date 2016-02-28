@@ -5,9 +5,17 @@ public class EnemySpawner : MonoBehaviour {
 
 	public EnemySpawner spawner;
 
+	public string enemyName = "";
+
 	public Vector3 spawnerPosition;
 	public Vector3 tempVector;
 	public bool spawned = false;
+
+	public float attackRange;
+	public int attackDamage;
+	public int maxHealth;
+	public int maxMoves;
+	public int moves;
 
 	// Use this for initialization
 	void Start () {
@@ -22,7 +30,7 @@ public class EnemySpawner : MonoBehaviour {
 	void Update () {
 		if (spawned == false) {
 			print ("Sspawnend == false");
-			GameManager.instance.spawnEnemy(spawnerPosition);
+			GameManager.instance.spawnEnemy(spawnerPosition, attackRange, attackDamage, maxHealth, maxMoves, moves, enemyName);
 			spawned = true;
 		}
 
