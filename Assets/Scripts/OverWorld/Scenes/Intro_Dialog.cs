@@ -22,7 +22,7 @@ public class Intro_Dialog : MonoBehaviour {
 	
 	void Update(){
 		if (OverworldManager.instance.scene  == 0) {
-			OverworldManager.instance.scrollPosition.y = Mathf.Infinity;
+			//OverworldManager.instance.scrollPosition.y = Mathf.Infinity;
 			if (OverworldManager.instance.dialogControllerMenu == 0) {
 				OverworldManager.instance.textForLog = "Welcome to DOS65";
 				if (tempBool == false){

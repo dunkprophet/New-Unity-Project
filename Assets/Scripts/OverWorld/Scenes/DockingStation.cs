@@ -15,7 +15,6 @@ public class DockingStation : MonoBehaviour {
 	void Update () {
 		if (OverworldManager.instance.scene == 1 && OverworldManager.instance.freeMode == false) {
 
-
 			
 			if (OverworldManager.instance.dialogController < 0) {
 				OverworldManager.instance.i = 0;
@@ -150,6 +149,7 @@ public class DockingStation : MonoBehaviour {
 			if (OverworldManager.instance.dialogController == 20 && OverworldManager.instance.response1picked == true) {
 				OverworldManager.instance.text = "\"Calvin, Ogasawara.\"";
 				OverworldManager.instance.govermentKnowsName = true;
+				OverworldManager.instance.choices.Add (OverworldManager.instance.govermentKnowsName);
 			}
 			if (OverworldManager.instance.dialogController == 21 && OverworldManager.instance.response1picked == true) {
 				OverworldManager.instance.text = "The guard laughed. \"An islander? Then you're practically a metropolis citizen. No passport?\"";
@@ -169,6 +169,7 @@ public class DockingStation : MonoBehaviour {
 			if (OverworldManager.instance.dialogController == 20 && OverworldManager.instance.response2picked == true) {
 				OverworldManager.instance.text = "\"Jiro, Hong Kong.\"";
 				OverworldManager.instance.govermentKnowsName = false;
+				OverworldManager.instance.choices.Add (OverworldManager.instance.govermentKnowsName);
 			}
 			if (OverworldManager.instance.dialogController == 21 && OverworldManager.instance.response2picked == true) {
 				OverworldManager.instance.deleteOldText = false;
@@ -207,7 +208,7 @@ public class DockingStation : MonoBehaviour {
 			}
 			if (OverworldManager.instance.dialogController == 30) {
 				OverworldManager.instance.text = "And not a human around.";
-				OverworldManager.instance.scene1Background = OverworldManager.instance.scene1Background2;
+				OverworldManager.instance.background = OverworldManager.instance.scene1Background2;
 			}
 			if (OverworldManager.instance.dialogController == 31) {
 				if (tempBool == true){
@@ -245,6 +246,7 @@ public class DockingStation : MonoBehaviour {
 			}
 			if (OverworldManager.instance.dialogController == 40) {
 				OverworldManager.instance.text = "Calvin saw two groups of men glaring at each other at the end of the alley.";
+				OverworldManager.instance.guiAlpha = 1;
 			}
 			if (OverworldManager.instance.dialogController == 41) {
 				OverworldManager.instance.text = "\"Go fuck youself,\" said the guy to the right, a gangly fellow wearing a black jacket and a cloth around his face.";
@@ -350,6 +352,7 @@ public class DockingStation : MonoBehaviour {
 			}
 			if (OverworldManager.instance.dialogController == 72) {
 				OverworldManager.instance.text = "Calvin's heart skipped a beat.";
+				OverworldManager.instance.guiAlpha = 0;
 			}
 			if (OverworldManager.instance.dialogController == 73) {
 				OverworldManager.instance.text = "\"Don't worry,\" he said, giving a quick laugh at Calvin's reaction. \"I won't hold a grudge. Those cops were going to fuck us over one of these days anyhow. Except now I survived.\"";
@@ -399,7 +402,7 @@ public class DockingStation : MonoBehaviour {
 			if (OverworldManager.instance.dialogController == 85) {
 				OverworldManager.instance.responseWanted = true;
 				OverworldManager.instance.response1 = "\"Wait.\"";
-				OverworldManager.instance.response2 = "...";
+				OverworldManager.instance.response2 = "\"...\"";
 				OverworldManager.instance.text = "\"...\"";
 			}
 			if (OverworldManager.instance.dialogController == 86 && OverworldManager.instance.response1picked == true) {
@@ -454,9 +457,15 @@ public class DockingStation : MonoBehaviour {
 			}
 			if (OverworldManager.instance.dialogController == 97) {
 				OverworldManager.instance.text = "稲毛区\nInage-ku";
+				if (tempBool == true){
+					OverworldManager.instance.fadeToWhite = true;
+					tempBool = false;
+				}
 			}
 			if (OverworldManager.instance.dialogController == 98) {
 				OverworldManager.instance.text = "To his suprise, even the streets of Chiba's more urban areas lay barren in the darkness.";
+				tempBool = true;
+
 			}
 			if (OverworldManager.instance.dialogController == 99) {
 				OverworldManager.instance.deleteOldText = false;
@@ -512,6 +521,7 @@ public class DockingStation : MonoBehaviour {
 			}
 			if (OverworldManager.instance.dialogController == 115) {
 				OverworldManager.instance.text = "The man did not respond.";
+				OverworldManager.instance.guiAlpha = 1;
 			}
 			if (OverworldManager.instance.dialogController == 116) {
 				OverworldManager.instance.text = "\"He won't answer you,\" a raspy voice said behind Calvin. It came from an old man leaning out of a nearby archway. \"Mind's all scrambled.\"";
@@ -536,15 +546,21 @@ public class DockingStation : MonoBehaviour {
 			}
 			if (OverworldManager.instance.dialogController == 123) {
 				OverworldManager.instance.text = "Calvin followed him inside the building, and up a long staircase. Hachi went on about rules and what-not about the apartment. \"No pets\", \"No drugs\", and so on. Calvin only barely listened. He was just happy to finally be close to a bed.";
+				if (tempBool == true){
+					tempBool = false;
+					OverworldManager.instance.fadeToBlack = true;
+				}
 			}
 			if (OverworldManager.instance.dialogController == 124) {
 				OverworldManager.instance.text = "When they ultimately arrived at a tiny door enscribed with the numbers \"106\", the old man gave him a pat on the back.";
+				tempBool = true;
 			}
 			if (OverworldManager.instance.dialogController == 125) {
 				OverworldManager.instance.text = "\"35000¥ each month, delivered to my office. Break the rules, you're out. Got it?\"";
 			}
 			if (OverworldManager.instance.dialogController == 126) {
 				OverworldManager.instance.text = "Calvin nodded, and Hachi gave him the keys.";
+				OverworldManager.instance.guiAlpha = 0;
 			}
 			if (OverworldManager.instance.dialogController == 127) {
 				OverworldManager.instance.text = "...";
@@ -611,40 +627,74 @@ public class DockingStation : MonoBehaviour {
 				OverworldManager.instance.scene = 2;
 				OverworldManager.instance.freeMode = true;
 
-				OverworldManager.instance.programList.Add("Bug");
-				OverworldManager.instance.programList.Add("GOD");
+				OverworldManager.instance.programList.Add(OverworldManager.instance.Bug);
+				OverworldManager.instance.programList.Add(OverworldManager.instance.GOD);
 
-				OverworldManager.instance.unreadMessages++;
-				OverworldManager.instance.messagesTitle.Add("09/22 - Hey Kid");
-				OverworldManager.instance.messages.Add("[06:28:15]: Hey Kid\n\nI'm sure you feel as shitty as I do about what happened yesterday. " +
-					"Actually, no, I should feel worse considering they were my friends. " +
-					"Then again, you probably have a lot less experience with death, and killings, whilst I have tons." +
-					"\n\n...whatever, look. I want this to be over with too, so just do as I say: LAY LOW. Don't make anyone look at you funny, " +
-					"and don't fucking talk about what you saw yesterday. Okay? Good. I'll write to you in three days, THREE DAYS, " +
-					"to tell you where I want you, and when.\n\nDon't fuck up till then.\n\n/Saburo");
-				OverworldManager.instance.unreadMessages++;
-				OverworldManager.instance.messagesTitle.Add("09/22 - Concerning payment");
-				OverworldManager.instance.messages.Add("[18:02:59]: From Hachi\n\nYou didn't listen to me yesterday, so here's the info again:" +
-					"\n\n-¥35000 a month, delvered to me PERSONALLY" +
-					"\n-No drugs" +
-					"\n-No pets" +
-					"\n-No loud noises after midnight" +
-					"\n-NO HACKING!" +
-					"\n\nI know your type. Hoping to relive the lives of the \"netscapers\" by living on their old street. Bah." +
-					" If you want to be a dank hacker, then you can find some other place to live. Or use a proxy.");
-				OverworldManager.instance.unreadMessages++;
-				OverworldManager.instance.messagesTitle.Add("09/22 - Calvin!");
-				OverworldManager.instance.messages.Add("[20:09:30]: Calvin!\n\n" +
-				    "I just got your message, sorry for not looking in my inbox sooner (;﹏;) I've been REALLY busy at school\n\n" +
-					"But cool! Moving to Chiba all by yourself, that's awesome! " +
-					"Would have been even better if you would have gotten in somewhere..." +
-					" but you can always try for a spot next year! Don't forget to get a job too, " +
-					"just a temporary one, of course, but still! You need to be able to pay for your apartment.\n\n" +
-					"You DO have an apartment, don't you? Chiba is the easiest place in the world for that right now," +
-					" so it shouln't be a problem :) Just write if you need any help with anything, I promise to answer you this time!!!" +
-					"\n\n /Aya\n\nPS. If you wanna talk, just head on over to the Training Ground on the net. I can show you some of the" +
-				    " stuff we do at TT in our spare time! (Hint: It involves programming v(￣∇￣))");
-					
+				GameObject mailObject; 
+				mailObject = ((GameObject)Instantiate (
+					Resources.Load("Prefabs/mail") as GameObject,
+					new Vector3(0,0,0),
+					Quaternion.Euler (new Vector3 ()))
+					) as GameObject;
+
+				mailObject.GetComponent<Mail>().sender = "Zzaam_x";
+				mailObject.GetComponent<Mail>().time = "[06:28:15]";
+				mailObject.GetComponent<Mail>().date = "09/22";
+				mailObject.GetComponent<Mail>().subject = "Hey Kid";
+				mailObject.GetComponent<Mail>().content = "I'm sure you feel as shitty as I do about what happened yesterday. " +
+				"Actually, no, I should feel worse considering they were my friends. " +
+				"Then again, you probably have a lot less experience with death, and killings, whilst I have tons." +
+				"\n\n...whatever, look. I want this to be over with too, so just do as I say: LAY LOW. Don't make anyone look at you funny, " +
+				"and don't fucking talk about what you saw yesterday. Okay? Good. I'll write to you in three days, THREE DAYS, " +
+				"to tell you where I want you, and when.\n\nDon't fuck up till then.\n\n/Saburo";
+
+				OverworldManager.instance.mailList.Add(mailObject);
+
+
+				mailObject = ((GameObject)Instantiate (
+					Resources.Load("Prefabs/mail") as GameObject,
+					new Vector3(0,0,0),
+					Quaternion.Euler (new Vector3 ()))
+				    ) as GameObject;
+				
+				mailObject.GetComponent<Mail>().sender = "Hachi";
+				mailObject.GetComponent<Mail>().time = "[18:02:59]";
+				mailObject.GetComponent<Mail>().date = "09/22";
+				mailObject.GetComponent<Mail>().subject = "Concerning payment";
+				mailObject.GetComponent<Mail>().content = "You didn't listen to me yesterday, so here's the info again:" +
+				"\n\n-¥35000 a month, delvered to me PERSONALLY" +
+				"\n-No drugs" +
+				"\n-No pets" +
+				"\n-No loud noises after midnight" +
+				"\n-NO HACKING!" +
+				"\n\nI know your type. Hoping to relive the lives of the \"netscapers\" by living on their old street. Bah." +
+				" If you want to be a dank hacker, then you can find some other place to live. Or use a proxy.";
+				
+				OverworldManager.instance.mailList.Add(mailObject);
+
+				mailObject = ((GameObject)Instantiate (
+					Resources.Load("Prefabs/mail") as GameObject,
+					new Vector3(0,0,0),
+					Quaternion.Euler (new Vector3 ()))
+				    ) as GameObject;
+				
+				mailObject.GetComponent<Mail>().sender = "Aralia_3";
+				mailObject.GetComponent<Mail>().time = "[20:09:30]";
+				mailObject.GetComponent<Mail>().date = "09/22";
+				mailObject.GetComponent<Mail>().subject = "Calvin!";
+				mailObject.GetComponent<Mail>().content = "I just got your message, sorry for not looking in my inbox sooner (;﹏;) I've been REALLY busy at school\n\n" +
+				"But cool! Moving to Chiba all by yourself, that's awesome! " +
+				"Would have been even better if you would have gotten in somewhere..." +
+				" but you can always try for a spot next year! Don't forget to get a job too, " +
+				"just a temporary one, of course, but still! You need to be able to pay for your apartment.\n\n" +
+				"You DO have an apartment, don't you? Chiba is the easiest place in the world for that right now," +
+				" so it shouln't be a problem :) Just write if you need any help with anything, I promise to answer you this time!!!" +
+				"\n\n /Aya\n\nPS. If you wanna talk, just head on over to the Training Ground on the net. I can show you some of the" +
+				" stuff we do at TT in our spare time! (Hint: It involves programming v(￣∇￣))"; 
+				mailObject.GetComponent<Mail>().unlockingNode = 9;
+
+
+				OverworldManager.instance.mailList.Add(mailObject);
 
 			}
 

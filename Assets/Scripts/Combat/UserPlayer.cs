@@ -10,6 +10,9 @@ public class UserPlayer : Player {
 	public int maxMoves;
 	public int maxHealth;
 
+	public string name;
+	public string description;
+
 	public bool playerSelected;
 
 	public bool doingItOnce;
@@ -33,6 +36,7 @@ public class UserPlayer : Player {
 
 	public int tempInt;
 
+
 	public float attackRange;
 	public int attackDamage;
 
@@ -41,9 +45,11 @@ public class UserPlayer : Player {
 	public List<Vector3> markedTiles;
 
 	public List<Vector3> markedTilesLastTurn;
-	public Vector3 positionLastTurn;
+	public Vector3 positionStartOfTurn;
 
 	public List<Vector3> specificTiles;
+
+	public List<string> abilities  = new List<string>();
 
 	//public Vector3 moveDestination;
 
@@ -52,6 +58,12 @@ public class UserPlayer : Player {
 	void Start ()
 	{
 		//Vector3.zero = GameManager.instance.transform.position;
+		moves = gameObject.GetComponent<Stats>().moves;
+		maxMoves = gameObject.GetComponent<Stats>().maxMoves;
+		maxHealth = gameObject.GetComponent<Stats>().maxHealth;
+		//attackRange = gameObject.GetComponent<Stats>().attackRange;
+		//attackDamage = gameObject.GetComponent<Stats>().attackDamage;
+		name = gameObject.GetComponent<Stats>().name;
 
 		markedTiles = new List<Vector3>();
 		
@@ -74,8 +86,8 @@ public class UserPlayer : Player {
 		allowedToMove = false;
 		tempCount = 0;
 
-		positionLastTurn = transform.position;
-		markedTilesLastTurn = markedTiles;
+		positionStartOfTurn = transform.position;
+		markedTilesLastTurn.Add (transform.position);
 
 	}
 
@@ -110,7 +122,7 @@ public class UserPlayer : Player {
 		health = markedTiles.Count;
 
 			if (attacking == true){
-				GameManager.instance.attackDamage = attackDamage;
+				//GameManager.instance.attackDamage = attackDamage;
 			}
 			if (markedTiles.Contains(GameManager.instance.attackPosition)){
 				takingDamage();
@@ -138,8 +150,8 @@ public class UserPlayer : Player {
 			//Fix this
 			tempPlayer = GameManager.instance.players[playerNumber];
 			GameManager.instance.playersThatCanMove.Add(tempPlayer);
-			positionLastTurn = transform.position;
-			markedTilesLastTurn = markedTiles;
+			//positionStartOfTurn = transform.position;
+			//markedTilesLastTurn = markedTiles;
 			hasAttacked = false;
 			noMovesSelected = false;
 			//print ("TurnChange Works");
@@ -205,7 +217,18 @@ public class UserPlayer : Player {
 			GameManager.instance.NextProgram();
 		}
 		if (moves <= 0 && hasAttacked == false) {
-			GameManager.instance.attack ();
+			if (GameManager.instance.undone == false){
+				if (abilities[0] == "Slash"){
+					GameManager.instance.attack (1.1f, 3);
+				}
+				if (abilities[0] == "Crash"){
+					GameManager.instance.attack (2.2f, 8);
+				}
+				if (abilities[0] == "Glitch"){
+					GameManager.instance.attack (1.1f, 2);
+				}
+
+			}
 		}
 
 		if (attacking == true) {

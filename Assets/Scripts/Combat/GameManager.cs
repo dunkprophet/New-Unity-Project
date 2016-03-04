@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour {
 
 	//Current player info
 	public float currentPlayerAttackRange;
+	public string tempString;
 
 	//Bools
 	public bool movingPlayer;
@@ -62,6 +63,8 @@ public class GameManager : MonoBehaviour {
 	public bool canAttack;
 	public bool winText = false;
 	public bool loseText = false;
+	public bool undone = false;
+	public bool textRunning = false;
 
 	//Useless shit
 	public int AIact = 0;
@@ -75,6 +78,8 @@ public class GameManager : MonoBehaviour {
 	public List<AIPlayer> AIplayers = new List<AIPlayer> ();
 	public List<Vector3> tilesPos = new List<Vector3> ();
 	public List<Tile> tilesObj = new List<Tile> ();
+	
+	public List<GameObject> checkTiles  = new List<GameObject>();
 
 	//List of all colored tiles
 	public List<Vector3> tilesListBothPlayers;
@@ -357,7 +362,9 @@ public class GameManager : MonoBehaviour {
 
 	public void spawnPlayer (Vector3 spawnerPosition){
 		startingVector = spawnerPosition;
-		spawningPlayer = true;
+		if (OverworldManager.instance.freeMode == true) {
+			spawningPlayer = true;
+		}
 	}
 	public void spawnEnemy (Vector3 spawnerPosition, float attackRange, int attackDamage, int maxHealth, int maxMoves, int moves, string enemyName){
 		//ENEMEY SPAWNER
@@ -454,7 +461,7 @@ public class GameManager : MonoBehaviour {
 			//tiles.
 			//}
 			healthString = players [currentPlayerIndex].GetComponent<UserPlayer> ().health.ToString ();
-			currentPlayerAttackRange = players [currentPlayerIndex].GetComponent<UserPlayer> ().attackRange;
+			//currentPlayerAttackRange = players [currentPlayerIndex].GetComponent<UserPlayer> ().attackRange;
 		
 			/*if (tempCount > 10) {
 			tempCount = 0;
@@ -467,6 +474,14 @@ public class GameManager : MonoBehaviour {
 	public void NextProgram()
 	{
 		playersThatCanMove.Remove (players [currentPlayerIndex]);
+		players [currentPlayerIndex].GetComponent<UserPlayer> ().positionStartOfTurn = players [currentPlayerIndex].GetComponent<UserPlayer> ().transform.position;
+		players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTilesLastTurn.Clear();
+		for (int d = 0; d < players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Count; d++) {
+
+			players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTilesLastTurn.Add(players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles[d]);
+
+		}
+		//players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTilesLastTurn = players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles;
 		//HERE IS THE PROBLEM:
 		//AS ONE PLAYER IS OUT OF MOVES, THIS THING IS RUN TO TRY TO FIND A PLAYER THAT DOES HAVE MOVES(Unless the player is selected AND out of moves,
 		//in which case it is allowed to undo its actions.
@@ -522,27 +537,83 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	public void undo(){
-		/*if (players [currentPlayerIndex].GetComponent<UserPlayer> ().hasAttacked == false) {
-			players [currentPlayerIndex].GetComponent<UserPlayer> ().transform.position = players [currentPlayerIndex].GetComponent<UserPlayer> ().positionLastTurn;
-			players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles = players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTilesLastTurn;
-			for (int x = 0; x< players[currentPlayerIndex].GetComponent<UserPlayer>().markedTiles.Count; x++) {
-				tempVector = players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles [x];
-				if (tempVector != players [currentPlayerIndex].GetComponent<UserPlayer> ().positionLastTurn) {
-					tilesListBothPlayers.Remove (tempVector);
+
+		if (players [currentPlayerIndex].GetComponent<UserPlayer> ().hasAttacked == false) {
+			if (players [currentPlayerIndex].GetComponent<UserPlayer> ().attacking == true){
+				for (int v = 0; v < checkTiles.Count; v++){
+					checkTiles[v].GetComponent<Tile>().attackableTile = false;
+				}
+				players [currentPlayerIndex].GetComponent<UserPlayer> ().attacking = false;
+			}
+			if (players [currentPlayerIndex].GetComponent<UserPlayer> ().moves < players [currentPlayerIndex].GetComponent<UserPlayer> ().maxMoves){
+			
+			players [currentPlayerIndex].GetComponent<UserPlayer> ().transform.position = players [currentPlayerIndex].GetComponent<UserPlayer> ().positionStartOfTurn;
+				currentPlayerPosition = players [currentPlayerIndex].GetComponent<UserPlayer> ().transform.position;
+				for (int k = 0; k < checkTiles.Count; k++){
+					if (checkTiles[k].GetComponent<Tile>().bumpTileCreated == true){
+						Destroy (checkTiles[k].GetComponent<Tile>().transform.FindChild ("movableTilePrefab(Clone)").gameObject);
+						checkTiles[k].GetComponent<Tile>().bumpTileCreated = false;
+					}
+				}
+			for (int x = 0; x < players[currentPlayerIndex].GetComponent<UserPlayer>().markedTiles.Count; x++){
+				if (tilesListBothPlayers.Contains(players[currentPlayerIndex].GetComponent<UserPlayer>().markedTiles[x]) == true){
+					tilesListBothPlayers.Remove(players[currentPlayerIndex].GetComponent<UserPlayer>().markedTiles[x]);
 				}
 			}
-			players [currentPlayerIndex].GetComponent<UserPlayer> ().moves = 3;
-			playersThatCanMove.Add (players[currentPlayerIndex]);
-			gamePaused = false;
+			for (int x = 0; x < players[currentPlayerIndex].GetComponent<UserPlayer>().markedTilesLastTurn.Count; x++){
+				if (tilesListBothPlayers.Contains(players[currentPlayerIndex].GetComponent<UserPlayer>().markedTilesLastTurn[x]) == false){
+					tilesListBothPlayers.Add(players[currentPlayerIndex].GetComponent<UserPlayer>().markedTilesLastTurn[x]);
+			}
+			}
+			
+			players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Clear ();
+			
+			for (int x = 0; x < players[currentPlayerIndex].GetComponent<UserPlayer>().markedTilesLastTurn.Count; x++){
+				players[currentPlayerIndex].GetComponent<UserPlayer>().markedTiles.Add(players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTilesLastTurn[x]);
+			}
+			
+
+			players [currentPlayerIndex].GetComponent<UserPlayer> ().moves = players [currentPlayerIndex].GetComponent<UserPlayer> ().maxMoves;
+			
+				if (playersThatCanMove.Contains(players[currentPlayerIndex]) == false){
+					playersThatCanMove.Add (players[currentPlayerIndex]);
+				}
+				undone = true;
+
+			}
+			players [currentPlayerIndex].GetComponent<UserPlayer> ().attacking = false;
 		}
+		/*for (int x = 0; x< players[currentPlayerIndex].GetComponent<UserPlayer>().markedTiles.Count; x++) {
+				
+			tempVector = players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles [x];
+				
+			if (tempVector != players [currentPlayerIndex].GetComponent<UserPlayer> ().positionStartOfTurn) {
+
+				tilesListBothPlayers.Remove (tempVector);
+
+			}
+
+		}*/
+			
+
+
+		//}
 		//Move player back 
-	*/
+	
 	}
 
 	public void doNothing(){
-	
-		players [currentPlayerIndex].GetComponent<UserPlayer> ().moves = 0;
+		
+		players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTilesLastTurn.Clear ();
+		for (int d = 0; d < players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Count; d++) {
+			players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTilesLastTurn.Add(players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles[d]);
+		}
+		players [currentPlayerIndex].GetComponent<UserPlayer> ().positionStartOfTurn = players [currentPlayerIndex].GetComponent<UserPlayer> ().transform.position;
+
 		players [currentPlayerIndex].GetComponent<UserPlayer> ().hasAttacked = true;
+		players [currentPlayerIndex].GetComponent<UserPlayer> ().moves = 0;
+		players [currentPlayerIndex].GetComponent<UserPlayer> ().attacking = false;
+
 	
 	}
 	//public int healthUpdate(){
@@ -554,6 +625,13 @@ public class GameManager : MonoBehaviour {
 
 		lastPosition = players [currentPlayerIndex].transform.position;
 		players [currentPlayerIndex].transform.position = tilePosition;
+		currentPlayerPosition = players [currentPlayerIndex].transform.position;
+		for (int k = 0; k < checkTiles.Count; k++){
+			if (checkTiles[k].GetComponent<Tile>().bumpTileCreated == true){
+				Destroy (checkTiles[k].GetComponent<Tile>().transform.FindChild ("movableTilePrefab(Clone)").gameObject);
+				checkTiles[k].GetComponent<Tile>().bumpTileCreated = false;
+			}
+		}
 
 		if (players [currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Count >= players [currentPlayerIndex].GetComponent<UserPlayer> ().maxHealth) {
 
@@ -599,8 +677,11 @@ public class GameManager : MonoBehaviour {
 	}
 
 
-	public void attack()
+	public void attack(float attackRange, int attackDam)
 	{
+		currentPlayerAttackRange = attackRange;
+		attackDamage = attackDam;
+		undone = false;
 		players [currentPlayerIndex].GetComponent<UserPlayer> ().attacking = true;
 	}
 	public void AIattack(){
@@ -636,7 +717,7 @@ public class GameManager : MonoBehaviour {
 				OverworldManager.instance.text = "Infiltration Successful";
 				OverworldManager.instance.i = 0;
 			}
-			GUILayout.BeginArea (new Rect (Screen.width*0.2f, Screen.height*0.1f, Screen.width*0.6f, Screen.height*0.8f));
+			GUILayout.BeginArea (new Rect (Screen.width/5, 0, Screen.width-Screen.width/5, Screen.height-Screen.height/5));
 			GUILayout.BeginVertical ("Screen.Victory();", GUI.skin.GetStyle ("netscape"));
 			GUI.skin.label.fontSize = Mathf.RoundToInt (36 * Screen.width / (OverworldManager.instance.defaultWidth* 1.0f));
 			GUILayout.Label(OverworldManager.instance.textPrint+"\n");
@@ -656,7 +737,7 @@ public class GameManager : MonoBehaviour {
 				OverworldManager.instance.text = "C̶̩o̕n͓̖̳̬͟n̷̜͓̮̳e̥̻̤͇͇ͅc̸̼̪̘̣̗͎ͅţ̝̗i̵͔̩͖͖̹̠o̙͓̞̥̤n̛͕͍͚͇̝ ̗̰̦̥̺͙̥͠L͔̪̥̬̬̱o̡s̶͔̲t͈̼̻";
 				OverworldManager.instance.i = 0;
 			}
-			GUILayout.BeginArea (new Rect (Screen.width*0.2f, Screen.height*0.1f, Screen.width*0.6f, Screen.height*0.8f));
+			GUILayout.BeginArea (new Rect (Screen.width/5, 0, Screen.width-Screen.width/5, Screen.height-Screen.height/5));
 			GUILayout.BeginVertical ("Screen.Loss();", GUI.skin.GetStyle ("netscape"));
 			GUI.skin.label.fontSize = Mathf.RoundToInt (36 * Screen.width / (OverworldManager.instance.defaultWidth* 1.0f));
 			GUILayout.Label(OverworldManager.instance.textPrint+"\n");
@@ -665,6 +746,7 @@ public class GameManager : MonoBehaviour {
 			if (GUILayout.Button("[Exit Node]")){
 				matchStarted = false;
 				OverworldManager.instance.matchStarted = false;
+				OverworldManager.instance.textBoxShown = false;
 				Application.LoadLevel(1);
 			}
 			GUILayout.EndVertical();
@@ -672,89 +754,34 @@ public class GameManager : MonoBehaviour {
 		}
 
 
-		if (turnChange == false && matchStarted == true) {	
-		GUILayout.BeginArea (tempRect);
-			GUILayout.BeginVertical ("Selected Program", GUI.skin.GetStyle ("box"));
-
-			GUILayout.Label (healthString);
-			if (matchStarted == true) {
-				if (players [currentPlayerIndex].GetComponent<UserPlayer> ().hasAttacked == false) {
-					if (GUILayout.Button ("Attack")) {
-						attack ();
-					}
-				}
-			}
-			if (GUILayout.Button ("No Action")) {
-				doNothing ();
-			}
-			if (players[currentPlayerIndex].GetComponent<UserPlayer>().hasAttacked == false){
-				if (GUILayout.Button ("Undo[WIP]")) {
-					undo ();
-				}
-			}
-
-			/*if (GUILayout.Button ("Isometric")) {
-				Camera.main.transform.position = new Vector3 (0,0,-9);
-				Camera.main.transform.rotation = Quaternion.Euler(30,45,0);
-				
-
-			}
-			if (GUILayout.Button ("Old-school")) {
-
-				Camera.main.transform.position = new Vector3 (12,5,-9);
-				Camera.main.transform.rotation = Quaternion.Euler(90,0,0);
-			}*/
-
-			/*if (matchStarted == true && gamePaused == true) {
-				if (GUILayout.Button ("Next Turn")) {
-					turnChange = true;
-					AITurn ();
-					round++;
-					currentPlayerIndex = 0;
-					for (int y = 0; y < players.Count; y++) {
-						players [y].GetComponent<UserPlayer> ().moves = 3;
-						print ("players given moves works");
-					}
-					gamePaused = false;
-				}
-
-			}*/
-		
-			GUILayout.EndVertical ();
-			GUILayout.EndArea ();
+		if (matchStarted == true) {	
+			tempString = "Curr.Program";
+		} else {
+			tempString = "Program.Spawn";
 		}
-		if (matchStarted == false && gamePaused == false) {
-			tempRect = new Rect (0, 0, Screen.width/5, Screen.height);
-			GUILayout.BeginArea (tempRect);
-			GUILayout.BeginVertical ("", GUI.skin.GetStyle ("netscape"));
-			GUILayout.Label (healthString);
-			GUI.skin.label.fontSize = Mathf.RoundToInt (18 * Screen.width / (OverworldManager.instance.defaultWidth* 1.0f));
-			if (spawningPlayer == true){
-				for (int a = 0; a < OverworldManager.instance.programList.Count; a++){
-					if (GUILayout.Button("Spawn "+OverworldManager.instance.programList[a])){
-						UserPlayer player;
-						player = ((GameObject)Instantiate(
-							Resources.Load ("Prefabs/"+OverworldManager.instance.programList[a]) as GameObject,
-							startingVector,
-							Quaternion.Euler(new Vector3()))
-						          ).GetComponent<UserPlayer>();
-						
-						players.Add(player);
+		if (1 == 1) {
 
-						if (OverworldManager.instance.programList[a] == "Bug"){
-							players[players.IndexOf(player)].GetComponent<UserPlayer>().attackRange = 1.1f;
-							players[players.IndexOf(player)].GetComponent<UserPlayer>().attackDamage = 2;
-							players[players.IndexOf(player)].GetComponent<UserPlayer>().maxHealth = 1;
-							players[players.IndexOf(player)].GetComponent<UserPlayer>().maxMoves = 4;
-							players[players.IndexOf(player)].GetComponent<UserPlayer>().moves = 4;
-						}
-						if (OverworldManager.instance.programList[a] == "GOD"){
-							players[players.IndexOf(player)].GetComponent<UserPlayer>().attackRange = 2.2f;
-							players[players.IndexOf(player)].GetComponent<UserPlayer>().attackDamage = 3;
-							players[players.IndexOf(player)].GetComponent<UserPlayer>().maxHealth = 8;
-							players[players.IndexOf(player)].GetComponent<UserPlayer>().maxMoves = 8;
-							players[players.IndexOf(player)].GetComponent<UserPlayer>().moves = 8;
-						}
+			tempRect = new Rect (0, 0, Screen.width / 5, Screen.height);
+
+			GUILayout.BeginArea (tempRect);
+			GUILayout.BeginVertical (tempString, GUI.skin.GetStyle ("netscape"));
+
+			//GUILayout.Label (healthString);
+
+			GUI.skin.label.fontSize = Mathf.RoundToInt (24 * Screen.width / (OverworldManager.instance.defaultWidth * 1.0f));
+
+
+			if (spawningPlayer == true) {
+				for (int a = 0; a < OverworldManager.instance.programList.Count; a++) {
+					if (GUILayout.Button ("Spawn " + OverworldManager.instance.programList [a].GetComponent<Stats>().name)) {
+						UserPlayer player;
+						player = ((GameObject)Instantiate (
+							OverworldManager.instance.programList[a],
+							startingVector,
+							Quaternion.Euler (new Vector3 ()))
+						          ).GetComponent<UserPlayer> ();
+						
+						players.Add (player);
 						
 						spawningPlayer = false;
 					}
@@ -762,12 +789,48 @@ public class GameManager : MonoBehaviour {
 			}
 
 			//CHANGE HERE FOR AMOUNT OF PLAYERS IN MATCH
-			if (players.Count >= 1){
-				if (GUILayout.Button ("Start Match")){
+			if (matchStarted == false){
+			if (players.Count >= 1) {
+				if (GUILayout.Button (">Start Match")) {
 					matchStarted = true;
 					turnChange = true;
 				}
 			}
+			}
+		
+			if (matchStarted == true) {
+			GUILayout.Label (players [currentPlayerIndex].GetComponent<UserPlayer> ().name+"\n" +
+				"SS  = "+healthString+"/"+players [currentPlayerIndex].GetComponent<UserPlayer> ().maxHealth+"\n" +
+			    "MP  = "+players [currentPlayerIndex].GetComponent<UserPlayer> ().moves+"/" +
+			    ""+players [currentPlayerIndex].GetComponent<UserPlayer> ().maxMoves+"\n\n");
+
+
+				if (players [currentPlayerIndex].GetComponent<UserPlayer> ().hasAttacked == false) {
+
+					for (int d = 0; d < players [currentPlayerIndex].GetComponent<UserPlayer> ().abilities.Count; d++){
+						if (GUILayout.Button (">"+players [currentPlayerIndex].GetComponent<UserPlayer> ().abilities[d])) {
+							if (players [currentPlayerIndex].GetComponent<UserPlayer> ().abilities[d] == "Slash"){
+								attack (1.1f, 3);
+							}
+							if (players [currentPlayerIndex].GetComponent<UserPlayer> ().abilities[d] == "Crash"){
+								attack (2.2f, 8);
+							}
+							if (players [currentPlayerIndex].GetComponent<UserPlayer> ().abilities[d] == "Glitch"){
+								attack (1.1f, 2);
+							}
+					}
+					}
+
+					if (GUILayout.Button (">No Action")) {
+						doNothing ();
+					}
+					if (GUILayout.Button (">Undo[WIP]")) {
+						undo ();
+					}
+
+				}
+			}
+		
 			GUILayout.EndVertical ();
 			GUILayout.EndArea ();
 		}

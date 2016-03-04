@@ -11,6 +11,12 @@ public class Nodes : MonoBehaviour {
 
 	private bool clicked = false;
 
+	public Renderer rend;
+	public BoxCollider boxC;
+	public SphereCollider sphereC;
+	public CapsuleCollider capsC;
+	public bool turnOn = false;
+
 	private Rect nodeBox;
 	private Vector3 nodePosition;
 
@@ -20,10 +26,41 @@ public class Nodes : MonoBehaviour {
 	void Start () {
 		nodeText = nodeText.Replace("NL","\n");
 		nodePosition = transform.position;
+		rend = GetComponent<Renderer>();
+		rend.enabled = turnOn;
+		if (GetComponent<BoxCollider> () != null) {
+			boxC = GetComponent<BoxCollider> ();
+			boxC.enabled = turnOn;
+		}
+		if (GetComponent<SphereCollider> () != null) {
+			sphereC = GetComponent<SphereCollider> ();
+			sphereC.enabled = turnOn;
+		}
+		if (GetComponent<CapsuleCollider> () != null) {
+			capsC = GetComponent<CapsuleCollider> ();
+			capsC.enabled = turnOn;
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		if (turnOn == false && OverworldManager.instance.netscapeNodes.Contains (node)) {
+		
+			turnOn = true;
+			rend.enabled = turnOn;
+			if (GetComponent<BoxCollider> () != null) {
+				boxC.enabled = turnOn;
+			}
+			if (GetComponent<SphereCollider> () != null) {
+				sphereC.enabled = turnOn;
+			}
+			if (GetComponent<CapsuleCollider> () != null) {
+				capsC.enabled = turnOn;
+			}
+		}
+
+
+
 		/*nodePosition = Camera.main.ScreenToWorldPoint (transform.position);*/
 		if (OverworldManager.instance.grayNode == true) {
 			clicked = false;

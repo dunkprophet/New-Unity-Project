@@ -44,12 +44,14 @@ public class Tile : MonoBehaviour {
 		//GameManager.instance.tiles.Add(tilePosition);
 		//Tile tile;
 
+		GameManager.instance.checkTiles.Add (this.gameObject);
+
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
-
+		if (GameManager.instance.textRunning == false){
 		if (bumpTileCreated == true && GameManager.instance.currentPlayerPosition == transform.position){
 			Destroy (transform.FindChild ("movableTilePrefab(Clone)").gameObject);
 			bumpTileCreated = false;
@@ -78,6 +80,9 @@ public class Tile : MonoBehaviour {
 				if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) < GameManager.instance.currentPlayerAttackRange) {
 					attackableTile = true;
 				}
+				if (GameManager.instance.undone == true){
+					attackableTile = false;
+				}
 			}
 			tempVector = GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().transform.position;
 			tempInt = GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().moves;
@@ -105,7 +110,7 @@ public class Tile : MonoBehaviour {
 				bumpMarkedTileCreated = false;
 			}
 			//AI MARKEDTILES
-			if (GameManager.instance.tilesListAllAIPlayers.Contains (transform.position)) {
+			if (GameManager.instance.tilesListAllAIPlayers.Contains (transform.position) == true) {
 				if (bumpMarkedAITileCreated == false){
 					createMarkedAIMark ();
 				}
@@ -121,7 +126,7 @@ public class Tile : MonoBehaviour {
 
 					if (bumpTileCreated == false) {
 						print ("Spawning Mark");
-						if (GameManager.instance.currentPlayerPosition != transform.position){
+						if (GameManager.instance.currentPlayerPosition != transform.position && GameManager.instance.players[GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().hasAttacked == false){
 							createMoveMark ();
 						}
 						
@@ -146,6 +151,9 @@ public class Tile : MonoBehaviour {
 					Destroy (transform.FindChild ("movableTilePrefab(Clone)").gameObject);
 					bumpTileCreated = false;
 				}
+			} else if (bumpTileCreated == true) {
+				Destroy (transform.FindChild ("movableTilePrefab(Clone)").gameObject);
+				bumpTileCreated = false;
 			}
 
 			//ATTACKTILES
@@ -163,7 +171,13 @@ public class Tile : MonoBehaviour {
 				
 				//DELETE TILE
 			}
+			if (GameManager.instance.undone == true && bumpAttackTileCreated == true) {
+				Destroy (transform.FindChild ("attackableTilePrefab(Clone)").gameObject);
+				bumpAttackTileCreated = false;
+				attackableTile = false;
+			}
 		}
+	}
 	}
 
 	void OnMouseExit() 
@@ -175,7 +189,7 @@ public class Tile : MonoBehaviour {
 	{
 
 		if (GameManager.instance.matchStarted == true && GameManager.instance.gamePaused == false) {
-			if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) < 1.1f) {
+			if (Vector3.Distance (GameManager.instance.players[GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().transform.position, transform.position) < 1.1f) {
 
 				if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition) == false && GameManager.instance.tilesListBothPlayers.Contains (tilePosition) == false) {
 					movableTile = true;
@@ -216,15 +230,61 @@ public class Tile : MonoBehaviour {
 		mark.transform.parent = transform;
 		bumpMarkedAITileCreated = true;
 	}
-	void createMoveMark(){
-		GameObject mark; 
-		mark = (GameObject)Instantiate (
-			GameManager.instance.movableTilePrefab,
-			new Vector3(transform.position.x, 0.65f,transform.position.z),
-			Quaternion.Euler (new Vector3 ()));
-		mark.transform.parent = transform;
-		bumpTileCreated = true;
-		OnMouseEnter ();
+	public void createMoveMark(){
+
+		if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) > 1.1f){
+			GameObject mark; 
+			mark = (GameObject)Instantiate (
+				GameManager.instance.movableTilePrefab,
+				new Vector3 (transform.position.x, 0.65f, transform.position.z),
+				Quaternion.Euler (new Vector3 ()));
+			mark.transform.parent = transform;
+			mark.GetComponent<Renderer>().material.mainTexture = Resources.Load("Textures/movableTile_3") as Texture;
+			bumpTileCreated = true;
+			OnMouseEnter ();
+		} else if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) <= 1.1f) {
+			GameObject mark; 
+			mark = (GameObject)Instantiate (
+				GameManager.instance.movableTilePrefab,
+				new Vector3 (transform.position.x, 0.65f, transform.position.z),
+				Quaternion.Euler (new Vector3 ()));
+			mark.transform.parent = transform;
+			bumpTileCreated = true;
+			OnMouseEnter ();
+		}
+		/*else if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) <= 3.3f){
+			GameObject mark; 
+			mark = (GameObject)Instantiate (
+				GameManager.instance.movableTilePrefab,
+				new Vector3 (transform.position.x, 0.65f, transform.position.z),
+				Quaternion.Euler (new Vector3 ()));
+			mark.transform.parent = transform;
+			mark.GetComponent<Renderer>().material.mainTexture = Resources.Load("Textures/movableTile_3") as Texture;
+			bumpTileCreated = true;
+			OnMouseEnter ();
+		}
+		else if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) <= 4.4f){
+			GameObject mark; 
+			mark = (GameObject)Instantiate (
+				GameManager.instance.movableTilePrefab,
+				new Vector3 (transform.position.x, 0.65f, transform.position.z),
+				Quaternion.Euler (new Vector3 ()));
+			mark.transform.parent = transform;
+			mark.GetComponent<Renderer>().material.mainTexture = Resources.Load("Textures/movableTile_4") as Texture;
+			bumpTileCreated = true;
+			OnMouseEnter ();
+		}
+		else if (Vector3.Distance (GameManager.instance.currentPlayerPosition, transform.position) > 4.4f){
+			GameObject mark; 
+			mark = (GameObject)Instantiate (
+				GameManager.instance.movableTilePrefab,
+				new Vector3 (transform.position.x, 0.65f, transform.position.z),
+				Quaternion.Euler (new Vector3 ()));
+			mark.transform.parent = transform;
+			mark.GetComponent<Renderer>().material.mainTexture = Resources.Load("Textures/movableTile_5") as Texture;
+			bumpTileCreated = true;
+			OnMouseEnter ();
+		}*/
 	}
 	void createAttackMark(){
 		GameObject mark; 
@@ -237,7 +297,7 @@ public class Tile : MonoBehaviour {
 	}
 
 	void OnMouseDown (){
-		if (GameManager.instance.matchStarted == true && GameManager.instance.gamePaused == false ) {
+		if (GameManager.instance.matchStarted == true && GameManager.instance.gamePaused == false && OverworldManager.instance.freeMode == true) {
 			GameManager.instance.movingPlayer = false;
 
 			/*if (GameManager.instance.players [GameManager.instance.lastPlayerIndex].GetComponent<UserPlayer> ().markedTiles.Contains (tilePosition)) {
@@ -245,23 +305,25 @@ public class Tile : MonoBehaviour {
 		}*/
 
 			if (tilePosition != GameManager.instance.currentPlayerPosition && movableTile == true && canMove == true && attackableTile == false) {
-				if (GameManager.instance.players[GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer>().moves > 0){
+				if (GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().moves > 0) {
 					canMove = GameManager.instance.MoveCurrentPlayer (tilePosition);
 					movableTile = false;
+					GameManager.instance.undone = false;
 				}
 			}
-			if (attackableTile == true){
-				GameManager.instance.players[GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer>().attacking = false;
-				if (GameManager.instance.tilesListAllAIPlayers.Contains (tilePosition) == true){
-				GameManager.instance.attackPosition = tilePosition;
-				GameManager.instance.attackDone(tilePosition);
+			if (attackableTile == true && GameManager.instance.undone == false) {
+				GameManager.instance.players [GameManager.instance.currentPlayerIndex].GetComponent<UserPlayer> ().attacking = false;
+				if (GameManager.instance.tilesListAllAIPlayers.Contains (tilePosition) == true) {
+					GameManager.instance.attackPosition = tilePosition;
+					GameManager.instance.attackDone (tilePosition);
 				
 				} else {
-					GameManager.instance.attackDone(tilePosition);
+					GameManager.instance.attackDone (tilePosition);
 				}
 			}
 		}
 	}
+
 
 	public void OnGUI() {
 		

@@ -170,7 +170,7 @@ public class Box106 : MonoBehaviour {
 			}
 			if (OverworldManager.instance.dialogController == 30) {
 				OverworldManager.instance.text = "And not a human around.";
-				OverworldManager.instance.scene1Background = OverworldManager.instance.scene1Background2;
+				OverworldManager.instance.background = OverworldManager.instance.scene1Background2;
 			}
 			if (OverworldManager.instance.dialogController == 31) {
 				if (tempBool == true){
