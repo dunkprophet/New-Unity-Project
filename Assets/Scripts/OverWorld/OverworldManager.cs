@@ -1273,7 +1273,7 @@ public class OverworldManager : MonoBehaviour {
 				//For loop showing all save files from list
 				for (int s = 0; s < 8; s++) {
 					if (SaveGameSystem.LoadGame("Save"+s) == null){
-						GUILayout.Label("Empty slot");
+						GUILayout.Label("Empty slot "+s);
 					} else {
 						if (GUILayout.Button("Load Save "+s/* + saveList[i].name*/)){
 							//SAVE FILE
@@ -1333,6 +1333,7 @@ public class OverworldManager : MonoBehaviour {
 					if (SaveGameSystem.LoadGame("Save"+s) == null){
 						if (GUILayout.Button("Empty slot")){
 
+
 							// Saving a saved game.
 							MySaveGame SaveFile = new MySaveGame();
 							SaveFile.userName = userName;
@@ -1367,6 +1368,7 @@ public class OverworldManager : MonoBehaviour {
 							SaveFile.response3picked = response3picked;
 							SaveFile.response4picked = response4picked;
 							SaveGameSystem.SaveGame(SaveFile, "Save"+s); // Saves as MySaveGame.sav
+
 							
 						}
 					} else {
