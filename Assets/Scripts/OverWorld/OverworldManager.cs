@@ -217,6 +217,10 @@ public class OverworldManager : MonoBehaviour {
 		public bool fadeToWhite;
 		public bool fadeToBlack;
 
+		public int i;
+		public string text;
+		public string textPrint;
+
 		public bool netscapeOpen;
 		public bool inboxOpen;
 		public bool mapOpen;
@@ -842,23 +846,17 @@ public class OverworldManager : MonoBehaviour {
 				}
 
 				//AREA -----------------------------------------------------------------------------------------------------------
-				GUILayout.BeginArea (new Rect (0, 0, Screen.width / 3, Screen.height / 12));
+				GUILayout.BeginArea (new Rect (-Screen.width/12, 0, Screen.width / 5, Screen.height / 12));
 				GUILayout.BeginHorizontal ("", GUI.skin.GetStyle ("empty"));
 				if (matchStarted == false) {
-					if (GUILayout.Button (" [Return]")) {
-					
-						netscapeOpen = false;
-						showNode = false;
-						grayNode = true;
-					
-					}
+					GUILayout.Label("");
 					if (showProgramList == false) {
-						if (GUILayout.Button (" [Show List]")) {
+						if (GUILayout.Button ("[Programs]")) {
 							showProgramList = true;
 							selectedItem = -1;
 						}
 					} else if (showProgramList == true) {
-						if (GUILayout.Button (" [Hide List]")) {
+						if (GUILayout.Button ("[Close---]")) {
 							showProgramList = false;
 							selectedItem = -1;
 						}
@@ -866,7 +864,19 @@ public class OverworldManager : MonoBehaviour {
 					}
 					
 				}
-
+				GUILayout.EndHorizontal ();
+				GUILayout.EndArea ();
+				GUILayout.BeginArea (new Rect (Screen.width-Screen.width/5.5f, 0, Screen.width / 5, Screen.height / 12));
+				GUILayout.BeginHorizontal ("", GUI.skin.GetStyle ("empty"));
+				if (matchStarted == false) {
+					if (GUILayout.Button ("[Exit]")) {
+						
+						netscapeOpen = false;
+						showNode = false;
+						grayNode = true;
+						
+					}
+				}
 				GUILayout.EndHorizontal ();
 				GUILayout.EndArea ();
 
@@ -1164,12 +1174,18 @@ public class OverworldManager : MonoBehaviour {
 			GUILayout.EndArea ();*/
 
 			//Buttons on interface
+			
+
+
 			GUILayout.BeginArea (new Rect (Screen.width / 2.8f, Screen.height /6f, Screen.width/2, Screen.height/2));
 			//windowRect = GUI.Window(0, windowRect, DoMyWindow, "Main_Menu メニュー", GUI.skin.GetStyle ("comp"));
 			GUILayout.BeginVertical ("Main_Menu メニュー", GUI.skin.GetStyle ("comp"));
 
 			//MENY, START LOAD OPTIONS EXIT
 			if (menuStarted == true) {
+
+				GUILayout.Label("\n\n\n\n");
+				GUI.skin.label.fontSize = Mathf.RoundToInt (18 * Screen.width / (defaultWidth * 1.0f));
 				if (scene > 0){
 					if (GUILayout.Button (">Go to main menu")) {
 						newGameOpen = true;
@@ -1224,27 +1240,44 @@ public class OverworldManager : MonoBehaviour {
 				if (GUILayout.Button (">Quit Application")) {
 					Application.Quit ();
 				}
+
+
 			}
 
 
 			GUILayout.EndVertical ();
 			GUILayout.EndArea ();
+			if (menuStarted == true) {
+				GUILayout.BeginArea (new Rect (Screen.width / 2.8f, Screen.height /6f, Screen.width/2, Screen.height/2));
+				GUILayout.BeginVertical ("", GUI.skin.GetStyle ("empty"));
+				GUI.skin.label.fontSize = Mathf.RoundToInt (10 * Screen.width / (defaultWidth * 1.0f));
+				
+				GUILayout.Label("██╗ ██████╗███████╗██████╗ ██████╗ ███████╗ █████╗ ██╗  ██╗███████╗██████╗ \n" +
+				                "██║██╔════╝██╔════╝██╔══██╗██╔══██╗██╔════╝██╔══██╗██║ ██╔╝██╔════╝██╔══██╗\n" +
+				                "██║██║     █████╗  ██████╔╝██████╔╝█████╗  ███████║█████╔╝ █████╗  ██████╔╝\n" +
+				                "██║██║     ██╔══╝  ██╔══██╗██╔══██╗██╔══╝  ██╔══██║██╔═██╗ ██╔══╝  ██╔══██╗\n" +
+				                "██║╚██████╗███████╗██████╔╝██║  ██║███████╗██║  ██║██║  ██╗███████╗██║  ██║\n" +
+				                "╚═╝ ╚═════╝╚══════╝╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝\n" +
+				                "╔╦╗┬ ┬┌─┐  ╦  ┬┌─┐┬ ┬┌┬┐  ┌─┐┌─┐  ╔═╗┬ ┬┬┌┐ ┌─┐  ╔═╗┬┌┬┐┬ ┬\n" +
+				                " ║ ├─┤├┤   ║  ││ ┬├─┤ │   │ │├┤   ║  ├─┤│├┴┐├─┤  ║  │ │ └┬┘\n" +
+				                " ╩ ┴ ┴└─┘  ╩═╝┴└─┘┴ ┴ ┴   └─┘└    ╚═╝┴ ┴┴└─┘┴ ┴  ╚═╝┴ ┴  ┴ \n");
+				GUI.skin.label.fontSize = Mathf.RoundToInt (18 * Screen.width / (defaultWidth * 1.0f));
+				GUILayout.EndVertical();
+				GUILayout.EndArea();
+			}
 
 			if (loadFilesOpen == true){
-				GUILayout.BeginArea (new Rect (Screen.width / 2.95f, Screen.height /2.5f, Screen.width/3.1f, Screen.height/1.8f));
+				GUILayout.BeginArea (new Rect (Screen.width * 0.6f, Screen.height /3.2f, Screen.width/3.1f, Screen.height/1.8f));
 				GUILayout.BeginVertical ("File Browser", GUI.skin.GetStyle ("comp"));
 				GUILayout.Label("Select file to load...");
 				//For loop showing all save files from list
-				for (int i = 0; i < 8; i++) {
-					if (SaveGameSystem.LoadGame("Save"+i) == null){
+				for (int s = 0; s < 8; s++) {
+					if (SaveGameSystem.LoadGame("Save"+s) == null){
 						GUILayout.Label("Empty slot");
 					} else {
-						if (GUILayout.Button("Load Save "+i/* + saveList[i].name*/)){
+						if (GUILayout.Button("Load Save "+s/* + saveList[i].name*/)){
 							//SAVE FILE
-							i = 0;
-							text = "";
-							textPrint = "";
-							MySaveGame SaveFile = SaveGameSystem.LoadGame("Save"+i) as MySaveGame;
+							MySaveGame SaveFile = SaveGameSystem.LoadGame("Save"+s) as MySaveGame;
 							userName = SaveFile.userName;
 							money = SaveFile.money;
 							day = SaveFile.day;
@@ -1263,6 +1296,13 @@ public class OverworldManager : MonoBehaviour {
 							fadeToWhite = SaveFile.fadeToWhite;
 							fadeToBlack = SaveFile.fadeToBlack;
 							
+							text = "";
+							textPrint = "";
+							
+							i = SaveFile.i;
+							text = SaveFile.text;
+							textPrint = SaveFile.textPrint;
+							
 							netscapeOpen = SaveFile.netscapeOpen;
 							inboxOpen = SaveFile.inboxOpen;
 							mapOpen = SaveFile.mapOpen;
@@ -1272,7 +1312,6 @@ public class OverworldManager : MonoBehaviour {
 							response2picked = SaveFile.response2picked;
 							response3picked = SaveFile.response3picked;
 							response4picked = SaveFile.response4picked;
-
 
 							fadeOutMusic = true;
 							menuStarted = false;
@@ -1286,12 +1325,12 @@ public class OverworldManager : MonoBehaviour {
 				GUILayout.EndArea ();
 			}
 			if (saveFilesOpen == true){
-				GUILayout.BeginArea (new Rect (Screen.width / 2.95f, Screen.height /2.5f, Screen.width/3.1f, Screen.height/1.8f));
+				GUILayout.BeginArea (new Rect (Screen.width * 0.6f, Screen.height /3.2f, Screen.width/3.1f, Screen.height/1.8f));
 				GUILayout.BeginVertical ("File Browser", GUI.skin.GetStyle ("comp"));
 				GUILayout.Label("Select save slot...");
 				//For loop showing all save files from list
-				for (int i = 0; i < 8; i++) {
-					if (SaveGameSystem.LoadGame("Save"+i) == null){
+				for (int s = 0; s < 8; s++) {
+					if (SaveGameSystem.LoadGame("Save"+s) == null){
 						if (GUILayout.Button("Empty slot")){
 
 							// Saving a saved game.
@@ -1313,23 +1352,27 @@ public class OverworldManager : MonoBehaviour {
 							SaveFile.deleteOldText = deleteOldText;
 							SaveFile.fadeToWhite = fadeToWhite;
 							SaveFile.fadeToBlack = fadeToBlack;
+
+							SaveFile.text = text;
+							SaveFile.textPrint = textPrint;
+							SaveFile.i = i;
 							
 							SaveFile.netscapeOpen = netscapeOpen;
 							SaveFile.inboxOpen = inboxOpen;
 							SaveFile.mapOpen = mapOpen;
-							
+
 							SaveFile.responseWanted = responseWanted;
 							SaveFile.response1picked = response1picked;
 							SaveFile.response2picked = response2picked;
 							SaveFile.response3picked = response3picked;
 							SaveFile.response4picked = response4picked;
-							SaveGameSystem.SaveGame(SaveFile, "Save"+i); // Saves as MySaveGame.sav
+							SaveGameSystem.SaveGame(SaveFile, "Save"+s); // Saves as MySaveGame.sav
 							
 						}
 					} else {
-						if (GUILayout.Button("Save Game "+i/* + saveList[i].name*/)){
+						if (GUILayout.Button("Save Game "+s/* + saveList[i].name*/)){
 							saveEraseOpen = true;
-							tempInt = i;
+							tempInt = s;
 						}
 					}
 				}
@@ -1353,7 +1396,7 @@ public class OverworldManager : MonoBehaviour {
 				GUILayout.BeginArea (new Rect (Screen.width * 0.666f, Screen.height /3f, Screen.width/3.1f, Screen.height/1.8f));
 				GUILayout.BeginVertical ("Erase File", GUI.skin.GetStyle ("comp"));
 				//Settings for grafixs, sound, etc.
-				GUILayout.Label("Are you sure you want to overwrite this file? I'm sure you worked hard on it...");
+				GUILayout.Label("Are you sure you want to overwrite this file?");
 				if (GUILayout.Button("Yes")){
 					saveEraseOpen = false;
 					SaveGameSystem.DeleteSaveGame("Save"+tempInt);
@@ -1376,7 +1419,11 @@ public class OverworldManager : MonoBehaviour {
 					SaveFile.deleteOldText = deleteOldText;
 					SaveFile.fadeToWhite = fadeToWhite;
 					SaveFile.fadeToBlack = fadeToBlack;
-					
+
+					SaveFile.text = text;
+					SaveFile.textPrint = textPrint;
+					SaveFile.i = i;
+
 					SaveFile.netscapeOpen = netscapeOpen;
 					SaveFile.inboxOpen = inboxOpen;
 					SaveFile.mapOpen = mapOpen;
