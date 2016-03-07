@@ -112,6 +112,7 @@ public class OverworldManager : MonoBehaviour {
 	public GameObject Breaker;
 
 	public List<GameObject> mailList = new List<GameObject> ();
+	public List<bool> mailListBool = new List<bool> ();
 	public List<int> netscapeNodes = new List<int> ();
 
 	public List<bool> choices = new List<bool> ();
@@ -199,8 +200,8 @@ public class OverworldManager : MonoBehaviour {
 		public string userName;
 
 		public List<bool> storyChoices;
-		public List<GameObject> programList;
-		public List<GameObject> mailList;
+		public List<string> programListNames;
+		public List<bool> mailListBool;
 		public List<int> netscapeNodes;
 		public List<string> placesToGo;
 
@@ -266,6 +267,7 @@ public class OverworldManager : MonoBehaviour {
 		{
 			if (!DoesSaveGameExist(name))
 			{
+				print("Can't find save game");
 				return null;
 			}
 			
@@ -273,14 +275,15 @@ public class OverworldManager : MonoBehaviour {
 			
 			using (FileStream stream = new FileStream(GetSavePath(name), FileMode.Open))
 			{
-				try
-				{
+				//try
+				//{
 					return formatter.Deserialize(stream) as SaveGame;
-				}
+				/*}
 				catch (Exception)
 				{
+					print("Can't format and deserialize the FileStream");
 					return null;
-				}
+				}*/
 			}
 		}
 		
@@ -723,7 +726,7 @@ public class OverworldManager : MonoBehaviour {
 					netscapeOpen = true;
 				}
 				for (int k = 0; k < mailList.Count; k++){
-					if (mailList[k].GetComponent<Mail>().read == false){
+					if (mailList[k].GetComponent<Mail>().read == false && mailListBool[k] == true){
 						unreadMessages++;
 					}
 				
@@ -766,12 +769,13 @@ public class OverworldManager : MonoBehaviour {
 				GUILayout.BeginVertical ("mail.co.com", GUI.skin.GetStyle ("comp"));
 				scrollPosition2 = GUILayout.BeginScrollView (scrollPosition2, GUILayout.Width (Screen.width / 3 -24), GUILayout.Height (Screen.height / 2.52f));
 				for (int m = mailList.Count-1; m >= 0; m--) {
+					if (mailListBool[m] == true){
 					if (GUILayout.Button (mailList[m].GetComponent<Mail>().date + " - "+ mailList[m].GetComponent<Mail>().subject)) {
 						messageText = mailList[m].GetComponent<Mail>().content;
 						tempInt = m;
 						mailList[m].GetComponent<Mail>().read = true;
 						OverworldManager.instance.netscapeNodes.Add(mailList[m].GetComponent<Mail>().unlockingNode);
-
+					}
 					}
 				}
 				GUILayout.EndScrollView();
@@ -1278,14 +1282,19 @@ public class OverworldManager : MonoBehaviour {
 						if (GUILayout.Button("Load Save "+s/* + saveList[i].name*/)){
 							//SAVE FILE
 							MySaveGame SaveFile = SaveGameSystem.LoadGame("Save"+s) as MySaveGame;
+							//FOR LOOP THAT GETS PROGRAM NAMES FROM programListNames
+							for (int j = 0; j < SaveFile.programListNames.Count; j++){
+								if (SaveFile.programListNames[j] == "Bug")
+								programList.Add(Bug);
+							}
 							userName = SaveFile.userName;
 							money = SaveFile.money;
 							day = SaveFile.day;
 							date = SaveFile.date;
-							mailList = SaveFile.mailList;
+							mailListBool = SaveFile.mailListBool;
 							netscapeNodes = SaveFile.netscapeNodes;
 							placesToGo = SaveFile.placesToGo;
-							programList = SaveFile.programList;
+							//programList = SaveFile.programListNames;
 							choices = SaveFile.storyChoices;
 							coding = SaveFile.coding;
 							scene = SaveFile.scene;
@@ -1336,14 +1345,18 @@ public class OverworldManager : MonoBehaviour {
 
 							// Saving a saved game.
 							MySaveGame SaveFile = new MySaveGame();
+							//FOR LOOP THAT GET NAMES FROM programList and puts them in programListNames
+							for (int j = 0; j < programList.Count; j++){
+								SaveFile.programListNames.Add(programList[j].GetComponent<Stats>().name);
+							}
 							SaveFile.userName = userName;
 							SaveFile.money = money;
 							SaveFile.day = day;
 							SaveFile.date = date;
-							SaveFile.mailList = mailList;
+							SaveFile.mailListBool = mailListBool;
 							SaveFile.netscapeNodes = netscapeNodes;
 							SaveFile.placesToGo = placesToGo;
-							SaveFile.programList = programList;
+							//SaveFile.programListNames = programList;
 							SaveFile.storyChoices = choices;
 							SaveFile.coding = coding;
 							SaveFile.scene = scene;
@@ -1404,14 +1417,17 @@ public class OverworldManager : MonoBehaviour {
 					SaveGameSystem.DeleteSaveGame("Save"+tempInt);
 					// Saving a saved game.
 					MySaveGame SaveFile = new MySaveGame();
+					for (int j = 0; j < programList.Count; j++){
+						SaveFile.programListNames.Add(programList[j].GetComponent<Stats>().name);
+					}
 					SaveFile.userName = userName;
 					SaveFile.money = money;
 					SaveFile.day = day;
 					SaveFile.date = date;
-					SaveFile.mailList = mailList;
+					SaveFile.mailListBool = mailListBool;
 					SaveFile.netscapeNodes = netscapeNodes;
 					SaveFile.placesToGo = placesToGo;
-					SaveFile.programList = programList;
+					//SaveFile.programList = programList;
 					SaveFile.storyChoices = choices;
 					SaveFile.coding = coding;
 					SaveFile.scene = scene;

@@ -18,6 +18,74 @@ public class Intro_Dialog : MonoBehaviour {
 	private GUISkin DOS2;
 	
 	void Start () {
+		//ALL MAIL HERE!
+		GameObject mailObject; 
+
+		mailObject = ((GameObject)Instantiate (
+			Resources.Load("Prefabs/mail") as GameObject,
+			new Vector3(0,0,0),
+			Quaternion.Euler (new Vector3 ()))
+		              ) as GameObject;
+		
+		mailObject.GetComponent<Mail>().sender = "Zzaam_x";
+		mailObject.GetComponent<Mail>().time = "[06:28:15]";
+		mailObject.GetComponent<Mail>().date = "09/22";
+		mailObject.GetComponent<Mail>().subject = "Hey Kid";
+		mailObject.GetComponent<Mail>().content = "I'm sure you feel as shitty as I do about what happened yesterday. " +
+			"Actually, no, I should feel worse considering they were my friends. " +
+				"Then again, you probably have a lot less experience with death, and killings, whilst I have tons." +
+				"\n\n...whatever, look. I want this to be over with too, so just do as I say: LAY LOW. Don't make anyone look at you funny, " +
+				"and don't fucking talk about what you saw yesterday. Okay? Good. I'll write to you in three days, THREE DAYS, " +
+				"to tell you where I want you, and when.\n\nDon't fuck up till then.\n\n/Saburo";
+		
+		OverworldManager.instance.mailList.Add(mailObject);
+		
+		
+		mailObject = ((GameObject)Instantiate (
+			Resources.Load("Prefabs/mail") as GameObject,
+			new Vector3(0,0,0),
+			Quaternion.Euler (new Vector3 ()))
+		              ) as GameObject;
+		
+		mailObject.GetComponent<Mail>().sender = "Hachi";
+		mailObject.GetComponent<Mail>().time = "[18:02:59]";
+		mailObject.GetComponent<Mail>().date = "09/22";
+		mailObject.GetComponent<Mail>().subject = "Concerning payment";
+		mailObject.GetComponent<Mail>().content = "You didn't listen to me yesterday, so here's the info again:" +
+			"\n\n-¥35000 a month, delvered to me PERSONALLY" +
+				"\n-No drugs" +
+				"\n-No pets" +
+				"\n-No loud noises after midnight" +
+				"\n-NO HACKING!" +
+				"\n\nI know your type. Hoping to relive the lives of the \"netscapers\" by living on their old street. Bah." +
+				" If you want to be a dank hacker, then you can find some other place to live. Or use a proxy.";
+		
+		OverworldManager.instance.mailList.Add(mailObject);
+		
+		mailObject = ((GameObject)Instantiate (
+			Resources.Load("Prefabs/mail") as GameObject,
+			new Vector3(0,0,0),
+			Quaternion.Euler (new Vector3 ()))
+		              ) as GameObject;
+		
+		mailObject.GetComponent<Mail>().sender = "Aralia_3";
+		mailObject.GetComponent<Mail>().time = "[20:09:30]";
+		mailObject.GetComponent<Mail>().date = "09/22";
+		mailObject.GetComponent<Mail>().subject = "Calvin!";
+		mailObject.GetComponent<Mail>().content = "I just got your message, sorry for not looking in my inbox sooner (;﹏;) I've been REALLY busy at school\n\n" +
+			"But cool! Moving to Chiba all by yourself, that's awesome! " +
+				"Would have been even better if you would have gotten in somewhere..." +
+				" but you can always try for a spot next year! Don't forget to get a job too, " +
+				"just a temporary one, of course, but still! You need to be able to pay for your apartment.\n\n" +
+				"You DO have an apartment, don't you? Chiba is the easiest place in the world for that right now," +
+				" so it shouln't be a problem :) Just write if you need any help with anything, I promise to answer you this time!!!" +
+				"\n\n /Aya\n\nPS. If you wanna talk, just head on over to the Training Ground on the net. I can show you some of the" +
+				" stuff we do at TT in our spare time! (Hint: It involves programming v(￣∇￣))"; 
+		mailObject.GetComponent<Mail>().unlockingNode = 9;
+		
+		
+		OverworldManager.instance.mailList.Add(mailObject);
+
 	}
 	
 	void Update(){
