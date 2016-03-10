@@ -101,6 +101,7 @@ public class GameManager : MonoBehaviour {
 	private Vector3 tempVector;
 	public Ray ray;
 	public RaycastHit hit;
+	public Vector3 arrowPos = new Vector3(100,100,100);
 
 	//Current program attack values
 	public Vector3 attackPosition;
@@ -830,7 +831,15 @@ public class GameManager : MonoBehaviour {
 
 				}
 			}
-		
+			GUILayout.EndVertical ();
+			GUILayout.EndArea ();
+			GUILayout.BeginArea (new Rect (0, Screen.height*0.9f, Screen.width / 5, Screen.height*0.1f));
+			GUILayout.BeginVertical (tempString, GUI.skin.GetStyle ("empty"));
+			if (GUILayout.Button ("[Disconnect]")) {
+				OverworldManager.instance.matchStarted = false;
+				OverworldManager.instance.textBoxShown = false;
+				Application.LoadLevel (1);
+			}
 			GUILayout.EndVertical ();
 			GUILayout.EndArea ();
 		}

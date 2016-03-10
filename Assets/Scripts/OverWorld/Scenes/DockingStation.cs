@@ -13,7 +13,7 @@ public class DockingStation : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (OverworldManager.instance.scene == 1 && OverworldManager.instance.freeMode == false) {
+		if (OverworldManager.instance.scene == 1 && OverworldManager.instance.freeMode == false && OverworldManager.instance.tutorialDone == false) {
 
 			
 			if (OverworldManager.instance.dialogController < 0) {

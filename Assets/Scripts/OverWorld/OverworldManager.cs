@@ -68,6 +68,7 @@ public class OverworldManager : MonoBehaviour {
 	public bool newGameOpen = false;
 	public bool newGameOpen2 = false;
 	public bool saveEraseOpen = false;
+	public bool tutorialDone = false;
 
 	public bool deleteOldText = true;
 
@@ -104,6 +105,7 @@ public class OverworldManager : MonoBehaviour {
 	//public List<string> sites = new List<string> ();
 	public List<string> placesToGo = new List<string> ();
 	public List<GameObject> programList = new List<GameObject> ();
+	public List<GameObject> programListOverview = new List<GameObject> ();
 	//public List<string> programText = new List<string> ();
 
 	public GameObject Golem;
@@ -200,7 +202,7 @@ public class OverworldManager : MonoBehaviour {
 		public string userName;
 
 		public List<bool> storyChoices;
-		public List<string> programListNames;
+		public List<string> programListNames = new List<string>();
 		public List<bool> mailListBool;
 		public List<int> netscapeNodes;
 		public List<string> placesToGo;
@@ -267,7 +269,7 @@ public class OverworldManager : MonoBehaviour {
 		{
 			if (!DoesSaveGameExist(name))
 			{
-				print("Can't find save game");
+				//print("Can't find save game");
 				return null;
 			}
 			
@@ -275,15 +277,15 @@ public class OverworldManager : MonoBehaviour {
 			
 			using (FileStream stream = new FileStream(GetSavePath(name), FileMode.Open))
 			{
-				//try
-				//{
+				try
+				{
 					return formatter.Deserialize(stream) as SaveGame;
-				/*}
+				}
 				catch (Exception)
 				{
-					print("Can't format and deserialize the FileStream");
+					//print("Can't format and deserialize the FileStream");
 					return null;
-				}*/
+				}
 			}
 		}
 		
@@ -353,7 +355,10 @@ public class OverworldManager : MonoBehaviour {
 		Golem = Resources.Load ("Prefabs/Golem") as GameObject;
 		Breaker = Resources.Load ("Prefabs/Breaker") as GameObject;
 
-
+		programListOverview.Add (GOD);
+		programListOverview.Add (Bug);
+		programListOverview.Add (Golem);
+		programListOverview.Add (Breaker);
 
 
 		map = Resources.Load ("Textures/map") as Texture;
@@ -434,8 +439,13 @@ public class OverworldManager : MonoBehaviour {
 		}
 		if (Input.GetKeyDown(KeyCode.Escape)) {
 			if (menuStarted == false){
+				//IF AUDIO IS PLAYING, PAUSE AUDIO
+				GetComponent<AudioSource>().Pause();
 				menuStarted = true;
-			} else {menuStarted = false;}
+			} else if (scene != 0) {
+				menuStarted = false;
+				GetComponent<AudioSource>().UnPause();
+			}
 		}
 
 	}
@@ -689,7 +699,9 @@ public class OverworldManager : MonoBehaviour {
 		tempColor = new Color (guiAlpha, guiAlpha, guiAlpha, guiAlpha);
 		GUI.color = tempColor;
 		//Background
-		GUI.DrawTexture (new Rect (0, 0, Screen.width, Screen.height), background);
+		if (background != null) {
+			GUI.DrawTexture (new Rect (0, 0, Screen.width, Screen.height), background);
+		}
 		//Characters
 		//GUI.DrawTexture(new Rect(Screen.width-500, 0, Screen.width/4, Screen.height/4), scene2Background);
 		GUI.color = Color.white;
@@ -1192,6 +1204,9 @@ public class OverworldManager : MonoBehaviour {
 				GUI.skin.label.fontSize = Mathf.RoundToInt (18 * Screen.width / (defaultWidth * 1.0f));
 				if (scene > 0){
 					if (GUILayout.Button (">Go to main menu")) {
+						text = "";
+						textPrint = "";
+						textBoxShown = false;
 						newGameOpen = true;
 						//Application.LoadLevel (2);
 						//matchStarted = true;
@@ -1279,13 +1294,20 @@ public class OverworldManager : MonoBehaviour {
 					if (SaveGameSystem.LoadGame("Save"+s) == null){
 						GUILayout.Label("Empty slot "+s);
 					} else {
-						if (GUILayout.Button("Load Save "+s/* + saveList[i].name*/)){
+						MySaveGame SaveFile = SaveGameSystem.LoadGame("Save"+s) as MySaveGame;
+						tempInt = SaveFile.day;
+						if (GUILayout.Button("Load Save "+s+ " - Day "+tempInt.ToString()/* + saveList[i].name*/)){
+
 							//SAVE FILE
-							MySaveGame SaveFile = SaveGameSystem.LoadGame("Save"+s) as MySaveGame;
+							//MySaveGame SaveFile = SaveGameSystem.LoadGame("Save"+s) as MySaveGame;
 							//FOR LOOP THAT GETS PROGRAM NAMES FROM programListNames
+							programList.Clear();
 							for (int j = 0; j < SaveFile.programListNames.Count; j++){
-								if (SaveFile.programListNames[j] == "Bug")
-								programList.Add(Bug);
+								for (int k = 0; k < programListOverview.Count; k++){
+									if (programListOverview[k].GetComponent <Stats>().name == (SaveFile.programListNames[j])){
+										programList.Add(programListOverview[k]);
+									}
+								}
 							}
 							userName = SaveFile.userName;
 							money = SaveFile.money;
@@ -1346,9 +1368,11 @@ public class OverworldManager : MonoBehaviour {
 							// Saving a saved game.
 							MySaveGame SaveFile = new MySaveGame();
 							//FOR LOOP THAT GET NAMES FROM programList and puts them in programListNames
-							for (int j = 0; j < programList.Count; j++){
-								SaveFile.programListNames.Add(programList[j].GetComponent<Stats>().name);
+
+							for (int d = 0; d < programList.Count; d++) {
+									SaveFile.programListNames.Add(programList[d].GetComponent <Stats>().name);
 							}
+							
 							SaveFile.userName = userName;
 							SaveFile.money = money;
 							SaveFile.day = day;
@@ -1417,8 +1441,8 @@ public class OverworldManager : MonoBehaviour {
 					SaveGameSystem.DeleteSaveGame("Save"+tempInt);
 					// Saving a saved game.
 					MySaveGame SaveFile = new MySaveGame();
-					for (int j = 0; j < programList.Count; j++){
-						SaveFile.programListNames.Add(programList[j].GetComponent<Stats>().name);
+					for (int d = 0; d < programList.Count; d++) {
+						SaveFile.programListNames.Add(programList[d].GetComponent <Stats>().name);
 					}
 					SaveFile.userName = userName;
 					SaveFile.money = money;
@@ -1470,11 +1494,17 @@ public class OverworldManager : MonoBehaviour {
 			if (scene > 0) {
 				GUILayout.Label("Are you sure you want to quit? Any unsaved progress will be eaten by cyberspace demons.");
 				if (GUILayout.Button (">Yes")) {
+					text = "";
+					textPrint = "";
+					saveFilesOpen = false;
+
 					newGameOpen = false;
 					scene = 0;
 					inboxOpen = false;
 					mapOpen = false;
 					netscapeOpen = false;
+					dialogController = 0;
+					dialogControllerMenu = 0;
 					//Application.LoadLevel (2);
 					//matchStarted = true;
 				}
@@ -1542,7 +1572,7 @@ public class OverworldManager : MonoBehaviour {
 		}
 		if (level == 10) {//Training Grounds
 			matchStarted = true;
-			Application.LoadLevel (3);//Tutorial Battle with Aya
+			Application.LoadLevel (3);//First real battle
 		}
 		else if (level == 420) {//Training Grounds
 			showMaxShop = true;

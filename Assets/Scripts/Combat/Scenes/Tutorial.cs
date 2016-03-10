@@ -152,6 +152,7 @@ public class Tutorial : MonoBehaviour {
 			if (OverworldManager.instance.dialogController == 24 && OverworldManager.instance.response1picked == true) {
 				OverworldManager.instance.text = "\"You see those white boxes on the battlefield? Those are Input Points. " +
 					"You can place one program on every Input Point.\"";
+				GameManager.instance.arrowPos = new Vector3 (10,1,5);
 			}
 			if (OverworldManager.instance.dialogController == 25 && OverworldManager.instance.response1picked == true) {
 				OverworldManager.instance.text = "\"On this map there is only a single Input Point.\"";
@@ -177,6 +178,7 @@ public class Tutorial : MonoBehaviour {
 				OverworldManager.instance.text = "\"Awesome! Now you can start the match against those bots.\"";
 				OverworldManager.instance.textBoxShown = true;
 				OverworldManager.instance.freeMode = false;
+				GameManager.instance.arrowPos = new Vector3 (100,100,100);
 			}
 			if (OverworldManager.instance.dialogController == 29) {
 				OverworldManager.instance.textBoxShown = true;
@@ -241,6 +243,7 @@ public class Tutorial : MonoBehaviour {
 				OverworldManager.instance.textBoxShown = true;
 				GameManager.instance.textRunning = true;
 				OverworldManager.instance.text = "\"You see those colored tiles following the Breaker? Those are its Server Space.\"";
+				GameManager.instance.arrowPos = new Vector3 (10,1,5);
 			}
 			if (OverworldManager.instance.dialogController == 36 && GameManager.instance.matchStarted == true) {
 				OverworldManager.instance.freeMode = false;
@@ -264,6 +267,7 @@ public class Tutorial : MonoBehaviour {
 				OverworldManager.instance.text = "\"And as you can see, the box on your left has changed. " +
 					"Now, the stats of your selected program are shown, " +
 					"along with some buttons.\"";
+				GameManager.instance.arrowPos = new Vector3 (100,100,100);
 			}
 			if (OverworldManager.instance.dialogController == 41 && GameManager.instance.matchStarted == true) {
 				OverworldManager.instance.text = "\"These buttons have three different functions.\"";
